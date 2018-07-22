@@ -1,8 +1,8 @@
-# Thank you for using Boss!
+# Thank You for Using Boss!
 
 ### > Please spend 5 minutes on the [Wiki](https://github.com/kangarko/Boss/wiki) before posting an issue :)
 
-### > Use CTRL + F for searching.
+### > Use CTRL + F and the search function.
 
 ### > Have patience. This is a single-man team and sometimes life happens so it may take few days to get back to you.
 
@@ -18,5 +18,5 @@
 Upload (the effective part of the) affected file(s) on pastebin.net
 ````
 
-# When posting:
+# When Posting
 Take 3 minutes to read this quick [Issue Guide](https://github.com/kangarko/Boss/wiki/Getting-Help-the-Right-Way), because it will provide you all necessary information regarding sending issues and asking questions the right way.
