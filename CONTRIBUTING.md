@@ -15,7 +15,7 @@
 5. **Any other plugins that can interfere?** PerWorldInventory/CreativeControl etc.?
 
 ````
-Upload (the effective part of the) affected file(s) on pastebin.net
+Upload (the effective part of the) affected file(s) on pastebin.com
 ````
 
 # When Posting
