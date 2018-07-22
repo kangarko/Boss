@@ -8,11 +8,11 @@
 
 # What We Need to Know
 
-* Your server version (if unsure, paste the content of /version command).
-* How to reproduce. When does the bug occur?
-* Any error logs or stack traces (this is critical).
-* Is there any other plugins whose functions can interfere? PerWorldInventory/CreativeControl etc.?
-* Include sections from your settings files that you have changed and believe might cause the issue.
+* **Your server version** (if unsure, paste the content of /version command).
+* **Steps to reproduce.**
+* **Any errors or stack traces (this is critical).**
+* **Any other plugins that can interfere? PerWorldInventory/CreativeControl etc.?
+* Sections from your config files that you changed and believe cause the issue. **If unsure, ZIP the entire Boss/ folder and upload it directly to the answer window.**
 
 ````
 Upload (the effective part of the) affected file(s) on pastebin.net
