@@ -10,9 +10,9 @@
 
 1. **Any errors or stack traces.**
 2. **Steps to reproduce.**
-3. **Your server version**
+3. **Your server version.**
 4. Sections from your config files that you changed and believe cause the issue. **If unsure, ZIP the entire Boss/ folder and upload it directly to the answer window.**
-5. **Any other plugins that can interfere? PerWorldInventory/CreativeControl etc.?**
+5. **Any other plugins that can interfere?** PerWorldInventory/CreativeControl etc.?
 
 ````
 Upload (the effective part of the) affected file(s) on pastebin.net
