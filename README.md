@@ -1,3 +1,11 @@
+<p align="center">
+  <a href="https://www.spigotcourse.org/?utm_source=github&utm_medium=github">
+    <img src="https://i.imgur.com/Xr0p2g3.png" />
+  </a>
+</p>
+
+---
+
 # Boss
 Boss is a premium quality plugin for custom monsters on your server.
 
