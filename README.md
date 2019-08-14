@@ -1,7 +1,7 @@
 <p align="center">
-  Do you want to code your own Boss?
-  <a href="https://www.spigotcourse.org/?utm_source=github&utm_medium=github">
-    <img src="https://i.imgur.com/Xr0p2g3.png" />
+  Do you want to build your own Confiscate with unique features only for your server?
+  <a href="https://mineacademy.org/gh-join">
+    <img src="https://i.imgur.com/SuIyaDV.png" />
   </a>
 </p>
 
