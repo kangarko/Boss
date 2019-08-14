@@ -1,5 +1,5 @@
 <p align="center">
-  Do you want to build your own Confiscate with unique features only for your server?
+  Do you want to build your own Boss with unique features only for your server?
   <a href="https://mineacademy.org/gh-join">
     <img src="https://i.imgur.com/SuIyaDV.png" />
   </a>
