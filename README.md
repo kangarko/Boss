@@ -5,10 +5,6 @@
   </a>
 </p>
 
----
-
-## Important: We will be discontinuing this page soon, please visit https://support.mineacademy.org for documentation and support.
-
 # Boss
 Boss is a premium quality plugin for custom monsters on your server.
 
