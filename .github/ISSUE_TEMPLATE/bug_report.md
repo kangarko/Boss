@@ -10,6 +10,8 @@ assignees: ''
 <!---
 To report a problem or a bug with this plugin, please follow the three steps below:
 
+**IMPORTANT** If you Bosses are NOT spawning / having issues with them, please upload your folder as a ZIP (see step 3)!
+
 1) Put your Minecraft version in the title.
 Example: 1.16.1: Getting NullPointerException error
 
