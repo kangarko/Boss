@@ -1,0 +1,77 @@
+# !-----------------------------------------------------------------------------------------!
+#
+#                              Bienvenido al archivo de localización
+#
+# -------------------------------------------------------------------------------------------
+#
+#  Este archivo contiene la mayoría de los mensajes visuales y notificaciones que recibe el jugador.
+#  mientras interactúas con este plugin. Simplemente edítalos como quieras y aplica los cambios.
+#  reiniciando el servidor o volviendo a cargar el complemento.
+#
+#  Para no mostrar un mensaje, configúrelo en 'none'
+#
+#  Messages admite variables entre paréntesis {} y códigos de color con & carácter
+# !-----------------------------------------------------------------------------------------!
+
+# -------------------------------------------------------------------------------------------
+# Commands-related messages.
+# -------------------------------------------------------------------------------------------
+Commands:
+  No_Console: "&cYou may only use this command as a player"
+  Biome: "&7Biome at x: {x} z: {z} is &6{biome}."
+  Reload_Success: "{plugin_name} {plugin_version} has been reloaded."
+  Reload_Fail: "&4Oups, &creloading failed! See the console for more information. Error: {error}"
+  Invalid_Argument: "&cInvalid parameter. Run &6/{label} ? &cfor help."
+  Invalid_Sub_Argument: "&cInvalid parameter. Run '/{label} {0}' for help."
+  Invalid_Argument_Multiline: "&cInvalid parameter. Usage:"
+  Label_Description: "&cDescription: {description}"
+  Label_Usage: "&cUsage:"
+  Label_Usages: "&cUsages:"
+  Error: "&4&lOups! &cThe command failed :( Check the console and report the error."
+
+# -------------------------------------------------------------------------------------------
+# Player-related messages.
+# -------------------------------------------------------------------------------------------
+Player:
+  Not_Online: "&cPlayer {player} &cis not online on this server."
+
+# -------------------------------------------------------------------------------------------
+# Mensajes relacionados con el desove.
+# -------------------------------------------------------------------------------------------
+Spawning:
+  Main_Hand: "&cSolo puedes engendrar jefes de tu mano principal."
+  No_Permission: "&cTe faltan permisos para usar los huevos de jefes (boss.use.spawneregg)."
+  Not_Installed: "&cJefe '{boss}' no está instalado en este servidor."
+  Fail: "&cNo se puede generar {boss} en esta ubicación!"
+  Summoned_Location: "Invocado {amount} en {location}"
+
+# -------------------------------------------------------------------------------------------
+# Mensajes relacionados con herramientas.
+# -------------------------------------------------------------------------------------------
+Tools:
+  Inspect_Open: "&6Abriendo el menú del jefe '{boss}'..."
+  Inspect_Invalid: "&cEsta entidad no es un jefe válido."
+
+# -------------------------------------------------------------------------------------------
+# Invalid messages.
+# -------------------------------------------------------------------------------------------
+Invalid:
+  Boss: "Jefe '{boss}' no existe. Disponible: {available}"
+  World: "Mundo {world}' no existe. Disponible: {available}"
+
+# -------------------------------------------------------------------------------------------
+# The message shown when the player did not have a permission for something.
+# -------------------------------------------------------------------------------------------
+No_Permission: "&cPermiso insuficiente ({permission})."
+
+# -------------------------------------------------------------------------------------------
+# El mensaje que se muestra a las personas (con permiso) cuando hay nuevas versiones disponibles.
+# -------------------------------------------------------------------------------------------
+Update:
+  Available: |-
+    &2Una nueva versión de &3${project.artifactId}&2 está disponible.
+    &2Versión actual: &f{current}&2; Nueva versión: &f{new}
+    &2URL: &7https://www.spigotmc.org/resources/{resource_id}/.
+
+# Número de versión interna. No cambies!
+Version: 1

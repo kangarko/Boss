@@ -1,0 +1,77 @@
+# !-----------------------------------------------------------------------------------------!
+#
+#                              Welcome to the localization file
+#
+# -------------------------------------------------------------------------------------------
+#
+#  This file contains most of the visual messages and notification player receives
+#  while interacting with this plugin. Simply edit them as you like and apply changes
+#  by restarting the server or reloading the plugin.
+#
+#  To not display a message, set it to 'none'
+#
+#  Messages supports variables in brackets {} and color codes with & character
+# !-----------------------------------------------------------------------------------------!
+
+# -------------------------------------------------------------------------------------------
+# Commands-related messages.
+# -------------------------------------------------------------------------------------------
+Commands:
+  No_Console: "&cYou may only use this command as a player"
+  Biome: "&7Biome at x: {x} z: {z} is &6{biome}."
+  Reload_Success: "{plugin_name} {plugin_version} has been reloaded."
+  Reload_Fail: "&4Oups, &creloading failed! See the console for more information. Error: {error}"
+  Invalid_Argument: "&cInvalid parameter. Run &6/{label} ? &cfor help."
+  Invalid_Sub_Argument: "&cInvalid parameter. Run '/{label} {0}' for help."
+  Invalid_Argument_Multiline: "&cInvalid parameter. Usage:"
+  Label_Description: "&cDescription: {description}"
+  Label_Usage: "&cUsage:"
+  Label_Usages: "&cUsages:"
+  Error: "&4&lOups! &cThe command failed :( Check the console and report the error."
+
+# -------------------------------------------------------------------------------------------
+# Player-related messages.
+# -------------------------------------------------------------------------------------------
+Player:
+  Not_Online: "&cPlayer {player} &cis not online on this server."
+
+# -------------------------------------------------------------------------------------------
+# Spawning-related messages.
+# -------------------------------------------------------------------------------------------
+Spawning:
+  Main_Hand: "&cВы можете породить боссов только из вашей основной руки."
+  No_Permission: "&cУ вас недостаточно прав для использования яиц спавна боссов (boss.use.spawneregg)."
+  Not_Installed: "&cБосс '{boss}' не установлен на этом сервере."
+  Fail: "&cНевозможно создать {boss} в этом месте!"
+  Summoned_Location: "Вызвано {amount} в {location}"
+
+# -------------------------------------------------------------------------------------------
+# Tools-related messages.
+# -------------------------------------------------------------------------------------------
+Tools:
+  Inspect_Open: "&6Открытие меню босса '{boss}' ..."
+  Inspect_Invalid: "&cЭта сущность не является действительным боссом."
+
+# -------------------------------------------------------------------------------------------
+# Invalid messages.
+# -------------------------------------------------------------------------------------------
+Invalid:
+  Boss: "Босс '{boss}' не существует. Доступно: {available}"
+  World: "Мир '{world}' не существует. Доступно: {available}"
+
+# -------------------------------------------------------------------------------------------
+# The message shown when the player did not have a permission for something.
+# -------------------------------------------------------------------------------------------
+No_Permission: "&cНедостающее разрешение ({permission})."
+
+# -------------------------------------------------------------------------------------------
+# The message shown to people (with permission) when a new versions is available.
+# -------------------------------------------------------------------------------------------
+Update:
+  Available: |-
+    &2Доступна новая версия &3Boss.
+    &2Текущая версия: &f{current}&2; Новая версия: &f{new}
+    &2Ссылка: &7https://www.spigotmc.org/resources/{resource_id}/.
+
+# Internal version number. Do not change!
+Version: 1

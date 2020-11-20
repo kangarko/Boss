@@ -1,0 +1,77 @@
+# !-----------------------------------------------------------------------------------------!
+#
+#                              Welcome to the localization file
+#
+# -------------------------------------------------------------------------------------------
+#
+#  This file contains most of the visual messages and notification player receives
+#  while interacting with this plugin. Simply edit them as you like and apply changes
+#  by restarting the server or reloading the plugin.
+#
+#  To not display a message, set it to 'none'
+#
+#  Messages supports variables in brackets {} and color codes with & character
+# !-----------------------------------------------------------------------------------------!
+
+# -------------------------------------------------------------------------------------------
+# Commands-related messages.
+# -------------------------------------------------------------------------------------------
+Commands:
+  No_Console: "&cDu kannst diesen Befehl nur als Spieler verwenden"
+  Biome: "&7Biome bei x: {x} z: {z} ist &6{biome}."
+  Reload_Success: "{plugin_name} {plugin_version} wurde reloaded."
+  Reload_Fail: "&4Oups, &creloading fehlgeschlagen! Schau dir die Konsole für mehr Informationen an. Error: {error}"
+  Invalid_Argument: "&cUngültiger Parameter. Führe &6/{label} ? &cfür Hilfe aus."
+  Invalid_Sub_Argument: "&cUngültiger Parameter. Führe '/{label} {0}' für Hilfe aus."
+  Invalid_Argument_Multiline: "&cUngültiger Parameter. Nutzung:"
+  Label_Description: "&cBeschreibung: {description}"
+  Label_Usage: "&cNutzung:"
+  Label_Usages: "&cNutzung:"
+  Error: "&4&lOups! &cDer Command warf eine Ausnahme :( Check the console and report the error."
+
+# -------------------------------------------------------------------------------------------
+# Player-related messages.
+# -------------------------------------------------------------------------------------------
+Player:
+  Not_Online: "&cPlayer {player} &cis not online on this server."
+
+# -------------------------------------------------------------------------------------------
+# Spawning-related messages.
+# -------------------------------------------------------------------------------------------
+Spawning:
+  Main_Hand: "&cYou can only spawn Bosses from your main hand."
+  No_Permission: "&cDir fehlt die Berechtigung, um diese Boss Spawn-Eier zu nutzen (boss.use.spawneregg)."
+  Not_Installed: "&cBoss '{boss}' ist auf diesen Server nicht installiert."
+  Fail: "&cKonnte Boss {boss} nicht in an diesem Ort spawnen!"
+  Summoned_Location: "Summoned {amount} at {location}"
+
+# -------------------------------------------------------------------------------------------
+# Tools-related messages.
+# -------------------------------------------------------------------------------------------
+Tools:
+  Inspect_Open: "&6Öffne das Menü vom '{boss}' Boss..."
+  Inspect_Invalid: "&cDiese Entity ist kein valider Boss."
+
+# -------------------------------------------------------------------------------------------
+# Invalid messages.
+# -------------------------------------------------------------------------------------------
+Invalid:
+  Boss: "Boss '{boss}' existiert nicht. Verfügbar: {available}"
+  World: "World {world}' existier nicht. Verfügbar: {available}"
+
+# -------------------------------------------------------------------------------------------
+# The message shown when the player did not have a permission for something.
+# -------------------------------------------------------------------------------------------
+No_Permission: "&cUnzureichende Berechtigung ({permission})."
+
+# -------------------------------------------------------------------------------------------
+# The message shown to people (with permission) when a new versions is available.
+# -------------------------------------------------------------------------------------------
+Update:
+  Available: |-
+    &2Eine neue Version von &3${project.artifactId}&2 ist verfügbar.
+    &2Aktuelle Version: &f{current}&2; Neue Version: &f{new}
+    &2URL: &7https://www.spigotmc.org/resources/{resource_id}/.
+
+# Internal version number. Do not change!
+Version: 1

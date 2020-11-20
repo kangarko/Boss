@@ -19,6 +19,12 @@ If you have any **questions or bugs to report**, you are welcome to **fill an is
 
 Check out https://www.spigotmc.org/resources/46497 for more information.
 
+# Compiling
+
+1. Obtain Foundation from github.com/kangarko/Foundation
+2. Create library/ folder in Boss/ and obtain binaries described in pom.xml. You have to obtain them yourself. Regarding Boss, you can just remove the very few references to it in the source code and remove the dependency from pom.xml.
+3. Compile Foundation and Boss using Maven with the "clean install" goal.
+
 <hr>
 
 Dave Thomas, founder of OTI, godfather of the Eclipse strategy:

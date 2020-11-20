@@ -1,0 +1,77 @@
+# !-----------------------------------------------------------------------------------------!
+#
+#                              Welcome to the localization file
+#
+# -------------------------------------------------------------------------------------------
+#
+#  This file contains most of the visual messages and notification player receives
+#  while interacting with this plugin. Simply edit them as you like and apply changes
+#  by restarting the server or reloading the plugin.
+#
+#  To not display a message, set it to 'none'
+#
+#  Messages supports variables in brackets {} and color codes with & character
+# !-----------------------------------------------------------------------------------------!
+
+# -------------------------------------------------------------------------------------------
+# Commands-related messages.
+# -------------------------------------------------------------------------------------------
+Commands:
+  No_Console: "&cYou may only use this command as a player"
+  Biome: "&7Biome at x: {x} z: {z} is &6{biome}."
+  Reload_Success: "{plugin_name} {plugin_version} has been reloaded."
+  Reload_Fail: "&4Oups, &creloading failed! See the console for more information. Error: {error}"
+  Invalid_Argument: "&cInvalid parameter. Run &6/{label} ? &cfor help."
+  Invalid_Sub_Argument: "&cInvalid parameter. Run '/{label} {0}' for help."
+  Invalid_Argument_Multiline: "&cInvalid parameter. Usage:"
+  Label_Description: "&cDescription: {description}"
+  Label_Usage: "&cUsage:"
+  Label_Usages: "&cUsages:"
+  Error: "&4&lOups! &cThe command failed :( Check the console and report the error."
+
+# -------------------------------------------------------------------------------------------
+# Player-related messages.
+# -------------------------------------------------------------------------------------------
+Player:
+  Not_Online: "&cPlayer {player} &cis not online on this server."
+
+# -------------------------------------------------------------------------------------------
+# Spawning-related messages.
+# -------------------------------------------------------------------------------------------
+Spawning:
+  Main_Hand: "&cPuoi spawnare mob solo dalla tua mano principale."
+  No_Permission: "&cTi mancano i permessi per usare le uova di Boss (boss.use.spawneregg)."
+  Not_Installed: "&cBoss '{boss}' non è installato su questo server."
+  Fail: "&cÈ impossibile spawnare il Boss {boss} in questa posizione!"
+  Summoned_Location: "Spawnato {amount} a {location}"
+
+# -------------------------------------------------------------------------------------------
+# Tools-related messages.
+# -------------------------------------------------------------------------------------------
+Tools:
+  Inspect_Open: "&6Aprendo il menù del boss '{boss}' ..."
+  Inspect_Invalid: "&cQuesta entità non è un Boss valido."
+
+# -------------------------------------------------------------------------------------------
+# Invalid messages.
+# -------------------------------------------------------------------------------------------
+Invalid:
+  Boss: "Il boss '{boss}' non esiste. Disponibili: {available}"
+  World: "Il mondo {world}' non esiste. Disponibili: {available}"
+
+# -------------------------------------------------------------------------------------------
+# The message shown when the player did not have a permission for something.
+# -------------------------------------------------------------------------------------------
+No_Permission: "&cPermessi insufficienti ({permission})."
+
+# -------------------------------------------------------------------------------------------
+# The message shown to people (with permission) when a new versions is available.
+# -------------------------------------------------------------------------------------------
+Update:
+  Available: |-
+    &2Una nuova versione di &3${project.artifactId}&2 è disponibile.
+    &2Versione attuale: &f{current}&2; Nuova versione: &f{new}
+    &2URL: &7https://www.spigotmc.org/resources/{resource_id}/.
+
+# Internal version number. Do not change!
+Version: 1
