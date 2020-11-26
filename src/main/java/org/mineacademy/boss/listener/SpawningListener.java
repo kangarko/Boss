@@ -25,7 +25,7 @@ import org.mineacademy.boss.api.BossSpawnReason;
 import org.mineacademy.boss.api.BossSpecificSetting;
 import org.mineacademy.boss.api.SpawnedBoss;
 import org.mineacademy.boss.api.event.BossEggEvent;
-import org.mineacademy.boss.api.event.BossSpawnEvent;
+import org.mineacademy.boss.api.event.BossPostSpawnEvent;
 import org.mineacademy.boss.menu.MenuBossIndividual;
 import org.mineacademy.boss.settings.Localization;
 import org.mineacademy.boss.settings.Settings;
@@ -306,13 +306,14 @@ public final class SpawningListener implements Listener {
 	// -------------------------------------------------------------------------------------
 
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-	public void onBossSpawn(final BossSpawnEvent event) {
+	public void onBossSpawn(final BossPostSpawnEvent event) {
 		final LivingEntity entity = event.getEntity();
 		final Boss boss = event.getBoss();
 
 		if (entity.isValid() && !entity.isDead()) {
-			if ((event.getSpawnReason() == BossSpawnReason.CONVERTED && Settings.Converting.LIGHTNING)
-					|| (event.getSpawnReason() == BossSpawnReason.TIMED && Settings.TimedSpawning.LIGHTNING))
+
+			// Also strike lightning
+			if ((event.getSpawnReason() == BossSpawnReason.CONVERTED && Settings.Converting.LIGHTNING) || (event.getSpawnReason() == BossSpawnReason.TIMED && Settings.TimedSpawning.LIGHTNING))
 				entity.getWorld().strikeLightningEffect(entity.getLocation());
 
 			BossUtil.setBossTargetInRadius(boss, entity);

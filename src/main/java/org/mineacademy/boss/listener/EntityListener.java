@@ -33,6 +33,7 @@ import org.bukkit.event.world.PortalCreateEvent;
 import org.bukkit.inventory.ItemStack;
 import org.mineacademy.boss.BossPlugin;
 import org.mineacademy.boss.api.Boss;
+import org.mineacademy.boss.api.BossAPI;
 import org.mineacademy.boss.api.BossDrop;
 import org.mineacademy.boss.api.BossRegionSettings;
 import org.mineacademy.boss.api.BossRegionType;
@@ -127,6 +128,11 @@ public final class EntityListener implements Listener {
 			if (boss != null)
 				new MenuBossIndividual(boss, false).displayTo(player);
 		}
+
+		final Boss boss = BossAPI.getBoss(event.getEntity());
+
+		if (boss != null)
+			Debugger.debug("damage", player.getName() + " hit " + boss.getName() + " that now has " + ((LivingEntity) event.getEntity()).getHealth() + " HP");
 	}
 
 	/**

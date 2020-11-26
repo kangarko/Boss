@@ -30,7 +30,8 @@ import org.mineacademy.boss.api.BossSpawnReason;
 import org.mineacademy.boss.api.BossSpawning;
 import org.mineacademy.boss.api.BossSpecificSetting;
 import org.mineacademy.boss.api.SpawnedBoss;
-import org.mineacademy.boss.api.event.BossSpawnEvent;
+import org.mineacademy.boss.api.event.BossPostSpawnEvent;
+import org.mineacademy.boss.api.event.BossPreSpawnEvent;
 import org.mineacademy.boss.model.BossAttribute;
 import org.mineacademy.boss.model.specific.SpecificKey;
 import org.mineacademy.boss.util.AutoUpdateList;
@@ -116,7 +117,7 @@ public final class SimpleBoss implements Boss {
 			final NmsEntity nms = new NmsEntity(loc, getType().getEntityClass());
 			LivingEntity en = (LivingEntity) nms.getBukkitEntity();
 
-			if (!Common.callEvent(new BossSpawnEvent(this, en, reason))) {
+			if (!Common.callEvent(new BossPreSpawnEvent(this, en, reason))) {
 				en.remove();
 
 				return null;
@@ -125,15 +126,18 @@ public final class SimpleBoss implements Boss {
 			BossTaggingUtil.setTag(en, this);
 			en = nms.addEntity(SpawnReason.CUSTOM);
 
-			if (!en.isDead() && en.isValid())
+			if (!en.isDead() && en.isValid()) {
 				try {
 					final LivingEntity enF = en;
 
 					transformToBoss(enF);
 
+					Common.callEvent(new BossPostSpawnEvent(this, en, reason));
+
 				} catch (final Throwable t) {
 					Common.error(t, "Error making a Boss!", "Entity: " + en, "Boss: " + getName(), "%error");
 				}
+			}
 
 			return new SpawnedBoss(this, en);
 
