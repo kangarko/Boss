@@ -48,4 +48,6 @@ public interface BossRegionSpawning extends ConfigSerializable {
 	boolean isBlacklist();
 
 	void setBlacklist(boolean blacklist);
+
+	String getFormatted();
 }

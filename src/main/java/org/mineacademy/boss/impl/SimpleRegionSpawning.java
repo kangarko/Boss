@@ -1,5 +1,6 @@
 package org.mineacademy.boss.impl;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -30,6 +31,19 @@ public final class SimpleRegionSpawning implements BossRegionSpawning {
 
 	private void update() {
 		spawning.update();
+	}
+
+	/**
+	 * @see org.mineacademy.boss.api.BossRegionSpawning#getFormatted()
+	 */
+	@Override
+	public String getFormatted() {
+		final Map<String, List<String>> formatted = new HashMap<>();
+
+		for (final Map.Entry<BossRegionType, StrictList<BossRegionSettings>> entry : regions.entrySet())
+			formatted.put(entry.getKey().name(), Common.convert(entry.getValue(), BossRegionSettings::getRegionName));
+
+		return formatted.toString();
 	}
 
 	@Override

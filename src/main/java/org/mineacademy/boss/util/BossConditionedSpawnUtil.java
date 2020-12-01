@@ -413,10 +413,12 @@ public class BossConditionedSpawnUtil {
 			Debugger.debug("spawning", "\tNot spawning. Blacklist is set & Boss is within a blacklisted region.");
 
 			return false;
+
 		} else if (!blacklist && !isWithinAny) {
-			Debugger.debug("spawning", "\tNot spawning. Whitelist is set & Boss is not within any whitelisted region.", "Regions: " + boss.getSpawning().getRegions());
+			Debugger.debug("spawning", "\tNot spawning. Whitelist is set & Boss is not within any whitelisted regions: " + boss.getSpawning().getRegions().getFormatted());
 			return false;
 		}
+
 		return true;
 	}
 
