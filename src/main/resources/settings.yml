@@ -252,13 +252,11 @@ Region_Keeping:
   # Enable this feature? This will launch a repetitive task inside of Boss.
   #
   Enabled: true
-
   #
   # If enabled the boss will be teleported to the center of the region
   # instead of a few blocks back.
   #
   Port_To_Center: false
-
   #
   # How often to check and teleport Bosses back? Lower values may produce more lag.
   # 20 ticks = 1 second
