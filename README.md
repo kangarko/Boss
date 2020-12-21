@@ -17,6 +17,8 @@ You are welcome to read the **[Boss Wikipedia](https://github.com/kangarko/Boss/
 
 If you have any **questions or bugs to report**, you are welcome to **fill an issue**. Please read the [Getting Help the Best Way](https://github.com/kangarko/Boss/wiki/Getting-Help-the-Right-Way) to obtain help as quickly as possible.
 
+Check out https://mineacademy.org/plugins for more information.
+
 # Compiling
 
 1. Obtain Foundation from github.com/kangarko/Foundation
