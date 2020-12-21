@@ -1,0 +1,77 @@
+# !-----------------------------------------------------------------------------------------!
+#
+#                              Welcome to the localization file
+#
+# -------------------------------------------------------------------------------------------
+#
+#  This file contains most of the visual messages and notification player receives
+#  while interacting with this plugin. Simply edit them as you like and apply changes
+#  by restarting the server or reloading the plugin.
+#
+#  To not display a message, set it to 'none'
+#
+#  Messages supports variables in brackets {} and color codes with & character
+# !-----------------------------------------------------------------------------------------!
+
+# -------------------------------------------------------------------------------------------
+# Commands-related messages.
+# -------------------------------------------------------------------------------------------
+Commands:
+  No_Console: "&cYou may only use this command as a player"
+  Biome: "&7Biome at x: {x} z: {z} is &6{biome}."
+  Reload_Success: "{plugin_name} {plugin_version} has been reloaded."
+  Reload_Fail: "&4Oups, &creloading failed! See the console for more information. Error: {error}"
+  Invalid_Argument: "&cInvalid parameter. Run &6/{label} ? &cfor help."
+  Invalid_Sub_Argument: "&cInvalid parameter. Run '/{label} {0}' for help."
+  Invalid_Argument_Multiline: "&cInvalid parameter. Usage:"
+  Label_Description: "&cDescription: {description}"
+  Label_Usage: "&cUsage:"
+  Label_Usages: "&cUsages:"
+  Error: "&4&lOups! &cThe command failed :( Check the console and report the error."
+
+# -------------------------------------------------------------------------------------------
+# Player-related messages.
+# -------------------------------------------------------------------------------------------
+Player:
+  Not_Online: "&cPlayer {player} &cis not online on this server."
+
+# -------------------------------------------------------------------------------------------
+# Spawning-related messages.
+# -------------------------------------------------------------------------------------------
+Spawning:
+  Main_Hand: "&Csak a jobb kezeddel tudod lespawnoltatni a bosst!"
+  No_Permission: "&cNincs jogod a boss tojás használatához (boss.use.spawneregg)."
+  Not_Installed: "&7A(z) &c'{boss}' &7nincs telepítve a szerverre!"
+  Fail: "&7erre a helyre nem tudod lespawnoltatni a(z) &c{boss} &7bosst!"
+  Summoned_Location: "megidéztél &c{amount} &7entitánst erre a helyre: &c{location}"
+
+# -------------------------------------------------------------------------------------------
+# Tools-related messages.
+# -------------------------------------------------------------------------------------------
+Tools:
+  Inspect_Open: "&6A(z) &e'{boss}' &7menüjének megnyitása..."
+  Inspect_Invalid: "&cEz az entitáns nem létezik!"
+
+# -------------------------------------------------------------------------------------------
+# Invalid messages.
+# -------------------------------------------------------------------------------------------
+Invalid:
+  Boss: "A(z) '{boss}' boss nem létezik. Bossok: {available}"
+  World: "A(z) {world}' világ nem létezik. Világok: {available}"
+
+# -------------------------------------------------------------------------------------------
+# The message shown when the player did not have a permission for something.
+# -------------------------------------------------------------------------------------------
+No_Permission: "&cNincs elég jogosultságod ehhez! ({permission})."
+
+# -------------------------------------------------------------------------------------------
+# The message shown to people (with permission) when a new versions is available.
+# -------------------------------------------------------------------------------------------
+Update:
+  Available: |-
+    &2A pluginnak a(z) &3${project.artifactId}&2 verziója elérhető.
+    &2Régi verzió: &f{current}&2; Új verzió: &f{new}
+    &2URL: &7https://www.spigotmc.org/resources/{resource_id}/.
+
+# Internal version number. Do not change!
+Version: 1

@@ -1,0 +1,110 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>org.mineacademy</groupId>
+    <artifactId>Boss</artifactId>
+    <version>3.9.7</version>
+    <packaging>jar</packaging>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <author>kangarko</author>
+        <plugin.name>boss</plugin.name>
+        <main.class>${project.groupId}.${plugin.name}.BossPlugin</main.class>
+    </properties>
+
+    <repositories>
+        <repository>
+            <id>mineacademy-repo</id>
+            <url>https://bitbucket.org/kangarko/libraries/raw/master</url>
+        </repository>
+    </repositories>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.mineacademy</groupId>
+            <artifactId>Foundation</artifactId>
+            <version>LATEST</version>
+        </dependency>
+        
+        <!-- Premium dependencies, stored locally -->
+		<dependency>
+			<groupId>org.mineacademy.plugin</groupId>
+            <artifactId>Heroes</artifactId>
+            <version>1.9.3</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/library/Heroes-1.9.3.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>org.mineacademy.plugin</groupId>
+            <artifactId>GriefPrevention</artifactId>
+            <version>16.15.0</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/library/GriefPrevention-16.15.0.jar</systemPath>
+		</dependency>
+		
+		<!-- Dependencies from our repository -->
+        <dependency>
+            <groupId>org.mineacademy.plugin</groupId>
+            <artifactId>SilkSpawners</artifactId>
+            <version>6.3.1</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.2.0</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.2.2</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <createDependencyReducedPom>false</createDependencyReducedPom>
+                    <artifactSet>
+                        <includes>
+                            <include>org.mineacademy:Foundation*</include>
+                        </includes>
+                    </artifactSet>
+                    <relocations>
+                        <relocation>
+                            <pattern>org.mineacademy</pattern>
+                            <shadedPattern>org.mineacademy.${plugin.name}.lib</shadedPattern>
+                            <excludes>
+                                <exclude>org.mineacademy.${plugin.name}.**</exclude>
+                            </excludes>
+                        </relocation>
+                    </relocations>
+                </configuration>
+            </plugin>
+        </plugins>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+    </build>
+</project>
