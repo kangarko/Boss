@@ -38,8 +38,8 @@ import org.mineacademy.fo.remain.Remain;
 import org.mineacademy.fo.settings.YamlStaticConfig;
 
 /**
- * The main class for the Boss plugin.
- */
+* The main class for the Boss plugin.
+*/
 public final class BossPlugin extends SimplePlugin {
 
 	/**
@@ -141,10 +141,10 @@ public final class BossPlugin extends SimplePlugin {
 		if (Settings.RegionKeep.ENABLED)
 			Common.runTimer(Settings.RegionKeep.PERIOD.getTimeTicks(), new BossKeepTask());
 
-		if (Common.doesPluginExistSilently("SilkSpawners"))
+		if (Common.doesPluginExist("SilkSpawners"))
 			registerEvents(new SilkSpawnersHook());
 
-		registerEventsIf(new StackMobListener(), Common.doesPluginExistSilently("StackMob"));
+		registerEventsIf(new StackMobListener(), Common.doesPluginExist("StackMob"));
 	}
 
 	public static BossPlayer getDataFor(final Player player) {

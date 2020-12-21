@@ -17,6 +17,14 @@ import org.mineacademy.fo.settings.SimpleSettings;
 @SuppressWarnings("unused")
 public final class Settings extends SimpleSettings {
 
+	/**
+	 * @see org.mineacademy.fo.settings.YamlStaticConfig#saveComments()
+	 */
+	@Override
+	protected boolean saveComments() {
+		return true;
+	}
+
 	@Override
 	protected int getConfigVersion() {
 		return 6;
