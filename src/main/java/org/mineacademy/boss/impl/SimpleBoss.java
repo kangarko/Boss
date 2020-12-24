@@ -177,14 +177,10 @@ public final class SimpleBoss implements Boss {
 		{ // Equipment
 			final EntityEquipment eq = en.getEquipment();
 
-			if (settings.getEquipment().allowRandom())
+			Common.runLater(() -> {
 				for (final BossEquipmentSlot slot : BossEquipmentSlot.values())
 					setEquipment(eq, slot);
-			else
-				Common.runLater(() -> {
-					for (final BossEquipmentSlot slot : BossEquipmentSlot.values())
-						setEquipment(eq, slot);
-				});
+			});
 		}
 
 		{ // Attributes
@@ -279,8 +275,12 @@ public final class SimpleBoss implements Boss {
 		final BossEquipment bossEquip = getEquipment();
 		BossDrop drop = bossEquip != null ? bossEquip.get(slot) : null;
 
-		if (drop == null)
+		if (drop == null) {
+			if (getEquipment().allowRandom())
+				return;
+
 			drop = new BossDrop((getType() == EntityType.SKELETON || getType().toString().equals("STRAY")) && slot == BossEquipmentSlot.HAND ? new ItemStack(Material.BOW) : new ItemStack(Material.AIR), 0);
+		}
 
 		try {
 			final Class<?> cl = EntityEquipment.class;
