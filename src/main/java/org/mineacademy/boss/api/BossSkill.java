@@ -16,6 +16,7 @@ import org.mineacademy.fo.Valid;
 import org.mineacademy.fo.plugin.SimplePlugin;
 
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.Setter;
 
 /**
@@ -46,11 +47,13 @@ public abstract class BossSkill implements Listener {
 	 *
 	 * @param player the player
 	 */
-	public final void sendSkillMessage(Player player, SpawnedBoss boss) {
+	public final void sendSkillMessage(Player player, @NonNull SpawnedBoss spawnedBoss) {
 		if (messages != null && messages.length > 0) {
 			final int index = RandomUtil.nextBetween(0, messages.length - 1);
+			final String message = messages[index];
 
-			Common.tell(player, messages[index].replace("{boss}", boss.getBoss().getName()).replace("{world}", boss.getEntity().getWorld().getName()));
+			if (message != null && spawnedBoss.getBoss() != null && spawnedBoss.getBoss().getName() != null && spawnedBoss.getEntity() != null && spawnedBoss.getEntity().isValid())
+				Common.tell(player, message.replace("{boss}", spawnedBoss.getBoss().getName()).replace("{world}", spawnedBoss.getEntity().getWorld().getName()));
 		}
 	}
 
