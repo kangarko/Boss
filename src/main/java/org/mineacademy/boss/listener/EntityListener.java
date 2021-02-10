@@ -327,11 +327,15 @@ public final class EntityListener implements Listener {
 
 	@EventHandler
 	public void onPortal(PortalCreateEvent event) {
-		if (event.getEntity() instanceof EnderDragon) {
-			final Boss boss = BossPlugin.getBossManager().findBoss(event.getEntity());
+		try {
+			if (event.getEntity() instanceof EnderDragon) {
+				final Boss boss = BossPlugin.getBossManager().findBoss(event.getEntity());
 
-			if (boss != null)
-				event.setCancelled(true);
+				if (boss != null)
+					event.setCancelled(true);
+			}
+		} catch (final NoSuchMethodError err) {
+			// Ignore old MC
 		}
 	}
 
