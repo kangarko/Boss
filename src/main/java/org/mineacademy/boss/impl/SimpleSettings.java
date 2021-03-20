@@ -185,15 +185,16 @@ public final class SimpleSettings extends YamlConfig implements BossSettings {
 	private void loadDrops() {
 		drops.getSource().clear();
 
-		final SerializedMap map = getMap("Drops");
+		if (isSet("Drops")) {
+			final SerializedMap map = getMap("Drops");
 
-		if (map != null)
 			for (final Entry<?, Object> e : map.asMap().entrySet()) {
 				final Integer slot = Integer.parseInt(e.getKey().toString());
 				final BossDrop drop = BossDrop.deserialize(SerializedMap.of(e.getValue()), this);
 
 				drops.getSource().put(slot, drop);
 			}
+		}
 	}
 
 	private void migrateHealth() {
