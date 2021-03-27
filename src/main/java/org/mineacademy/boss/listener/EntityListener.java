@@ -190,13 +190,12 @@ public final class EntityListener implements Listener {
 
 				bukkitDrops.clear();
 
-				boss.getEquipment().forEach(drop -> {
+				for (final BossDrop drop : boss.getEquipment())
 					if (RandomUtil.chanceD(drop.getDropChance())) {
 						Debugger.debug("drops", "Readded back equipment: " + drop.getItem());
 
 						bukkitDrops.add(drop.getItem().clone());
 					}
-				});
 			}
 
 			final List<BossDrop> drops = new ArrayList<>(boss.getDrops().values());

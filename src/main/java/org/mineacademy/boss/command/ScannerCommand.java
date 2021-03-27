@@ -36,16 +36,7 @@ public final class ScannerCommand extends AbstractBossSubcommand {
 	@Override
 	protected void onCommand() {
 		checkBoolean(!(sender instanceof Player), "&cThis command requires execution from the console.");
-
-		checkBoolean(MinecraftVersion.newerThan(V.v1_7) && MinecraftVersion.olderThan(V.v1_17),
-				"Only MC 1.8-1.16.2 are supported (for safety). Please notify the developer to test out if the new MC version is safe to use.");
-
-		{
-			final String mcVer = Bukkit.getBukkitVersion();
-
-			if (mcVer.startsWith("1.16") && !mcVer.startsWith("1.15."))
-				returnTell("Minecraft 1.16 is no longer supported, update to 1.16.2 or newer.");
-		}
+		checkBoolean(MinecraftVersion.newerThan(V.v1_7), "Only MC 1.8.8 and up are supported (for safety). Please notify the developer to test out if the new MC version is safe to use.");
 
 		final String worldRaw = args[0];
 		final String[] bosses = args.length > 1 ? Arrays.copyOfRange(args, 1, args.length) : new String[] {};
