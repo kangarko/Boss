@@ -39,10 +39,8 @@ import org.mineacademy.fo.remain.CompMaterial;
 import org.mineacademy.fo.remain.Remain;
 import org.mineacademy.fo.settings.SimpleLocalization;
 
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
 
 public final class BossConversation extends SimpleConversation {
 
@@ -81,7 +79,10 @@ public final class BossConversation extends SimpleConversation {
 
 		@Override
 		protected Prompt acceptValidatedInput(ConversationContext c, String input) {
-			setBoss(BossPlugin.getBossManager().createBoss(mob, input));
+			final Boss boss = BossPlugin.getBossManager().createBoss(mob, input);
+
+			if (boss != null)
+				c.setSessionData("Boss", boss);
 
 			return Prompt.END_OF_CONVERSATION;
 		}
@@ -91,9 +92,10 @@ public final class BossConversation extends SimpleConversation {
 			conversation.setMenuToReturnTo(null);
 
 			final Player player = (Player) event.getContext().getForWhom();
+			final Object boss = event.getContext().getSessionData("Boss");
 
-			if (event.gracefulExit() && getBoss() != null)
-				new MenuBossIndividual(getBoss()).displayTo(player);
+			if (boss != null && boss instanceof Boss)
+				new MenuBossIndividual((Boss) boss).displayTo(player);
 
 			else {
 				new MenuMain().displayTo(player);
@@ -1146,8 +1148,7 @@ public final class BossConversation extends SimpleConversation {
 	public static abstract class BossPrompt extends SimplePrompt {
 
 		@Getter
-		@Setter(value = AccessLevel.PROTECTED)
-		private Boss boss;
+		private final Boss boss;
 
 		@Override
 		public void onConversationEnd(SimpleConversation conversation, ConversationAbandonedEvent event) {

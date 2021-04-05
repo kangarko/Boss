@@ -340,24 +340,24 @@ public final class MenuBossIndividual extends Menu {
 					"We are working on a fix."));
 
 			/*soundsButton = new Button() {
-
+			
 				@Override
 				public void onClickedInMenu(Player pl, Menu menu, ClickType click) {
 					if (!HookManager.isProtocolLibLoaded()) {
 						animateTitle("&4Install ProtocolLib first!");
-
+			
 						return;
 					}
-
+			
 					if (!Settings.Setup.PROTOCOLLIB) {
 						animateTitle("&4Enable Setup.Hook_ProtocolLib!");
-
+			
 						return;
 					}
-
+			
 					new MenuSounds(MenuSettings.this).displayTo(pl);
 				}
-
+			
 				@Override
 				public ItemStack getItem() {
 					return ItemCreator.of(
@@ -368,7 +368,7 @@ public final class MenuBossIndividual extends Menu {
 							"this Boss makes.",
 							HookManager.isProtocolLibLoaded() ? "&3Uses ProtocolLib." : "&cRequires ProtocolLib.").build().make();
 				}
-
+			
 			};*/
 
 			equipmentButton = new ButtonMenu(new MenuEquipment(MenuSettings.this, EditMode.ITEMS),
@@ -611,7 +611,9 @@ public final class MenuBossIndividual extends Menu {
 				public void onClickedInMenu(final Player pl, final Menu menu, final ClickType click) {
 					final boolean has = boss.getEquipment().allowRandom();
 
-					boss.getEquipment().setAllowRandom(!has);
+					boss.getEquipment().setAllowRandomNoSave(!has);
+					((SimpleSettings) boss.getSettings()).saveEquipment();
+
 					restartMenu(has ? "&4Random equipment disallowed." : "&2Random equipment allowed.");
 				}
 
@@ -688,8 +690,10 @@ public final class MenuBossIndividual extends Menu {
 					final BossEquipmentSlot equipmentSlot = e.getValue();
 					final BossDrop oldDrop = getBoss().getEquipment().get(equipmentSlot);
 
-					getBoss().getEquipment().set(equipmentSlot, item, item != null && oldDrop != null ? oldDrop.getDropChance() : 0F);
+					getBoss().getEquipment().setNoSave(equipmentSlot, item, item != null && oldDrop != null ? oldDrop.getDropChance() : 0F);
 				}
+
+			((SimpleSettings) getBoss().getSettings()).saveEquipment();
 
 			BossUpdateUtil.updateAll();
 		}
@@ -704,10 +708,12 @@ public final class MenuBossIndividual extends Menu {
 				final int chance = (int) MathUtil.ceiling(eq.get(equipSlot).getDropChance() * 100);
 				final int newChance = MathUtil.range(chance + getNextQuantity(click), 0, 100);
 
-				eq.set(equipSlot, eq.get(equipSlot).getItem(), newChance / 100F);
+				eq.setNoSave(equipSlot, eq.get(equipSlot).getItem(), newChance / 100F);
 
 				pl.getOpenInventory().getTopInventory().setItem(slot, getItemAt(slot));
 			}
+
+			//((SimpleSettings) getBoss().getSettings()).saveEquipment();
 		}
 
 		@Override

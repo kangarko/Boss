@@ -28,7 +28,7 @@ public interface BossEquipment extends ConfigSerializable, Iterable<BossDrop> {
 	 * @param slot where on the equipment to set the item
 	 * @param item the item
 	 */
-	void set(BossEquipmentSlot slot, ItemStack item);
+	void setNoSave(BossEquipmentSlot slot, ItemStack item);
 
 	/**
 	 * Set the item on an equipment slot with a drop chance.
@@ -37,7 +37,7 @@ public interface BossEquipment extends ConfigSerializable, Iterable<BossDrop> {
 	 * @param item       the item, set to null to remove
 	 * @param dropChance the drop chance from 0.0 (never drops) to 1.0 (always drops)
 	 */
-	void set(BossEquipmentSlot slot, ItemStack item, float dropChance);
+	void setNoSave(BossEquipmentSlot slot, ItemStack item, float dropChance);
 
 	/**
 	 * Should we allow vanilla rules to give the mob random equipment?
@@ -53,5 +53,5 @@ public interface BossEquipment extends ConfigSerializable, Iterable<BossDrop> {
 	 *
 	 * @param flag, allow random?
 	 */
-	void setAllowRandom(boolean flag);
+	void setAllowRandomNoSave(boolean flag);
 }

@@ -1,5 +1,6 @@
 package org.mineacademy.boss.api;
 
+import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.mineacademy.boss.impl.SimpleSettings;
 import org.mineacademy.fo.collection.SerializedMap;
@@ -59,8 +60,8 @@ public class BossDrop implements ConfigSerializable {
 	public final SerializedMap serialize() {
 		final SerializedMap map = new SerializedMap();
 
-		map.putIfExist("item", item);
-		map.putIfExist("dropChance", dropChance);
+		map.put("item", item == null ? new ItemStack(Material.AIR) : item);
+		map.put("dropChance", dropChance);
 
 		return map;
 	}
@@ -78,6 +79,6 @@ public class BossDrop implements ConfigSerializable {
 
 	@Override
 	public final String toString() {
-		return "Drop{" + item.getType() + " " + dropChance * 100 + "%}";
+		return "Drop{" + (item == null ? "null" : item.getType()) + " " + dropChance * 100 + "%}";
 	}
 }

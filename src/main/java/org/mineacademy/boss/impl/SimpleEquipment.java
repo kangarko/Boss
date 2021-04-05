@@ -28,18 +28,16 @@ public final class SimpleEquipment implements BossEquipment {
 	private boolean allowRandom;
 
 	@Override
-	public void set(final BossEquipmentSlot slot, final ItemStack item) {
-		set(slot, item, 0F);
+	public void setNoSave(final BossEquipmentSlot slot, final ItemStack item) {
+		setNoSave(slot, item, 0F);
 	}
 
 	@Override
-	public void set(final BossEquipmentSlot slot, ItemStack item, final float dropChance) {
+	public void setNoSave(final BossEquipmentSlot slot, ItemStack item, final float dropChance) {
 		if (item != null && item.getType() == Material.AIR)
 			item = null;
 
 		equipment.override(slot, new BossDrop(item, dropChance));
-
-		settings.updateEquipment();
 	}
 
 	@Override
@@ -48,10 +46,8 @@ public final class SimpleEquipment implements BossEquipment {
 	}
 
 	@Override
-	public void setAllowRandom(final boolean flag) {
+	public void setAllowRandomNoSave(final boolean flag) {
 		this.allowRandom = flag;
-
-		settings.updateEquipment();
 	}
 
 	@Override

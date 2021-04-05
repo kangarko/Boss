@@ -133,7 +133,7 @@ public final class SimpleSettings extends YamlConfig implements BossSettings {
 		reinforcementsBoss = loadReinforcements("Death.Reinforcements.Boss");
 		reinforcementsVanilla = loadReinforcements("Death.Reinforcements.Vanilla");
 		deathLightning = getBoolean("Death.Lightning");
-		equipment = SimpleEquipment.deserialize(getMap("Equipment"), this);
+		equipment = SimpleEquipment.deserialize(isSet("Equipment") ? getMap("Equipment") : new SerializedMap(), this);
 		remappedSounds = loadSounds("Sounds.Remapped");
 		debuggingSounds = getBoolean("Sounds.Debug");
 		ridingVanilla = !getString("Riding").isEmpty() ? get("Riding", EntityType.class) : null;
@@ -269,6 +269,9 @@ public final class SimpleSettings extends YamlConfig implements BossSettings {
 
 		if (!isSet("Sounds.Remapped"))
 			setNoSave("Sounds.Remapped", new HashMap<>());
+
+		if (!isSet("Equipment"))
+			setNoSave("Equipment", new HashMap<>());
 
 		if (!isSet("Riding"))
 			setNoSave("Riding", "");
@@ -605,7 +608,7 @@ public final class SimpleSettings extends YamlConfig implements BossSettings {
 		//onLoadFinish();
 	}
 
-	public void updateEquipment() {
+	public void saveEquipment() {
 		save("Equipment", equipment);
 
 		onLoadFinish();
