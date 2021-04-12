@@ -612,7 +612,7 @@ public final class MenuBossIndividual extends Menu {
 					final boolean has = boss.getEquipment().allowRandom();
 
 					boss.getEquipment().setAllowRandomNoSave(!has);
-					((SimpleSettings) boss.getSettings()).saveEquipment();
+					((SimpleSettings) boss.getSettings()).saveEquipment_();
 
 					restartMenu(has ? "&4Random equipment disallowed." : "&2Random equipment allowed.");
 				}
@@ -693,7 +693,7 @@ public final class MenuBossIndividual extends Menu {
 					getBoss().getEquipment().setNoSave(equipmentSlot, item, item != null && oldDrop != null ? oldDrop.getDropChance() : 0F);
 				}
 
-			((SimpleSettings) getBoss().getSettings()).saveEquipment();
+			((SimpleSettings) getBoss().getSettings()).saveEquipment_();
 
 			BossUpdateUtil.updateAll();
 		}

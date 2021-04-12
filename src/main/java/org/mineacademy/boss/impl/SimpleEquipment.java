@@ -77,6 +77,14 @@ public final class SimpleEquipment implements BossEquipment {
 		return map;
 	}
 
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return this.serialize().toString();
+	}
+
 	public static SimpleEquipment deserialize(final SerializedMap map, final SimpleSettings settings) {
 		final SimpleEquipment eq = new SimpleEquipment(settings);
 

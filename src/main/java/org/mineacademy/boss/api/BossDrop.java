@@ -53,7 +53,7 @@ public class BossDrop implements ConfigSerializable {
 		this.dropChance = chance;
 
 		if (settings != null)
-			settings.updateDrops();
+			settings.updateDrops_();
 	}
 
 	@Override

@@ -186,13 +186,13 @@ public final class EntityListener implements Listener {
 			final List<ItemStack> bukkitDrops = event.getDrops();
 
 			if (!boss.getSettings().hasNaturalDrops()) {
-				Debugger.debug("drops", "Vanilla drops disabled -> Clearing what should been dropped originally: " + bukkitDrops);
+				Debugger.debug("drops", "Vanilla drops disabled -> Clearing what should been dropped originally: " + Common.join(bukkitDrops, ", ", it -> it.getType().toString()));
 
 				bukkitDrops.clear();
 
 				for (final BossDrop drop : boss.getEquipment())
 					if (RandomUtil.chanceD(drop.getDropChance())) {
-						Debugger.debug("drops", "Readded back equipment: " + drop.getItem());
+						Debugger.debug("drops", "Readded back equipment: " + drop.getItem().getType());
 
 						bukkitDrops.add(drop.getItem().clone());
 					}
@@ -201,7 +201,7 @@ public final class EntityListener implements Listener {
 			final List<BossDrop> drops = new ArrayList<>(boss.getDrops().values());
 			Collections.shuffle(drops);
 
-			Debugger.debug("drops", "Adding custom drops: " + drops);
+			Debugger.debug("drops", "Adding custom drops: " + Common.join(drops, ", ", it -> it.getItem().toString()));
 
 			Common.callEvent(new BossDeathEvent(boss, entity, drops, event));
 
@@ -210,7 +210,7 @@ public final class EntityListener implements Listener {
 
 				for (final BossDrop drop : drops) {
 					if (drop == null) {
-						Debugger.debug("drops", "NOT dropping (drop null):");
+						Debugger.debug("drops", "NOT dropping a null drop");
 
 						continue;
 					}
@@ -218,20 +218,20 @@ public final class EntityListener implements Listener {
 					final ItemStack item = new ItemStack(drop.getItem());
 
 					if (item.getType() == Material.AIR) {
-						Debugger.debug("drops", "NOT dropping (Material == AIR)" + drop.getItem());
+						Debugger.debug("drops", "NOT dropping air");
 
 						continue;
 					}
 
 					if (!RandomUtil.chance(MathUtil.ceiling(drop.getDropChance() * 100))) {
-						Debugger.debug("drops", "NOT dropping (item null or chance " + drop.getDropChance() + " failed): " + drop.getItem());
+						Debugger.debug("drops", "NOT dropping (item null or chance " + drop.getDropChance() + " failed): " + drop.getItem().getType());
 
 						continue;
 					}
 
 					bukkitDrops.add(item);
 
-					Debugger.debug("drops", "Dropping " + item);
+					Debugger.debug("drops", "Dropping " + item.getType());
 
 					if (boss.getSettings().hasSingleDrops())
 						break;
@@ -247,7 +247,7 @@ public final class EntityListener implements Listener {
 						if (drop != null && drop.getItem() != null && !drop.getItem().getType().toString().contains("AIR") && RandomUtil.chance(MathUtil.ceiling(drop.getDropChance() * 100))) {
 							final Map<Integer, ItemStack> remain = toReward.getInventory().addItem(drop.getItem());
 
-							Debugger.debug("drops", "Giving " + drop.getItem() + " to " + toReward.getName());
+							Debugger.debug("drops", "Giving " + drop.getItem().getType() + " to " + toReward.getName());
 
 							if (!remain.isEmpty()) {
 								Debugger.debug("drops", toReward.getName() + " Has a full inventory - dropping next to player, instead");

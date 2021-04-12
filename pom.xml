@@ -5,7 +5,7 @@
 
     <groupId>org.mineacademy</groupId>
     <artifactId>Boss</artifactId>
-    <version>3.10.1</version>
+    <version>3.10.2</version>
     <packaging>jar</packaging>
 
     <properties>

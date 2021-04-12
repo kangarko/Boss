@@ -93,7 +93,7 @@ public final class SimpleSettings extends YamlConfig implements BossSettings {
 	protected SimpleSettings(EntityType type, String name, SimpleBoss boss) {
 		this.type = type;
 		this.boss = boss;
-		this.drops = new AutoUpdateMap<>(this::updateDrops);
+		this.drops = new AutoUpdateMap<>(this::updateDrops_);
 	}
 
 	public void loadConfig() {
@@ -338,7 +338,7 @@ public final class SimpleSettings extends YamlConfig implements BossSettings {
 
 	private AutoUpdateMap<String, Integer> loadReinforcements(String path) {
 		final AutoUpdateMap<String, Integer> map = new AutoUpdateMap<>(null);
-		map.setUpdater(() -> updateReinforcements(path, map));
+		map.setUpdater(() -> updateReinforcements_(path, map));
 
 		final List<String> unparsed = getStringList(path);
 
@@ -374,7 +374,7 @@ public final class SimpleSettings extends YamlConfig implements BossSettings {
 
 	private AutoUpdateMap<Sound, SimpleSound> loadSounds(String path) {
 		final AutoUpdateMap<Sound, SimpleSound> map = new AutoUpdateMap<>(null);
-		map.setUpdater(this::updateSounds);
+		map.setUpdater(this::updateSounds_);
 
 		final SerializedMap unparsed = getMap(path);
 
@@ -396,30 +396,30 @@ public final class SimpleSettings extends YamlConfig implements BossSettings {
 	@Override
 	public void setConvertingChance(int convertingChance) {
 		Valid.checkBoolean(convertingChance >= 0 && convertingChance <= 100, "Converting chance for " + this + " must be between 0-100, got: " + convertingChance);
-		save("Converting_Chance", convertingChance);
 
-		onLoadFinish();
+		this.convertingChance = convertingChance;
+		save("Converting_Chance", this.convertingChance);
 	}
 
 	@Override
 	public void setCustomName(String customName) {
-		save("Custom_Name", customName != null ? customName : "none");
+		this.customName = customName != null ? customName : "none";
 
-		onLoadFinish();
+		save("Custom_Name", this.customName);
 	}
 
 	@Override
 	public void setNoSpawnPermissionMessage(String noSpawnPermissionMessage) {
-		save("No_Spawn_Permission_Message", noSpawnPermissionMessage == null ? "" : noSpawnPermissionMessage);
+		this.noSpawnPermissionMessage = noSpawnPermissionMessage == null ? "" : noSpawnPermissionMessage;
 
-		onLoadFinish();
+		save("No_Spawn_Permission_Message", this.noSpawnPermissionMessage);
 	}
 
 	@Override
 	public void setHealth(int health) {
-		save("Health", health);
+		this.health = health;
 
-		onLoadFinish();
+		save("Health", health);
 	}
 
 	@Override
@@ -438,9 +438,9 @@ public final class SimpleSettings extends YamlConfig implements BossSettings {
 
 	@Override
 	public void setDroppedExp(RangedRandomValue value) {
-		save("Dropped_Exp", value != null ? value.isStatic() ? value + "" : value.getMin() + " - " + value.getMax() : "default");
+		this.droppedExp = value;
 
-		onLoadFinish();
+		save("Dropped_Exp", value != null ? value.isStatic() ? value : value.getMin() + " - " + value.getMax() : "default");
 	}
 
 	@Override
@@ -495,16 +495,15 @@ public final class SimpleSettings extends YamlConfig implements BossSettings {
 
 	@Override
 	public void setSpecificSetting(BossSpecificSetting key, Object value) {
-		save("Specific_Settings." + key.getConfigKey(), value);
+		this.specificSettings.override(key, value);
 
-		onLoadFinish();
+		save("Specific_Settings." + key.getConfigKey(), value);
 	}
 
 	public void setDeathLightning(boolean deathLightning) {
 		this.deathLightning = deathLightning;
 
 		save("Death.Lightning", deathLightning);
-		onLoadFinish();
 	}
 
 	@Override
@@ -512,7 +511,6 @@ public final class SimpleSettings extends YamlConfig implements BossSettings {
 		this.debuggingSounds = flag;
 
 		save("Sounds.Debug", flag);
-		onLoadFinish();
 	}
 
 	@Override
@@ -520,7 +518,6 @@ public final class SimpleSettings extends YamlConfig implements BossSettings {
 		this.naturalDrops = naturalDrops;
 
 		save("Natural_Drops", naturalDrops);
-		onLoadFinish();
 	}
 
 	@Override
@@ -528,7 +525,6 @@ public final class SimpleSettings extends YamlConfig implements BossSettings {
 		this.singleDrops = singleDrops;
 
 		save("Single_Drops", singleDrops);
-		onLoadFinish();
 	}
 
 	@Override
@@ -552,14 +548,12 @@ public final class SimpleSettings extends YamlConfig implements BossSettings {
 		});
 
 		save("Potions", list);
-
-		onLoadFinish();
 	}
 
 	public void updateAttributes(BossAttributes attributes) {
-		save("Attributes", attributes);
+		this.attributes = attributes;
 
-		onLoadFinish();
+		save("Attributes", attributes);
 	}
 
 	private void updateSkills() {
@@ -570,26 +564,22 @@ public final class SimpleSettings extends YamlConfig implements BossSettings {
 		});
 
 		save("Skills", list);
-		onLoadFinish();
 	}
 
-	private void updateReinforcements(String path, AutoUpdateMap<String, Integer> map) {
-		{ // Death reinforcements
-			final StrictList<String> converted = Common.convertToList(map.getSource().getSource(), (boss, quantity) -> boss + ", " + quantity);
+	private void updateReinforcements_(String path, AutoUpdateMap<String, Integer> map) {
+		final StrictList<String> converted = Common.convertToList(map.getSource().getSource(), (boss, quantity) -> boss + ", " + quantity);
 
-			save(path, converted);
-		}
-
-		onLoadFinish();
+		save(path, converted);
 	}
 
 	public void updateSpawning(SimpleSpawning spawning) {
-		save("Spawning", spawning);
+		this.spawning = spawning;
 
-		onLoadFinish();
+		save("Spawning", spawning);
 	}
 
 	private void updateCommands(String path, AutoUpdateMap<String, Double> cmds) {
+
 		// Bukkit's yaml implementation doesn't escape key strings
 		final LinkedList<Map<String, Object>> temp = new LinkedList<>();
 
@@ -603,41 +593,34 @@ public final class SimpleSettings extends YamlConfig implements BossSettings {
 		}
 
 		save(path, temp);
-		// don't need to reload this - this function is only called when our copy is modified
-		// calling onDataLoad orphans the object that called the updater
-		//onLoadFinish();
 	}
 
-	public void saveEquipment() {
+	public void saveEquipment_() {
 		save("Equipment", equipment);
-
-		onLoadFinish();
 	}
 
-	public void updateDrops() {
+	public void updateDrops_() {
 		save("Drops", drops);
-
-		onLoadFinish();
 	}
 
 	public void updateEggItem(SimpleEggItem eggItem) {
-		save("Spawner_Egg", eggItem);
+		this.eggItem = eggItem;
 
-		onLoadFinish();
+		save("Spawner_Egg", eggItem);
 	}
 
 	@Override
 	public void setRidingVanilla(EntityType type) {
-		save("Riding", type);
+		this.ridingVanilla = type;
 
-		onLoadFinish();
+		save("Riding", type);
 	}
 
 	@Override
 	public void setRidingBoss(String boss) {
-		save("Riding_Boss", boss == null ? "" : boss);
+		this.ridingBoss = boss;
 
-		onLoadFinish();
+		save("Riding_Boss", boss == null ? "" : boss);
 	}
 
 	@Override
@@ -647,9 +630,9 @@ public final class SimpleSettings extends YamlConfig implements BossSettings {
 
 	@Override
 	public void setRemoveRidingOnDeath(boolean setting) {
-		save("Death.Kill_Riding_Entity", setting);
+		this.ridingRemoveOnDeath = setting;
 
-		onLoadFinish();
+		save("Death.Kill_Riding_Entity", setting);
 	}
 
 	@Override
@@ -659,9 +642,9 @@ public final class SimpleSettings extends YamlConfig implements BossSettings {
 
 	@Override
 	public void setInventoryDrops(boolean setting) {
-		save("Death.Inventory_Drops.Enabled", setting);
+		this.inventoryDrops = setting;
 
-		onLoadFinish();
+		save("Death.Inventory_Drops.Enabled", setting);
 	}
 
 	@Override
@@ -671,9 +654,9 @@ public final class SimpleSettings extends YamlConfig implements BossSettings {
 
 	@Override
 	public void setInventoryDropsPlayerLimit(int setting) {
-		save("Death.Inventory_Drops.Player_Limit", setting);
+		this.inventoryDropsPlayerLimit = setting;
 
-		onLoadFinish();
+		save("Death.Inventory_Drops.Player_Limit", setting);
 	}
 
 	@Override
@@ -683,12 +666,12 @@ public final class SimpleSettings extends YamlConfig implements BossSettings {
 
 	@Override
 	public void setInventoryDropsTimeLimit(int setting) {
-		save("Death.Inventory_Drops.Time_Limit_Seconds", setting);
+		this.inventoryDropsTimeLimit = setting;
 
-		onLoadFinish();
+		save("Death.Inventory_Drops.Time_Limit_Seconds", setting);
 	}
 
-	public void updateSounds() {
+	public void updateSounds_() {
 		save("Sounds.Remapped", Common.convertStrict(remappedSounds.getSource().getSource(), new Common.MapToMapConverter<Sound, SimpleSound, String, String>() {
 
 			@Override
@@ -701,14 +684,12 @@ public final class SimpleSettings extends YamlConfig implements BossSettings {
 				return value.toString();
 			}
 		}));
-
-		onLoadFinish();
 	}
 
 	@Override
 	public void setDamageMultiplier(double damageMultiplier) {
-		save("Damage_Multiplier", damageMultiplier);
+		this.damageMultiplier = damageMultiplier;
 
-		onLoadFinish();
+		save("Damage_Multiplier", damageMultiplier);
 	}
 }
