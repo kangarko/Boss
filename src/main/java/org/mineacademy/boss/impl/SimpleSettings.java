@@ -66,7 +66,7 @@ public final class SimpleSettings extends YamlConfig implements BossSettings {
 	private BossEggItem eggItem;
 	private RangedRandomValue droppedExp;
 
-	private StrictMap<BossSpecificSetting, Object> specificSettings;
+	private StrictMap<BossSpecificSetting, Object> specificSettings = new StrictMap<>();
 
 	private AutoUpdateList<BossPotion> potions;
 	private AutoUpdateList<BossSkill> skills;
@@ -440,7 +440,7 @@ public final class SimpleSettings extends YamlConfig implements BossSettings {
 	public void setDroppedExp(RangedRandomValue value) {
 		this.droppedExp = value;
 
-		save("Dropped_Exp", value != null ? value.isStatic() ? value : value.getMin() + " - " + value.getMax() : "default");
+		save("Dropped_Exp", value != null ? value.isStatic() ? value.toLine() : value.getMin() + " - " + value.getMax() : "default");
 	}
 
 	@Override
