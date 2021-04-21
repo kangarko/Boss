@@ -291,7 +291,7 @@ public final class EntityListener implements Listener {
 				final Boss reinforcement = BossPlugin.getBossManager().findBoss(name);
 
 				if (reinforcement == null)
-					Common.log("&cWARNING: &fCannot spawn reinforcement as the Boss '" + name + "' does not exist (if the name contains a number, edit your Boss yml file and add ' ,' between Boss name and the quantity");
+					Common.log("&cWarning: &fCannot spawn reinforcement as the Boss '" + name + "' does not exist (if the name contains a number, edit your Boss yml file and add ' ,' between Boss name and the quantity");
 
 				else {
 					final Location loc = entity.getLocation();

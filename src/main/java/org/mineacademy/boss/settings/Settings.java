@@ -369,6 +369,6 @@ public final class Settings extends SimpleSettings {
 		ITERATE_SPAWNING_TRIES = getBoolean("Iterate_Spawning_Tries");
 
 		if (Debugger.isDebugged("spawning"))
-			Common.log("&cWarning: We have detected that you are debugging 'spawning'. This will show up in your timings because we save each debug log to a file.");
+			Common.log("&cWarning: &fWe have detected that you are debugging 'spawning'. This will show up in your timings because we save each debug log to a file.");
 	}
 }
