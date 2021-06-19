@@ -32,7 +32,6 @@ import org.mineacademy.fo.MinecraftVersion.V;
 import org.mineacademy.fo.Valid;
 import org.mineacademy.fo.collection.StrictMap;
 import org.mineacademy.fo.command.SimpleCommandGroup;
-import org.mineacademy.fo.model.SpigotUpdater;
 import org.mineacademy.fo.plugin.SimplePlugin;
 import org.mineacademy.fo.remain.Remain;
 import org.mineacademy.fo.settings.YamlStaticConfig;
@@ -181,10 +180,10 @@ public final class BossPlugin extends SimplePlugin {
 		return bossCommand;
 	}
 
-	@Override
+	/*@Override
 	public SpigotUpdater getUpdateCheck() {
 		return new SpigotUpdater(46497);
-	}
+	}*/
 
 	@Override
 	public V getMinimumVersion() {
