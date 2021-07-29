@@ -598,7 +598,7 @@ public final class BossConversation extends SimpleConversation {
 		protected void acceptValidatedInputInt(ConversationContext context, int data) {
 			final BossEggItem egg = getBoss().getSettings().getEggItem();
 
-			final CompMaterial mat = CompMaterial.fromLegacy(egg.getMaterial().getLegacyName(), data);
+			final CompMaterial mat = CompMaterial.fromLegacy(egg.getMaterial().toString(), data);
 			egg.setMaterial(mat);
 
 			tellLater(1, context.getForWhom(), "&7Changed egg data value to &6" + data + "&7.");

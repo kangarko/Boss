@@ -178,7 +178,7 @@ public final class MenuBossIndividual extends Menu {
 
 			@Override
 			public ItemStack getItem() {
-				return ItemCreator.of(CompMaterial.ROSE_RED,
+				return ItemCreator.of(CompMaterial.RED_DYE,
 						"&cKill Bosses",
 						"",
 						"Remove this Boss",
@@ -2090,7 +2090,7 @@ public final class MenuBossIndividual extends Menu {
 				@Override
 				public ItemStack getItem() {
 					return ItemCreator.of(
-							is() ? CompMaterial.CACTUS_GREEN : CompMaterial.INK_SAC,
+							is() ? CompMaterial.GREEN_DYE : CompMaterial.INK_SAC,
 							"Blacklist",
 							"",
 							"Status: " + (is() ? "&2Enabled" : "&6Disabled"),

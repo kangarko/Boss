@@ -732,7 +732,7 @@ public enum BossSpecificSetting {
 		@Override
 		protected ItemCreatorBuilder getIcon() {
 			return ItemCreator.of(
-					CompMaterial.ROSE_RED,
+					CompMaterial.RED_DYE,
 					"Iron Golem Attack",
 					"",
 					get() ? "&7The Golem attacks monsters." : "&cGolem ignores monsters.",
