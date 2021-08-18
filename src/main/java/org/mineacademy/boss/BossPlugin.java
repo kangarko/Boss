@@ -107,7 +107,7 @@ public final class BossPlugin extends SimplePlugin {
 				"&6https://github.com/kangarko/Boss/issues",
 				"&8" + Common.consoleLineSmooth());
 
-		if (Settings.TimedSpawning.ENABLED && (Common.doesPluginExistSilently("Top") || Common.doesPluginExistSilently("TopLite") || Common.doesPluginExistSilently("MassiveLag")))
+		if (Settings.TimedSpawning.ENABLED && (Common.doesPluginExist("Top") || Common.doesPluginExist("TopLite") || Common.doesPluginExist("MassiveLag")))
 			Common.runLaterAsync(10, () -> Common.logFramed(false,
 					"[Boss] Notice for Anti-Lag Plugins",
 					" ",
