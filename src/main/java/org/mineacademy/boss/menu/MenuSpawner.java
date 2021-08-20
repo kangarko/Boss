@@ -169,7 +169,7 @@ public final class MenuSpawner extends Menu {
 					.lore("")
 					.lore(isCurr ? "Boss selected, click to remove." : "Click to select this Boss.")
 					.glow(isCurr)
-					.build().removeEnchants().make();
+					.build().make();
 		}
 
 		@Override

@@ -277,7 +277,7 @@ public final class Settings extends SimpleSettings {
 			PERIOD = getTime("Period");
 
 			if (ENABLED && MinecraftVersion.olderThan(V.v1_10)) {
-				Common.log("&6Warning: Region keeping requires Minecraft version 1.10 or greater, disabling..");
+				Common.warning("Region keeping requires Minecraft version 1.10 or greater, disabling..");
 
 				ENABLED = false;
 			}
@@ -361,6 +361,6 @@ public final class Settings extends SimpleSettings {
 		ITERATE_SPAWNING_TRIES = getBoolean("Iterate_Spawning_Tries");
 
 		if (Debugger.isDebugged("spawning"))
-			Common.log("&cWarning: &fWe have detected that you are debugging 'spawning'. This will show up in your timings because we save each debug log to a file.");
+			Common.warning("We have detected that you are debugging 'spawning'. This will show up in your timings because we save each debug log to a file.");
 	}
 }
