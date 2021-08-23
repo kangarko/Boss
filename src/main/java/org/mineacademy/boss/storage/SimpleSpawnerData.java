@@ -36,6 +36,14 @@ public final class SimpleSpawnerData extends YamlSectionConfig {
 		loadConfiguration(FoConstants.File.DATA);
 	}
 
+	/**
+	 * @see org.mineacademy.fo.settings.YamlConfig#saveComments()
+	 */
+	@Override
+	protected boolean saveComments() {
+		return false;
+	}
+
 	@Override
 	protected void onLoadFinish() {
 		Debugger.debug("spawner", "Loading spawner data.. ");

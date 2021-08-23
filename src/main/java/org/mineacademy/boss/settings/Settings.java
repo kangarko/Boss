@@ -22,6 +22,14 @@ public final class Settings extends SimpleSettings {
 		return 6;
 	}
 
+	/**
+	 * @see org.mineacademy.fo.settings.YamlConfig#saveComments()
+	 */
+	@Override
+	protected boolean saveComments() {
+		return false;
+	}
+
 	public static final class EggSpawning {
 
 		public static Integer RADIUS;

@@ -38,6 +38,14 @@ public final class SimpleTagData extends YamlSectionConfig {
 		loadConfiguration(NO_DEFAULT, FoConstants.File.DATA);
 	}
 
+	/**
+	 * @see org.mineacademy.fo.settings.YamlConfig#saveComments()
+	 */
+	@Override
+	protected boolean saveComments() {
+		return false;
+	}
+
 	@Override
 	protected void onLoadFinish() {
 		spawnedBosses.clear();
