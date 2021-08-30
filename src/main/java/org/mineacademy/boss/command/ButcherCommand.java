@@ -9,7 +9,6 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.mineacademy.boss.api.Boss;
 import org.mineacademy.fo.Common;
-import org.mineacademy.fo.Common.Stringer;
 import org.mineacademy.fo.exception.CommandException;
 
 public final class ButcherCommand extends AbstractBossSubcommand {
@@ -58,7 +57,7 @@ public final class ButcherCommand extends AbstractBossSubcommand {
 
 	private void cleanupWorld(Boss match, String param) throws CommandException {
 		final World world = Bukkit.getWorld(param);
-		checkNotNull(world, "World '" + param + "' doesn't exist. Available (" + Bukkit.getWorlds().size() + "): " + Common.join(Bukkit.getWorlds(), ", ", (Stringer<World>) World::getName));
+		checkNotNull(world, "World '" + param + "' doesn't exist. Available (" + Common.getWorldNames().size() + "): " + Common.join(Common.getWorldNames()));
 
 		final int removed = cleanup(match, world.getLivingEntities());
 
