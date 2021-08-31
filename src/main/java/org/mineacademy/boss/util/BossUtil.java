@@ -135,7 +135,13 @@ public final class BossUtil {
 			if (command.startsWith("/") && !command.startsWith("//"))
 				command = command.substring(1);
 
-			final String killer = target != null ? target.getName() : en.getKiller() != null ? en.getKiller().getName() : "";
+			final String killer = Common.getOrEmpty(target != null ? target.getName() : en.getKiller() != null ? en.getKiller().getName() : "");
+
+			if (command.contains("{killer}") && killer.isEmpty()) {
+				Debugger.debug("death-commands", "\tSkipping " + e.getKey() + ", contains {killer} but " + boss.getName() + " had none");
+
+				continue;
+			}
 
 			final String translatedCommand = Common.colorize(
 					command
