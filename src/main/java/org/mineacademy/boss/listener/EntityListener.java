@@ -166,11 +166,8 @@ public final class EntityListener implements Listener {
 		final LivingEntity entity = event.getEntity();
 		final Boss boss = BossPlugin.getBossManager().findBoss(entity);
 
-		if (boss == null) {
-			BossPlugin.getBossManager().removeCachedEntity(entity.getUniqueId());
-
+		if (boss == null)
 			return;
-		}
 
 		// Remove mount
 		if (boss.getSettings().isRemovingRidingOnDeath() && entity.isInsideVehicle())
@@ -320,8 +317,6 @@ public final class EntityListener implements Listener {
 
 		if (!Remain.hasScoreboardTags())
 			SimpleTagData.$().removeTagIfExists(entity.getUniqueId());
-
-		BossPlugin.getBossManager().removeCachedEntity(entity.getUniqueId());
 	}
 
 	@EventHandler

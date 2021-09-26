@@ -16,8 +16,6 @@ import org.mineacademy.fo.constants.FoConstants;
 import org.mineacademy.fo.remain.Remain;
 import org.mineacademy.fo.settings.YamlSectionConfig;
 
-import com.google.common.collect.Sets;
-
 import lombok.Getter;
 
 @Getter
@@ -60,6 +58,7 @@ public final class SimpleTagData extends YamlSectionConfig {
 	}
 
 	public String getTag(final UUID id) {
+
 		for (final Entry<String, Set<String>> e : spawnedBosses.entrySet())
 			if (e.getValue().contains(id.toString()))
 				return e.getKey();
@@ -73,9 +72,9 @@ public final class SimpleTagData extends YamlSectionConfig {
 		if (spawnedBosses.contains(name))
 			spawnedBosses.get(name).add(id.toString());
 		else
-			spawnedBosses.put(name, Sets.newHashSet(id.toString()));
+			spawnedBosses.put(name, Common.newSet(id.toString()));
 
-		Common.runLater(0, this::update);
+		save("Stored_Bosses", spawnedBosses);
 	}
 
 	public void removeTagIfExists(final UUID id) {
@@ -110,7 +109,7 @@ public final class SimpleTagData extends YamlSectionConfig {
 		spawnedBosses.removeAll(toRemoveNames);
 
 		if (updated)
-			update();
+			save("Stored_Bosses", spawnedBosses);
 	}
 
 	public void removeTag(final UUID id) {
@@ -124,16 +123,10 @@ public final class SimpleTagData extends YamlSectionConfig {
 			}
 
 		if (updated)
-			update();
+			save("Stored_Bosses", spawnedBosses);
 	}
 
 	public boolean hasStored(final UUID id) {
 		return getTag(id) != null;
-	}
-
-	private void update() {
-		save("Stored_Bosses", spawnedBosses);
-
-		onLoadFinish();
 	}
 }

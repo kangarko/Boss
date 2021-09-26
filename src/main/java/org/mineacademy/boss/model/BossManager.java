@@ -10,8 +10,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 
 import org.bukkit.Chunk;
 import org.bukkit.Location;
@@ -21,6 +19,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Flying;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.mineacademy.boss.api.Boss;
 import org.mineacademy.boss.api.SpawnedBoss;
@@ -37,7 +36,6 @@ import org.mineacademy.fo.MinecraftVersion.V;
 import org.mineacademy.fo.RandomUtil;
 import org.mineacademy.fo.Valid;
 import org.mineacademy.fo.collection.StrictList;
-import org.mineacademy.fo.collection.expiringmap.ExpiringMap;
 import org.mineacademy.fo.remain.CompMaterial;
 import org.mineacademy.fo.remain.Remain;
 
@@ -47,11 +45,6 @@ public final class BossManager {
 	 * Holds all loaded bosses.
 	 */
 	private final StrictList<Boss> bosses = new StrictList<>();
-
-	/**
-	 * Entity uid, boss name
-	 */
-	private final ExpiringMap<UUID, String> bossUidCache = ExpiringMap.builder().expiration(3, TimeUnit.HOURS).build();
 
 	public void loadBosses() {
 		bosses.clear();
@@ -98,14 +91,6 @@ public final class BossManager {
 	}
 
 	// --------------------------------------------------------------------
-	// Cache
-	// --------------------------------------------------------------------
-
-	public void removeCachedEntity(UUID id) {
-		bossUidCache.remove(id);
-	}
-
-	// --------------------------------------------------------------------
 	// Finding bosses
 	// --------------------------------------------------------------------
 
@@ -130,22 +115,9 @@ public final class BossManager {
 	public Boss findBoss(Entity entity) {
 		Valid.checkNotNull(entity, "Cannot find boss from null entity!");
 
-		String cachedName = bossUidCache.get(entity.getUniqueId());
+		final String bossName = BossTaggingUtil.getTag(entity);
 
-		if (cachedName == null)
-			cachedName = BossTaggingUtil.getTag(entity);
-
-		if (cachedName != null) {
-			final Boss boss = findBoss(cachedName);
-
-			if (boss != null) {
-				bossUidCache.put(entity.getUniqueId(), boss.getName());
-
-				return boss;
-			}
-		}
-
-		return null;
+		return bossName != null ? findBoss(bossName) : null;
 	}
 
 	public SpawnedBoss findBoss(Location loc) {
@@ -174,10 +146,12 @@ public final class BossManager {
 
 		try {
 			for (final LivingEntity entity : world.getLivingEntities()) {
-				final Boss boss = findBoss(entity);
+				if (!(entity instanceof Player)) {
+					final Boss boss = findBoss(entity);
 
-				if (boss != null)
-					bosses.add(new SpawnedBoss(boss, entity));
+					if (boss != null)
+						bosses.add(new SpawnedBoss(boss, entity));
+				}
 			}
 		} catch (final ConcurrentModificationException ex) {
 			Common.log("Failed to find Bosses in world " + world.getName() + ". Got " + ex);

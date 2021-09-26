@@ -117,7 +117,5 @@ public final class SimpleRegionData extends YamlSectionConfig {
 
 	private void update() {
 		save("Stored", regions);
-
-		onLoadFinish();
 	}
 }

@@ -108,7 +108,5 @@ public final class SimpleSpawnerData extends YamlSectionConfig {
 
 	private void update() {
 		save("Stored", Common.convertToList(spawners.getSource(), (key, value) -> SerializeUtil.serializeLoc(key) + ": " + value));
-
-		onLoadFinish();
 	}
 }

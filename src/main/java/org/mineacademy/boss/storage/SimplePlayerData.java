@@ -84,7 +84,5 @@ public final class SimplePlayerData extends YamlSectionConfig {
 
 	private void update() {
 		save("Pending_Skill_Restore", pendingSkillsToRestore);
-
-		onLoadFinish();
 	}
 }
