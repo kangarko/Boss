@@ -41,28 +41,28 @@ public final class BossKeepTask implements Runnable {
 				if (settings == null || !settings.getKeepInside())
 					continue bossScan;
 
-				final Region rg = BossRegionType.BOSS.getBoundingBox(keepInside);
+				final Region region = BossRegionType.BOSS.getBoundingBox(keepInside);
 
-				if (rg == null)
+				if (region == null)
 					continue bossScan;
 
 				final Location loc = boss.getEntity().getLocation();
 
 				// Boss escaped.. !
-				if (!rg.isWithin(loc)) {
+				if (!region.isWithin(loc)) {
 					Location closestLoc = null;
 					double closest = Double.MAX_VALUE;
 
 					// Find closes location in the border that has enough space
 					locationScan:
-					for (final Location lc : BlockUtil.getBoundingBox(rg.getPrimary(), rg.getSecondary())) {
-						if (lc.getBlock().getType() != Material.AIR || lc.getBlock().getRelative(BlockFace.UP).getType() != Material.AIR)
+					for (final Location regionWall : BlockUtil.getBoundingBox(region.getPrimary(), region.getSecondary())) {
+						if (regionWall.getBlock().getType() != Material.AIR || regionWall.getBlock().getRelative(BlockFace.UP).getType() != Material.AIR)
 							continue locationScan;
 
-						final double distance = lc.distance(loc);
+						final double distance = regionWall.distance(loc);
 
 						if (distance < closest) {
-							closestLoc = lc;
+							closestLoc = regionWall;
 
 							closest = distance;
 						}
@@ -73,7 +73,7 @@ public final class BossKeepTask implements Runnable {
 						closestLoc = moveCloserToRegion(closestLoc, loc);
 
 						if (Settings.RegionKeep.PORT_TO_CENTER) {
-							Location safeCenter = rg.getCenter().clone();
+							Location safeCenter = region.getCenter().clone();
 
 							while (!CompMaterial.isAir(safeCenter.getBlock()))
 								safeCenter = safeCenter.add(0, 1, 0);
@@ -86,7 +86,7 @@ public final class BossKeepTask implements Runnable {
 					// Find if the entity targets a player that is outside of the region and de-target it
 					final Player target = EntityUtil.getTargetPlayer(boss.getEntity());
 
-					if (target != null && !rg.isWithin(target.getLocation()))
+					if (target != null && !region.isWithin(target.getLocation()))
 						((Creature) boss.getEntity()).setTarget(null);
 				}
 			}
