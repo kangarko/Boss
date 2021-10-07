@@ -15,7 +15,6 @@ import org.mineacademy.boss.listener.FreezeListener;
 import org.mineacademy.boss.listener.PlayerListener;
 import org.mineacademy.boss.listener.SpawningListener;
 import org.mineacademy.boss.menu.MenuToolsBoss;
-import org.mineacademy.boss.model.BossCommandGroup;
 import org.mineacademy.boss.model.BossManager;
 import org.mineacademy.boss.model.BossPlayer;
 import org.mineacademy.boss.model.task.BossKeepTask;
@@ -28,10 +27,10 @@ import org.mineacademy.boss.storage.SimplePlayerData;
 import org.mineacademy.boss.storage.SimpleSpawnerData;
 import org.mineacademy.boss.storage.SimpleTagData;
 import org.mineacademy.fo.Common;
+import org.mineacademy.fo.Messenger;
 import org.mineacademy.fo.MinecraftVersion.V;
 import org.mineacademy.fo.Valid;
 import org.mineacademy.fo.collection.StrictMap;
-import org.mineacademy.fo.command.SimpleCommandGroup;
 import org.mineacademy.fo.plugin.SimplePlugin;
 import org.mineacademy.fo.remain.Remain;
 import org.mineacademy.fo.settings.YamlStaticConfig;
@@ -51,11 +50,6 @@ public final class BossPlugin extends SimplePlugin {
 	 */
 	private final BossManager bossManager = new BossManager();
 
-	/**
-	 * The main /boss command, capable of handling subcommands such as /boss region.
-	 */
-	private final BossCommandGroup bossCommand = new BossCommandGroup();
-
 	@Override
 	protected String[] getStartupLogo() {
 		return new String[] {
@@ -71,6 +65,8 @@ public final class BossPlugin extends SimplePlugin {
 
 	@Override
 	protected void onPluginStart() {
+		Messenger.ENABLED = false;
+
 		MenuToolsBoss.getInstance();
 
 		if (!Remain.hasScoreboardTags())
@@ -143,7 +139,8 @@ public final class BossPlugin extends SimplePlugin {
 		if (Common.doesPluginExist("SilkSpawners"))
 			registerEvents(new SilkSpawnersHook());
 
-		registerEventsIf(new StackMobListener(), Common.doesPluginExist("StackMob"));
+		if (Common.doesPluginExist("StackMob"))
+			registerEvents(new StackMobListener());
 	}
 
 	public static BossPlayer getDataFor(final Player player) {
@@ -173,11 +170,6 @@ public final class BossPlugin extends SimplePlugin {
 	@Override
 	public int getFoundedYear() {
 		return 2017; // 17.07
-	}
-
-	@Override
-	public SimpleCommandGroup getMainCommand() {
-		return bossCommand;
 	}
 
 	/*@Override

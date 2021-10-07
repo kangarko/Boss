@@ -85,7 +85,7 @@ public final class SimpleSpawnerData extends YamlSectionConfig {
 	}
 
 	public boolean hasSpawner(Location loc) {
-		return spawners.contains(loc);
+		return spawners.containsKey(loc);
 	}
 
 	public String getSpawner(Location loc) {

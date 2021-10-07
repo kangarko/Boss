@@ -9,7 +9,7 @@ import java.util.regex.Matcher;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.mineacademy.fo.Common;
-import org.mineacademy.fo.ItemUtil;
+import org.mineacademy.fo.SerializeUtil;
 import org.mineacademy.fo.TimeUtil;
 import org.mineacademy.fo.collection.StrictList;
 import org.mineacademy.fo.exception.FoException;
@@ -21,13 +21,13 @@ public final class SkillPotionUtils {
 
 	public PotionEffect parseEffect(final String line) {
 		final String[] split = line.split(", ");
-		final Matcher m = Common.compileMatcher("([a-zA-Z_ ]{1,})(([1-9]{1,})|())", split[0]);
+		final Matcher matcher = Common.compileMatcher("([a-zA-Z_ ]{1,})(([1-9]{1,})|())", split[0]);
 
-		if (m.find()) {
-			final String name = m.group(1).replaceAll("\\s+$", "");
-			final PotionEffectType type = ItemUtil.findPotion(name);
+		if (matcher.find()) {
+			final String name = matcher.group(1).replaceAll("\\s+$", "");
+			final PotionEffectType type = SerializeUtil.deserialize(PotionEffectType.class, name);
 
-			final int level = m.groupCount() > 2 && m.group(3) != null ? Integer.parseInt(m.group(3)) : 1;
+			final int level = matcher.groupCount() > 2 && matcher.group(3) != null ? Integer.parseInt(matcher.group(3)) : 1;
 			final String durationRaw = split.length == 2 ? split[1] : "1 minute";
 			final int durationTicks = (int) TimeUtil.toTicks(durationRaw);
 

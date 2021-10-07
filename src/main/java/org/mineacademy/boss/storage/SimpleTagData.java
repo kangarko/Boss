@@ -61,7 +61,7 @@ public final class SimpleTagData extends YamlSectionConfig {
 	public void addTag(final UUID id, final String name) {
 		Valid.checkBoolean(name != null && !name.isEmpty(), "The boss is lacking a name!");
 
-		if (spawnedBosses.contains(name))
+		if (spawnedBosses.containsKey(name))
 			spawnedBosses.get(name).add(id.toString());
 		else
 			spawnedBosses.put(name, Common.newSet(id.toString()));

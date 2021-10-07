@@ -92,8 +92,8 @@ public final class Settings extends SimpleSettings {
 			ENABLED = getBoolean("Enabled");
 			LIGHTNING = getBoolean("Lightning");
 			DELAY = getTime("Delay");
-			WORLDS = new IsInList<>(getStringList("Worlds"));
-			BOSSES = new IsInList<>(getStringList("Bosses"));
+			WORLDS = getIsInList("Worlds", String.class);
+			BOSSES = getIsInList("Bosses", String.class);
 
 			if (!Debugger.isDebugModeEnabled()) {
 				if (DELAY.getTimeTicks() < 20)
@@ -197,9 +197,9 @@ public final class Settings extends SimpleSettings {
 			pathPrefix("Prevent_Vanilla_Mobs");
 
 			ENABLED = getBoolean("Enabled");
-			SPAWN_REASONS = new IsInList<>(getCompatibleEnumList("Prevent_From", SpawnReason.class));
-			ENTITY_TYPES = new IsInList<>(getCompatibleEnumList("Entities", EntityType.class));
-			WORLDS = new IsInList<>(getStringList("Worlds"));
+			SPAWN_REASONS = getIsInList("Prevent_From", SpawnReason.class);
+			ENTITY_TYPES = getIsInList("Entities", EntityType.class);
+			WORLDS = getIsInList("Worlds", String.class);
 
 			if (VERSION < 4 && ENABLED) {
 				ENABLED = false;

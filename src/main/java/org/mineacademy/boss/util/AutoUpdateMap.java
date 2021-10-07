@@ -185,7 +185,7 @@ public final class AutoUpdateMap<V, K> extends StrictCollection {
 	 * @return
 	 */
 	public boolean contains(V key) {
-		return map.contains(key);
+		return map.containsKey(key);
 	}
 
 	/**

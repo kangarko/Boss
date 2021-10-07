@@ -2,7 +2,7 @@ package org.mineacademy.boss.api;
 
 import org.apache.commons.lang.math.NumberUtils;
 import org.bukkit.potion.PotionEffectType;
-import org.mineacademy.fo.ItemUtil;
+import org.mineacademy.fo.SerializeUtil;
 import org.mineacademy.fo.Valid;
 
 import lombok.Getter;
@@ -31,7 +31,7 @@ public final class BossPotion {
 		final String[] parts = line.split(" ");
 		Valid.checkBoolean(parts.length == 1 || parts.length == 2, "Malformed value " + line);
 
-		final PotionEffectType type = ItemUtil.findPotion(parts[0]);
+		final PotionEffectType type = SerializeUtil.deserialize(PotionEffectType.class, parts[0]);
 		final int level = parts.length == 2 && NumberUtils.isNumber(parts[1]) ? Integer.parseInt(parts[1]) : 1;
 
 		return new BossPotion(type, level);

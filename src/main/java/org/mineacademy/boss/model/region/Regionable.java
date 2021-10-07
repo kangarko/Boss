@@ -21,7 +21,7 @@ public interface Regionable {
 	List<String> getObject(Location loc);
 
 	default boolean isPluginEnabled(String name) {
-		return Common.doesPluginExistSilently(name);
+		return Common.doesPluginExist(name);
 	}
 
 	default boolean isWithin(Location loc, List<BossRegionSettings> evaluateAgainst) {

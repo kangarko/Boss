@@ -101,7 +101,7 @@ public final class SimpleRegionSpawning implements BossRegionSpawning {
 
 	@Override
 	public boolean hasRegions(final BossRegionType type) {
-		return regions.contains(type) && !regions.get(type).isEmpty();
+		return regions.containsKey(type) && !regions.get(type).isEmpty();
 	}
 
 	@Override

@@ -21,6 +21,6 @@ public final class BiomeCommand extends AbstractBossSubcommand {
 		final Location loc = getPlayer().getLocation();
 		final Biome biome = getPlayer().getWorld().getBiome(loc.getBlockX(), loc.getBlockZ());
 
-		tell(Replacer.of(Localization.Commands.BIOME).find("x", "z", "biome").replace(loc.getBlockX(), loc.getBlockZ(), ItemUtil.bountifyCapitalized(biome)));
+		tell(Replacer.replaceArray(Localization.Commands.BIOME, "x", loc.getBlockX(), "z", loc.getBlockZ(), "biome", ItemUtil.bountifyCapitalized(biome)));
 	}
 }

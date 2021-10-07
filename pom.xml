@@ -5,7 +5,7 @@
 
     <groupId>org.mineacademy</groupId>
     <artifactId>Boss</artifactId>
-    <version>3.10.10</version>
+    <version>3.11.0</version>
     <packaging>jar</packaging>
 
     <properties>
@@ -49,8 +49,13 @@
         <dependency>
             <groupId>org.mineacademy.plugin</groupId>
             <artifactId>SilkSpawners</artifactId>
-            <version>6.3.1</version>
-        </dependency>
+            <version>7.1.0</version>
+        </dependency>        
+		<dependency>
+			<groupId>org.mineacademy.plugin</groupId>
+			<artifactId>StackMob</artifactId>
+			<version>5.5.3</version>
+		</dependency>
     </dependencies>
 
     <build>

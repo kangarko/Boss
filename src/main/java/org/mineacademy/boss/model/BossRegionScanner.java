@@ -1,7 +1,6 @@
 package org.mineacademy.boss.model;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.bukkit.Chunk;
@@ -19,7 +18,7 @@ public final class BossRegionScanner extends OfflineRegionScanner {
 	private int totalRemovedAmount;
 
 	public void launch(final List<String> bossesToRemove, final World world) {
-		this.bossesToRemove = new IsInList<>(bossesToRemove == null ? Arrays.asList("*") : bossesToRemove);
+		this.bossesToRemove = bossesToRemove == null ? IsInList.fromStar() : IsInList.fromList(bossesToRemove);
 		this.totalRemovedAmount = 0;
 
 		scan(world);

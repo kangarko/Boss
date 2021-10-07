@@ -15,9 +15,11 @@ import org.mineacademy.boss.command.SpawnCommand;
 import org.mineacademy.boss.command.SpawnPlayerCommand;
 import org.mineacademy.boss.command.ToolsCommand;
 import org.mineacademy.boss.command.UidCommand;
+import org.mineacademy.fo.annotation.AutoRegister;
 import org.mineacademy.fo.command.ReloadCommand;
 import org.mineacademy.fo.command.SimpleCommandGroup;
 
+@AutoRegister
 public final class BossCommandGroup extends SimpleCommandGroup {
 
 	@Override

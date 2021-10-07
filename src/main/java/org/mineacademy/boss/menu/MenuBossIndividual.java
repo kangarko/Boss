@@ -187,9 +187,9 @@ public final class MenuBossIndividual extends Menu {
 			}
 		};
 
-		removeButton = new ButtonRemove(this, "Boss", boss.getName(), name -> {
+		removeButton = new ButtonRemove(this, "Boss", boss.getName(), () -> {
 			final BossManager manager = BossPlugin.getBossManager();
-			manager.removeBoss(name);
+			manager.removeBoss(boss.getName());
 
 			final Menu nextMenu = manager.getBossesAsList().isEmpty() ? new MenuMain() : new MenuBossContainer();
 			nextMenu.displayTo(getViewer());
@@ -340,24 +340,24 @@ public final class MenuBossIndividual extends Menu {
 					"We are working on a fix."));
 
 			/*soundsButton = new Button() {
-			
+
 				@Override
 				public void onClickedInMenu(Player pl, Menu menu, ClickType click) {
 					if (!HookManager.isProtocolLibLoaded()) {
 						animateTitle("&4Install ProtocolLib first!");
-			
+
 						return;
 					}
-			
+
 					if (!Settings.Setup.PROTOCOLLIB) {
 						animateTitle("&4Enable Setup.Hook_ProtocolLib!");
-			
+
 						return;
 					}
-			
+
 					new MenuSounds(MenuSettings.this).displayTo(pl);
 				}
-			
+
 				@Override
 				public ItemStack getItem() {
 					return ItemCreator.of(
@@ -368,7 +368,7 @@ public final class MenuBossIndividual extends Menu {
 							"this Boss makes.",
 							HookManager.isProtocolLibLoaded() ? "&3Uses ProtocolLib." : "&cRequires ProtocolLib.").build().make();
 				}
-			
+
 			};*/
 
 			equipmentButton = new ButtonMenu(new MenuEquipment(MenuSettings.this, EditMode.ITEMS),
@@ -652,10 +652,10 @@ public final class MenuBossIndividual extends Menu {
 		@Override
 		public ItemStack getItemAt(final int slot) {
 
-			if (mode == EditMode.ITEMS && slots.contains(slot + 9))
+			if (mode == EditMode.ITEMS && slots.containsKey(slot + 9))
 				return getHelpFor(slots.get(slot + 9));
 
-			if (slots.contains(slot))
+			if (slots.containsKey(slot))
 				return getEquipment(slots.get(slot));
 
 			if (slot == getSize() - 3)
@@ -701,7 +701,7 @@ public final class MenuBossIndividual extends Menu {
 		@Override
 		public void onMenuClick(final Player pl, final int slot, final InventoryAction action, final ClickType click, final ItemStack cursor, final ItemStack clicked, final boolean cancelled) {
 
-			if (mode == EditMode.DROP_CHANCES && slots.contains(slot)) {
+			if (mode == EditMode.DROP_CHANCES && slots.containsKey(slot)) {
 				final BossEquipment eq = getBoss().getEquipment();
 				final BossEquipmentSlot equipSlot = slots.get(slot);
 
@@ -721,7 +721,7 @@ public final class MenuBossIndividual extends Menu {
 			if (mode == EditMode.DROP_CHANCES)
 				return false;
 
-			if (location == MenuClickLocation.MENU && slots.contains(slot)) {
+			if (location == MenuClickLocation.MENU && slots.containsKey(slot)) {
 				final String type = cursor.getType().toString();
 				final BossEquipmentSlot eq = slots.get(slot);
 
@@ -1119,12 +1119,12 @@ public final class MenuBossIndividual extends Menu {
 			if (slot == getSize() - 5)
 				return damageMultiplierButton.getItem();
 
-			return attributes.contains(slot) ? getAttribute(attributes.get(slot)) : null;
+			return attributes.containsKey(slot) ? getAttribute(attributes.get(slot)) : null;
 		}
 
 		@Override
 		public void onMenuClick(final Player pl, final int slot, final InventoryAction action, final ClickType click, final ItemStack cursor, final ItemStack clicked, final boolean cancelled) {
-			if (attributes.contains(slot)) {
+			if (attributes.containsKey(slot)) {
 				final BossAttribute attr = attributes.get(slot);
 
 				if (MinecraftVersion.olderThan(V.v1_9) && !attr.hasLegacy())

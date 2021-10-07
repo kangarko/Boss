@@ -61,7 +61,7 @@ public final class SpawnCommand extends AbstractBossSubcommand {
 
 	private World getWorld(final String name) throws CommandException {
 		final World w = Bukkit.getWorld(name);
-		checkNotNull(w, Replacer.of(Localization.Invalid.WORLD).find("world", "available").replace(name, StringUtils.join(Bukkit.getWorlds(), ", ")).getReplacedMessageJoined());
+		checkNotNull(w, Replacer.replaceArray(Localization.Invalid.WORLD, "world", name, "available", StringUtils.join(Bukkit.getWorlds(), ", ")));
 
 		return w;
 	}

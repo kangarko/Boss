@@ -26,7 +26,7 @@ import lombok.NoArgsConstructor;
  * Represents the tool used to create arena region for any arena
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class RegionTool extends VisualTool {
+public final class RegionTool extends VisualTool {
 
 	@Getter
 	private static final Tool instance = new RegionTool();

@@ -287,7 +287,7 @@ public final class BossConversation extends SimpleConversation {
 
 		@Override
 		protected boolean isInputValid(ConversationContext context, String input) {
-			if (wrapped.contains(input.toLowerCase()))
+			if (wrapped.containsKey(input.toLowerCase()))
 				return true;
 
 			try {
@@ -302,7 +302,7 @@ public final class BossConversation extends SimpleConversation {
 
 		@Override
 		protected Prompt acceptValidatedInput(ConversationContext context, String input) {
-			getBoss().getSpawning().getConditions().setTime(wrapped.contains(input.toLowerCase()) ? wrapped.get(input) : RangedValue.parse(input));
+			getBoss().getSpawning().getConditions().setTime(wrapped.containsKey(input.toLowerCase()) ? wrapped.get(input) : RangedValue.parse(input));
 
 			tellLater(1, context.getForWhom(), "&7The spawning time has been &2set &7to " + input + "!");
 			return Prompt.END_OF_CONVERSATION;
@@ -343,7 +343,7 @@ public final class BossConversation extends SimpleConversation {
 
 		@Override
 		protected boolean isInputValid(ConversationContext context, String input) {
-			if (wrapped.contains(input.toLowerCase()))
+			if (wrapped.containsKey(input.toLowerCase()))
 				return true;
 
 			try {
@@ -358,7 +358,7 @@ public final class BossConversation extends SimpleConversation {
 
 		@Override
 		protected Prompt acceptValidatedInput(ConversationContext context, String input) {
-			getBoss().getSpawning().getConditions().setLight(wrapped.contains(input.toLowerCase()) ? wrapped.get(input) : RangedValue.parse(input));
+			getBoss().getSpawning().getConditions().setLight(wrapped.containsKey(input.toLowerCase()) ? wrapped.get(input) : RangedValue.parse(input));
 
 			tellLater(1, context.getForWhom(), "&7The spawning light has been &2set &7to " + input + "!");
 			return Prompt.END_OF_CONVERSATION;
