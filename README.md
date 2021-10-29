@@ -1,3 +1,5 @@
+# We have left SpigotMC and [continue Boss development here](https://www.mc-market.org/resources/21619/). If you purchased the plugin on SpigotMC you can get a free license upgrade.
+
 <p align="center">
   Do you want to build your own Boss with unique features only for your server?
   <a href="https://mineacademy.org/gh-join">
