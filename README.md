@@ -1,4 +1,4 @@
-# We have left SpigotMC and [continue Boss development here](https://www.mc-market.org/resources/21619/). If you purchased the plugin on SpigotMC you can get a free license upgrade.
+# SpigotMC.org banned us and is censoring "MineAcademy" mentions. We're still active. [Read more here](https://mineacademy.org/spigotmc-ban?st=github&sc=spigotban_boss).
 
 <p align="center">
   Learn Java and code highly-customized Minecraft plugins in 20 days (without experience):
