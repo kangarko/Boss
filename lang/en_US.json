@@ -1,0 +1,151 @@
+{
+	"case-boss": "Boss, Bosses",
+	"command-biome-description": "Find biome at your or a player's location.",
+	"command-biome-success": "<gray>Biome at x: {x} y: {y} z: {z} is <gold>{biome}.",
+	"command-butcher-description": "Kill spawned Bosses.",
+	"command-butcher-no-player": "<dark_red>Only players can specify the butcher radius from their location.",
+	"command-butcher-success-all-words": "<red>Removed <gray>{amount}<red> from all worlds.",
+	"command-butcher-success-radius": "<red>Removed <gray>{amount}<red> from {radius} around you.",
+	"command-butcher-success-world": "<red>Removed <gray>{amount}<red> from {world}.",
+	"command-egg-description": "Get a Boss' spawner egg.",
+	"command-egg-no-player": "When running from the console, please specify the player as the last argument!",
+	"command-egg-success": "<gray>{player} <green>received <gray>{boss} egg.",
+	"command-find-description": "Find Bosses in loaded chunks.",
+	"command-invalid-boss": "Boss named '{boss}' doesn't exist. Available: {available}",
+	"command-invalid-boss-dead": "The Boss is no longer alive.",
+	"command-invalid-boss-type": "Invalid Boss type '{boss}'. Available: {available}",
+	"command-invalid-boss-uid": "Invalid Boss from entity UUID: {uuid}",
+	"command-invalid-boss-uninstalled": "Boss '{boss}' is not installed on this server.",
+	"command-invalid-bosses": "There are no Bosses alive that match your search.",
+	"command-list-description": "List loaded bosses.",
+	"command-list-hover": "Click to open this Boss menu.",
+	"command-list-start": "{prefix_info} <gray>Available <dark_gray>(<dark_red>{amount}<dark_gray>): <gray>",
+	"command-menu-description": "Show the main menu or menu for boss.",
+	"command-menu-success": "Opened Boss menu for {player}.",
+	"command-new-description": "Create a new boss.",
+	"command-region-description": "Manage Boss regions.",
+	"command-reloading": "reloading",
+	"command-remove-description": "Delete a Boss from disk. Alive Bosses will be kept, use the butcher or scan command to remove them first.",
+	"command-remove-success": "Removed '<red>{boss}<gray>' from disk. Alive Bosses were kept.",
+	"command-scan-description": "Remove Bosses from unloaded chunks.",
+	"command-spawn-cannot-autodetect-location": "Only living players can use ~ for their location!",
+	"command-spawn-description": "Spawn Bosses in worlds. This command can be used from console or command block.",
+	"command-spawn-fail": "Unable to spawn Boss '{boss}' at {location}",
+	"command-spawn-invalid-position": "Invalid position '{position}', type a valid number or '~' for your coordinate.",
+	"command-spawn-player-description": "Spawn Bosses behind players (sneaky).",
+	"command-spawn-success": "Spawned '{boss}' at {location}",
+	"command-spawn-success-egg": "Dropped egg of '{boss}' at {location}",
+	"command-tools-description": "Open the tools menu.",
+	"command-tools-success": "Opened Boss tools menu for {player}.",
+	"command-uid-description": "Manage entities by UUID. Supports Bukkit entities too and can be run from command block or console.",
+	"command-uid-invalid-coordinate": "Invalid {coordinate} coordinate, expected a whole number.",
+	"command-uid-success-kill": "The selected entity has been killed silently.",
+	"command-uid-success-tp": "Teleported to <gold>{entity_type}<gray>.",
+	"command-uid-tpto-success": "Teleported entity <gold>{entity_type}<gray> to {location}.",
+	"command-uid-tpto-usage": "Specify a world name, x, y, and z coordinates to teleport the entity to.",
+	"egg-spawn-fail-1": "Unable to spawn '{boss}' because {reason}. Hover",
+	"egg-spawn-fail-2": " <underlined>here<gray> ",
+	"egg-spawn-fail-3": "for help.",
+	"egg-spawn-fail-api": "another plugin using Boss prevented the event",
+	"egg-spawn-fail-cancelled": "another plugin cancelled the event",
+	"egg-spawn-fail-claim": "You cannot spawn Bosses in {player}'s claim.",
+	"egg-spawn-fail-hover": [
+		"<red><bold>Solving Spawn Issues:",
+		"",
+		"<white>1. <gray>Check plugins like Residence,",
+		"<gray>WorldGuard, GriefPrevention etc.",
+		"<gray>and their mob spawn flags.",
+		"",
+		"<white>2. <gray>Check your Boss spawn limits.",
+		"",
+		"<white>3. <gray>Set Debug key to '[spawning]' ",
+		"<gray>in settings.yml and see console",
+		"<gray>for more information."
+	],
+	"egg-spawn-fail-limit": "Boss is over limit (see Boss menu > Spawning Limits)",
+	"fight-cheats-cheats-disabled": "You are in a Boss fight, disabling abilities: {abilities}.",
+	"fight-cheats-flight": "flight",
+	"fight-cheats-god-mode": "god mode",
+	"fight-cheats-vanish": "invisibility",
+	"menu-button-integer": [
+		"",
+		"<gray>Value: <white>{value}",
+		"",
+		" <dark_gray>(Mouse click)",
+		" <gray><bold>< <dark_red>-1    <dark_green>+1 <gray><bold>>"
+	],
+	"menu-set-to": "{key} Set To {value}",
+	"placeholder-creating-region-no": "no",
+	"placeholder-creating-region-yes": "yes",
+	"placeholder-no-damage-player": "None",
+	"skill-arrow-default-message": [
+		"Watch out! The {boss} has <red>shoot an arrow <gray>at ya!",
+		"The {boss} has <red>launched a projectile <gray>at you!",
+		"You are now under attack!"
+	],
+	"skill-bomb-default-message": [
+		"You have been <red>bombed <gray>by the boss!",
+		"The {boss} has <red>spawned a TnT <gray>at you!",
+		"Please do not move, there's a gift for ya!"
+	],
+	"skill-confuse-default-message": [
+		"You have been <red>confused <gray>by the boss!",
+		"OMG! What is happening?",
+		"You were teleported to the wonderlands! Just kidding."
+	],
+	"skill-disarm-default-message": [
+		"You are <red>too weak <gray>to hold this item!",
+		"Your item in hand has <red>fell off<gray>, guess who did that!",
+		"The {boss} has <red>disarmed <gray>you!"
+	],
+	"skill-enderman-default-message": [
+		"I was lonely far from you so I wanted to say hey",
+		"Say hey! {boss} has <red>teleported itself to you <gray>!",
+		"I thought we were friends, so here I come!"
+	],
+	"skill-fireball-default-message": [
+		"You have been <red>fireballed <gray>by the boss!",
+		"The {boss} has <red>launched a fireball <gray>at you!",
+		"Hellfire! Do you like small or big fireballs?"
+	],
+	"skill-freeze-default-message": [
+		"The Boss has put you into a meditation state. Do not move.",
+		"You are now stuck! The {boss} is coming at you!",
+		"You are playing too fast! Slow down please!"
+	],
+	"skill-ignite-default-message": [
+		"You have been <red>ignited <gray>by the boss!",
+		"The {boss} has <red>ignited you<gray>!",
+		"It is getting warmer and warmer. Wonder why?"
+	],
+	"skill-lightning-default-message": [
+		"You have been <red>strucked by a lightning bolt<gray>!",
+		"The {boss} has <red>send a lightning <gray>at you!",
+		"You are very attractive so a lightning bolt connected to you!"
+	],
+	"skill-minions-default-message": [
+		"Watch out for {boss}'s new friends - Minions!",
+		"{boss} has spawned reinforcements!",
+		"Say hello to your new friends, {player}!"
+	],
+	"skill-potions-default-message": [
+		"Watch out! The {boss} has <red>given you a special potion effect<gray>!",
+		"The {boss} has <red>poisoned you<gray>!",
+		"You are now given special potion effects!"
+	],
+	"skill-steal-life-default-message": [
+		"You have been <red>stolen <gray>your health to the Boss!",
+		"Your lives have been <red>decreased<gray> by the {boss}!",
+		"The {boss} has <red>drained <gray>your health!"
+	],
+	"skill-teleport-default-message": [
+		"You are now facing the {boss} himself!",
+		"Welcome! {boss} has <red>teleported you <gray>closer!",
+		"Don't run away from me! Fight like a man!"
+	],
+	"skill-throw-default-message": [
+		"Embrace the fresh air in the skies!",
+		"The {boss} has decided to <red>kick you<gray>!",
+		"Good bye, {player}!"
+	]
+}
