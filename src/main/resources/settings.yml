@@ -1,0 +1,270 @@
+# !-----------------------------------------------------------------------------------------------!
+#                       Welcome to the main configuration of ${project.name}
+# !-----------------------------------------------------------------------------------------------!
+#
+#    This is the main plugin's settings class. You can use SimpleSettings to load values from it,
+#    and update it automatically.
+#
+#    For support and documentation, please visit:
+#    - https://github.com/${author}/${project.name}/wiki
+#
+# !-----------------------------------------------------------------------------------------------!
+#
+#    1) COLOR CODES are supported with the '&' character.
+#       - For usage, see http://minecraftwiki.net/wiki/Formatting_codes
+#       - When you use them, place quotes around the message like this: "Hello &cworld."
+#       - To use HEX colors, use <#123456> syntax: "Hello <#123456>world."
+#
+#    2) TO HIDE any message, set it to 'none'.
+#
+#    3) For UNICODE CHARACTERS (smileys, symbols, ..), save the file in UTF-8 encoding. See
+#       - https://github.com/${author}/${project.name}/wiki/Use-Right-Encoding
+#
+#    4) JSON is supported.
+#       - For usage, see https://github.com/${author}/${project.name}/wiki/JSON
+#
+#    5) WHITELISTS can be turned into blacklists, by putting "@blacklist" on the first line.
+#       - Doing such, filters will only apply for messages in those lists.
+#
+#    PS: Everything above applies for all files in ${project.name}/ folder.
+#
+# !-----------------------------------------------------------------------------------------------!
+
+# -------------------------------------------------------------------------------------------------
+# Settings for Boss spawning.
+#
+# [TIP] Set the Debug key below to ["spawning"] to learn why your Bosses are / are not spawning.
+# -------------------------------------------------------------------------------------------------
+Spawning: 
+  
+  # Spawn on right clicking the air?
+  # Bosses will be spawned at the Max_Distance's blocks away from the player in the air!
+  Air_Spawn: true
+  
+  # How farthest away from the player to spawn when they right click a Boss egg?
+  # Higher than 50 blocks distances can lag the server since it must load lots of chunks!
+  Air_Spawn_Max_Distance: 30
+  
+  # The Replace Vanilla spawn rule listens to the creature spawn event. What spawn causes
+  # should NOT trigger the vanilla mob replacement? Useful to prevent other plugin conflicts.
+  #
+  # For all spawn reasons, see:
+  # https://hub.spigotmc.org/javadocs/spigot/org/bukkit/event/entity/CreatureSpawnEvent.SpawnReason.html
+  #
+  # NB: Boss will properly ignore the CHUNK_GEN spawn cause even if docs say it is no longer called.
+  Ignore_Replacing_Vanilla_From: [COMMAND, CUSTOM, SLIME_SPLIT] 
+
+  # Should we prevent vanilla mob from appearing if the Replace Vanilla spawn rule fails? A rule
+  # can typically fail due to limits or conditions, so you can prevent more mobs from spawning.
+  Cancel_Vanilla_If_Replace_Fails: false
+  
+  # Spawning rules that automatically summon Bosses at a given point will only function
+  # when at least one player is in the given blocks radius. Defaults to 30 blocks around.
+  #
+  # Set to -1 to disable this check.
+  Location_Spawn_Nearby_Player_Radius: 30
+  
+  # The minimum distance from player we should spawn monsters from, preventing
+  # mobs appearing right before the player.
+  Nearby_Spawn_Min_Distance_From_Player: 5
+  
+  # Save unloaded bosses to a unloaded-bosses.xml to include in spawning limits?
+  Count_Unloaded_Bosses_In_Limits: true
+  
+  # The placeholder %boss_{bossName}_respawn_{spawnRule}% will display the time until the given
+  # Boss respawns from the given respawn rule. What should we display if the time has run out?
+  # (Most likely the Boss is already spawned).
+  Respawn_Placeholder_Past_Due: "Spawned"
+  
+  # When you make a chance to a Boss using /boss menu, should we update all Bosses in loaded
+  # chunks with their new settings? Defaults to true.
+  Live_Updates: true
+  
+  # Integration with third party plugins
+  Integration:
+  
+    # Prevent Bosses from spawning in lands where mob/animal/phanom flag is disabled?
+    Lands: true
+
+# -------------------------------------------------------------------------------------------------
+# Tweak Boss fights.
+# -------------------------------------------------------------------------------------------------
+Fighting:
+  
+  # When you hit Boss who's already attacking someone else, enter the chance that it'll chase you.
+  Retarget_Chance: 0%
+  
+  # When player attacks Boss or Boss attacks player, select abilities for player we disable.
+  Disable_Cheats: [FLIGHT, GOD_MODE, INVISIBILITY]
+  
+  # Configure the action bar showing when you attack a Boss.
+  Health_Bar:
+  
+    # Show the action bar with fight information when you damage a Boss?
+    Enabled: true
+    
+    # Customize the format, using the following variables:
+    # {damage}, {world}, {x}, {y}, {z}, {player}
+    Format: "&4{damage} dmg &8| &7{boss_alias}"
+    
+    # Customize the prefix and suffix
+    Prefix: "&8["
+    Suffix: "&8]"
+    
+    # Edit colors on the action bar for different Boss properties.
+    Color: 
+
+      # The remaining Boss health.
+      Remaining: DARK_RED
+
+      # Total Boss health he had at spawn.
+      Total: GRAY
+      
+      # Color to indicate your hit has killed the Boss.
+      Dead: BLACK
+
+  # Settings for the targeting pathfinder. Requires Citizens plugin.
+  Citizens_Retarget:
+    
+    # Should Boss find another target to attack after a while? If there is no other
+    # targets in the given radius, Boss will keep attacking old target.
+    Enabled: true
+    
+    # The delay between retarget attempts.
+    Delay: 30 seconds
+
+# -------------------------------------------------------------------------------------------------
+# Tweak Boss health.
+# -------------------------------------------------------------------------------------------------
+Health:
+
+  # Prevent all Bosses from regenerating health from any source?
+  Prevent_Regeneration: false
+
+# -------------------------------------------------------------------------------------------
+# Settings related to a Boss' tragic death.
+# -------------------------------------------------------------------------------------------
+Death: 
+  
+  # If true, we run commands for players who dealt the most damage to boss as the server
+  # console. False means we run the command from the console to the player.
+  Run_PvP_Commands_As_Console: true
+
+# -------------------------------------------------------------------------------------------
+# Settings related to variables.
+# -------------------------------------------------------------------------------------------
+Variables: 
+  
+  # What is the maximum radius around player to look for Bosses? This is used to find the 
+  # closest Boss for which we can replace PlaceholderAPI variables. Less = more performance.
+  Nearby_Boss_Radius: 20
+
+# -------------------------------------------------------------------------------------------
+# Settings related to a Boss' skills.
+# -------------------------------------------------------------------------------------------
+Skills:
+  
+  # Some skills such as steal life, TNT, freeze target individual players. What is the
+  # maximum distance from Boss to each player for the skill to be run?
+  Target_Range: 8
+
+# -------------------------------------------------------------------------------------------
+# Completely prevent any and all vanilla mobs to spawn. Useful for minigame worlds
+# or servers where you only want Bosses to appaer.
+#
+# *WARNING* This completely prevents any mobs from spawning naturally,
+#           including mobs from mob spawners etc. It's basically like a mob blocker plugin.
+# -------------------------------------------------------------------------------------------
+Prevent_Vanilla_Mobs:
+  
+  # Enable this feature?
+  Enabled: false
+  
+  # Spawn reasons to prevent spawning, see 
+  # https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/event/entity/CreatureSpawnEvent.SpawnReason.html
+  Prevent_From: [NATURAL, CHUNK_GEN, SPAWNER, VILLAGE_DEFENSE, VILLAGE_INVASION, REINFORCEMENTS, INFECTION, CURED, DROWNED]
+  
+  # Prevent the following mobs from spawning (applies to Prevent_From causes above)
+  #
+  # Set to ["*"] to prevent all entities, or specific their names, see 
+  # https://hub.spigotmc.org/javadocs/spigot/org/bukkit/entity/EntityType.html
+  Entities: ["*"]
+  
+  # List of worlds where to apply this limitation. Leave on * to apply on all worlds.
+  Worlds: ["*"]
+
+# -------------------------------------------------------------------------------------------------
+# Set the timezone for natural spawning clock (i.e. spawning bosses every Friday 5pm)
+# Available: https://garygregory.wordpress.com/2013/06/18/what-are-the-java-timezone-ids/
+# Example: Europe/Budapest, America/New_York etc.
+# -------------------------------------------------------------------------------------------------
+Timezone: ""
+
+# -------------------------------------------------------------------------------------------------
+# In the /boss menu should we group bosses by their type? false = sort from A-Z
+# Changes take place upon server restart only.
+# -------------------------------------------------------------------------------------------------
+Sort_By_Type: false
+
+# -------------------------------------------------------------------------------------------------
+# Enable this to enable Boss regions. This is used in spawn rules and /boss regions.
+#
+# RESTART THE SERVER WHEN TOGGLING THIS.
+# -------------------------------------------------------------------------------------------------
+Register_Regions: true
+
+# -------------------------------------------------------------------------------------------------
+# Enable this before you want to create regions with "/b region". Then disable this for maximum
+# performance. Leaving this on will make plugin check every online player's click and compare
+# it to determine if he clicked with our tool, which has a performance penaulty.
+# Your regions will continue to function with this option disabled.
+#
+# RESTART THE SERVER WHEN TOGGLING THIS.
+# -------------------------------------------------------------------------------------------------
+Register_Tools: true
+
+# -------------------------------------------------------------------------------------------------
+# What commands should trigger the main plugin command group?
+#
+# * THE FIRST ALIAS IS THE MAIN LABEL, PLEASE DO NOT REMOVE IT. *
+# -------------------------------------------------------------------------------------------------
+Command_Aliases: [boss, b]
+
+# -------------------------------------------------------------------------------------------------
+# What language should we use for messages? Use "/boss dumplocale" to move the file to your
+# plugin's folder so you can edit it easily.
+#
+# Available: en_US (English) 
+# -------------------------------------------------------------------------------------------------
+Locale: en_US
+
+# -------------------------------------------------------------------------------------------------
+# The prefix used in front of most chat or console messages. You can manually use it with
+# {prefix_plugin} variable anywhere.
+# -------------------------------------------------------------------------------------------------
+Prefix: "&4Boss &8//&7"
+
+# -------------------------------------------------------------------------------------------------
+# Time of some plugin's operations is measured. You can also use the LagCatcher class to invoke
+# this feature. We log a console message if an operation takes over the time below (milliseconds). 
+# Set to -1 to disable.
+# -------------------------------------------------------------------------------------------------
+Log_Lag_Over_Milis: 100
+
+# -------------------------------------------------------------------------------------------------
+# Should we notify you about new versions of the plugin to players with boss.update.notify
+# permission and the console on startup?
+# -------------------------------------------------------------------------------------------------
+Notify_New_Versions: true
+
+# -------------------------------------------------------------------------------------------------
+# Send anonymized error reports to sentry.io? This helps us fix bugs without you needing to
+# report them manually.
+# -------------------------------------------------------------------------------------------------
+Sentry: true
+
+# -------------------------------------------------------------------------------------------------
+# List of section names that will print informative messages about their features.
+# Available: spawning, skills, region-keep, unloaded, commands, health
+# -------------------------------------------------------------------------------------------------
+Debug: []

@@ -1,0 +1,20 @@
+#
+# This is the file your server opens to find the main class of your 
+# plugin and its information. We automatically replace variables here 
+# from your pom.xml file.
+#
+# See https://www.spigotmc.org/wiki/plugin-yml/ for more information.
+#
+name: ${project.name}
+version: ${project.version}
+main: ${main.class}
+author: ${author}
+# DO NOT EDIT. This api-version is used for maximum backward compatibility.
+api-version: 1.13
+# Plugins that we support so that we are loaded after them for your convenience.
+softdepend: [AuthMe, BanManager, Citizens, CMI, DiscordSRV, Factions, Feudal, ItemsAdder, Essentials, LegacyFactions, LiteBans, Lands, LuckPerms, Multiverse-Core, MVdWPlaceholderAPI, MythicMobs, mcMMO, NashornPlus, Nicky, PlaceholderAPI, ProtocolLib, SimpleClans, Towny, TownyChat, Vault, WorldGuard, WorldEdit]
+#
+# The commands are built at runtime so you can change them easily within the settings.
+# Do not change anything in here, you will break the plugin and get no support.
+#
+commands: 
