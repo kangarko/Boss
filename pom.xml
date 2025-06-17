@@ -36,6 +36,7 @@
 			<scope>compile</scope>
 		</dependency>
 
+		<!-- Has to be there due to a missing event in newer versions -->
 		<dependency>
 			<groupId>org.spigotmc</groupId>
 			<artifactId>spigot-api</artifactId>
