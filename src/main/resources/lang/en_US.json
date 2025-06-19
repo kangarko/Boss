@@ -89,6 +89,7 @@
   "placeholder-creating-region-no": "no",
   "placeholder-creating-region-yes": "yes",
   "placeholder-no-damage-player": "None",
+  "placeholder-no-damage-value": "0",
   "skill-arrow-default-message": [
     "Watch out! The {boss} has <red>shoot an arrow <gray>at ya!",
     "The {boss} has <red>launched a projectile <gray>at you!",
