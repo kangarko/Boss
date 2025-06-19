@@ -1,5 +1,8 @@
 package org.mineacademy.boss.model;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.UUID;
@@ -191,7 +194,7 @@ public final class BossPlaceholders extends SimpleExpansion {
 			}
 		}
 
-		if ("name".equals(params) || "alias".equals(params) || "health".equals(params) || "top_damager".equals(params) || "top_damage".equals(params) || "location".equals(params) || "location_x".equals(params) || "location_y".equals(params) || "location_z".equals(params) || "location_world".equals(params)) {
+		if ("name".equals(params) || "alias".equals(params) || "health".equals(params) || params.startsWith("top_damage") || "location".equals(params) || "location_x".equals(params) || "location_y".equals(params) || "location_z".equals(params) || "location_world".equals(params)) {
 			if (!Bukkit.isPrimaryThread()) {
 				Common.warning("Called Boss placeholder {" + params + "} asynchronoously. It requires getting the closest entity, which must be done on the main thread. Do NOT report this, this is caused by you using the variable in a plugin which replaces them async such as CMI. Adjust your setup or contact their developers and ask how to replace variables on the main thread.");
 
@@ -204,14 +207,23 @@ public final class BossPlaceholders extends SimpleExpansion {
 			final Location location = hasBoss ? closestBoss.getEntity().getLocation() : null;
 			final TreeMap<Double, Player> lastDamageMap = hasBoss ? closestBoss.getBoss().getRecentDamagerPlayer(closestBoss.getEntity(), false) : null;
 
-			double lastDamage = 0;
-			String lastDamagePlayer = Lang.legacy("placeholder-no-damage-player");
+			if (hasBoss && params.startsWith("top_damage")) {
+                try {
+					final String[] split = params.split("_");
+                    final int index = split.length < 3 ? 1 : Integer.parseInt(split[2]);
+                    final boolean damager = params.startsWith("top_damager");
 
-			if (hasBoss && !lastDamageMap.isEmpty()) {
-				final Map.Entry<Double, Player> topDamage = lastDamageMap.firstEntry();
+					if(index > lastDamageMap.size())
+						return damager ? Lang.legacy("placeholder-no-damage-player") : Lang.legacy("placeholder-no-damage-value");
 
-				lastDamage = topDamage.getKey();
-				lastDamagePlayer = topDamage.getValue().getName();
+                    final NumberFormat damageFormat = new DecimalFormat("#.##");
+
+                    final Object entry = new ArrayList<>(damager ? lastDamageMap.values() : lastDamageMap.keySet()).get(index - 1);
+
+                    return damager ? ((Player)entry).getName() : damageFormat.format(entry);
+                } catch(IndexOutOfBoundsException | IllegalArgumentException exception) {
+                    return "Invalid key " + params;
+                }
 			}
 
 			//
@@ -226,10 +238,6 @@ public final class BossPlaceholders extends SimpleExpansion {
 					return hasBoss ? SimpleComponent.fromMiniAmpersand(closestBoss.getBoss().getAlias()).toPlain() : "";
 				case "health":
 					return hasBoss ? String.valueOf(Remain.getHealth(closestBoss.getEntity())) : "";
-				case "top_damager":
-					return lastDamagePlayer;
-				case "top_damage":
-					return String.valueOf(Math.round(lastDamage));
 				case "location":
 					return hasBoss ? SerializeUtil.serializeLocation(location) : "";
 				case "location_x":
