@@ -194,7 +194,7 @@ public final class BossPlaceholders extends SimpleExpansion {
 			}
 		}
 
-		if ("name".equals(params) || "alias".equals(params) || "health".equals(params) || params.startsWith("top_damager") || params.startsWith("top_damage") || "location".equals(params) || "location_x".equals(params) || "location_y".equals(params) || "location_z".equals(params) || "location_world".equals(params)) {
+		if ("name".equals(params) || "alias".equals(params) || "health".equals(params) || params.startsWith("top_damage") || "location".equals(params) || "location_x".equals(params) || "location_y".equals(params) || "location_z".equals(params) || "location_world".equals(params)) {
 			if (!Bukkit.isPrimaryThread()) {
 				Common.warning("Called Boss placeholder {" + params + "} asynchronoously. It requires getting the closest entity, which must be done on the main thread. Do NOT report this, this is caused by you using the variable in a plugin which replaces them async such as CMI. Adjust your setup or contact their developers and ask how to replace variables on the main thread.");
 
@@ -207,11 +207,11 @@ public final class BossPlaceholders extends SimpleExpansion {
 			final Location location = hasBoss ? closestBoss.getEntity().getLocation() : null;
 			final TreeMap<Double, Player> lastDamageMap = hasBoss ? closestBoss.getBoss().getRecentDamagerPlayer(closestBoss.getEntity(), false) : null;
 
-			if (hasBoss && (params.startsWith("top_damage") || params.startsWith("top_damager"))) {
+			if (hasBoss && params.startsWith("top_damage")) {
                 try {
 					final String[] split = params.split("_");
                     final int index = split.length < 3 ? 1 : Integer.parseInt(split[2]);
-                    final boolean damager = params.contains("r");
+                    final boolean damager = params.startsWith("top_damager");
 
 					if(index > lastDamageMap.size())
 						return damager ? Lang.legacy("placeholder-no-damage-player") : Lang.legacy("placeholder-no-damage-value");
