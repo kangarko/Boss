@@ -54,7 +54,7 @@ public final class CommandsMenu extends MenuPaged<BossCommand> {
 
 		this.setTitle(ChatUtil.capitalize(type.getMenuLabel()) + " Commands");
 
-		this.createButton = new ButtonConversation(new SimpleStringPrompt("Enter the command without /. For help, see https://docs.mineacademy.org/boss/boss-commands", setter::accept),
+		this.createButton = new ButtonConversation(new SimpleStringPrompt("Enter the command without /. For help, see <click:open_url:'https://docs.mineacademy.org/boss/boss-commands'>https://docs.mineacademy.org/boss/boss-commands</click>", setter::accept),
 				ItemCreator.from(
 						CompMaterial.EMERALD,
 						"&aCreate new",
@@ -128,7 +128,7 @@ public final class CommandsMenu extends MenuPaged<BossCommand> {
 					"Current: " + command.getCommandFormatted(),
 					"",
 					"Click to edit."),
-					"Enter the command without /. For help, see https://docs.mineacademy.org/boss/boss-commands. Current: '&f<click:suggest_command:'"
+					"Enter the command without /. For help, see <click:open_url:'https://docs.mineacademy.org/boss/boss-commands'>https://docs.mineacademy.org/boss/boss-commands</click>. Current: '&f<click:suggest_command:'"
 							+ command.getCommand() + "'><hover:show_text:'Click to edit.'>" + command.getCommand() + "</hover></click>&7'",
 					"Command updated!", command::setCommand);
 

@@ -1177,13 +1177,23 @@ public final class Boss extends YamlConfig implements ConfigStringSerializable {
 			final Map<Double, Player> recentDamagers = this.getRecentDamagerPlayer(bossEntity, false);
 			final String message = Common.joinRange(1, split);
 
+			// Calculate total damage for percentage
+			double totalDamage = 0;
+			for (final Double damage : recentDamagers.keySet())
+				totalDamage += damage;
+
 			for (final Map.Entry<Double, Player> entry : recentDamagers.entrySet()) {
 				final Player damager = entry.getValue();
 				final double damage = entry.getKey();
 
-				Platform.toPlayer(damager).sendMessage(this.replaceVariables(SimpleComponent.fromMiniAmpersand(message
-						.replace("{damager}", damager.getName())
-						.replace("{damage}", MathUtil.formatTwoDigits(damage))), bossEntity, player));
+				if (damage > 0) {
+					final double damagePercent = totalDamage > 0 ? (damage / totalDamage) * 100 : 0;
+					
+					Platform.toPlayer(damager).sendMessage(this.replaceVariables(SimpleComponent.fromMiniAmpersand(message
+							.replace("{damager}", damager.getName())
+							.replace("{damage}", MathUtil.formatTwoDigits(damage))
+							.replace("{damage_percent}", MathUtil.formatTwoDigits(damagePercent) + "%")), bossEntity, player));
+				}
 			}
 
 		} else if (command.startsWith("tell-damagers-list ") || command.startsWith("broadcast-damagers-list ")) {
@@ -1202,15 +1212,22 @@ public final class Boss extends YamlConfig implements ConfigStringSerializable {
 					: "&6Top " + this.getAlias() + " &r&6Damagers:";
 			final String content = formatSplit.length > 1 ? formatSplit[1] : formatSplit[0];
 
+			// Calculate total damage for percentage
+			double totalDamage = 0;
+			for (final Double damage : recentDamagers.keySet())
+				totalDamage += damage;
+
 			for (final Map.Entry<Double, Player> entry : recentDamagers.entrySet()) {
 				final Player damager = entry.getValue();
 				final double damage = entry.getKey();
+				final double damagePercent = totalDamage > 0 ? (damage / totalDamage) * 100 : 0;
 
 				for (final String line : content.split("\\|"))
 					messages.add(this.replaceVariables(SimpleComponent.fromMiniAmpersand(line
 							.replace("{order}", order++ + "")
 							.replace("{damager}", damager.getName())
-							.replace("{damage}", MathUtil.formatTwoDigits(damage))), bossEntity, player));
+							.replace("{damage}", MathUtil.formatTwoDigits(damage))
+							.replace("{damage_percent}", MathUtil.formatTwoDigits(damagePercent) + "%")), bossEntity, player));
 			}
 
 			final ChatPaginator pages = new ChatPaginator()
