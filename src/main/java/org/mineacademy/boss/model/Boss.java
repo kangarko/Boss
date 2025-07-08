@@ -31,6 +31,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Horse;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Mob;
 import org.bukkit.entity.Monster;
 import org.bukkit.entity.Piglin;
 import org.bukkit.entity.Player;
@@ -39,6 +40,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.mineacademy.boss.api.event.BossSpawnEvent;
 import org.mineacademy.boss.custom.CustomSetting;
+import org.mineacademy.boss.goal.GoalManager;
 import org.mineacademy.boss.hook.CitizensHook;
 import org.mineacademy.boss.hook.LandsHook;
 import org.mineacademy.boss.hook.WorldGuardHook;
@@ -345,6 +347,12 @@ public final class Boss extends YamlConfig implements ConfigStringSerializable {
 	 */
 	private Map<String, Long> lastDeathFromSpawnRule;
 
+	/**
+	 * Whether the native attack goal is enabled for this Boss (persistent)
+	 */
+	@Getter
+	private boolean nativeAttackGoalEnabled = false;
+
 	//
 	// Non saveable fields below
 	//
@@ -474,6 +482,7 @@ public final class Boss extends YamlConfig implements ConfigStringSerializable {
 		this.eggTitle = this.getString("Egg.Title");
 		this.eggLore = this.getStringList("Egg.Lore");
 		this.lastDeathFromSpawnRule = this.getMap("Last_Death_From_Spawn_Rule", String.class, Long.class);
+		this.nativeAttackGoalEnabled = getBoolean("Native_Attack_Goal_Enabled", false);
 
 		this.initDefaultAttributes();
 
@@ -644,6 +653,7 @@ public final class Boss extends YamlConfig implements ConfigStringSerializable {
 		this.set("Egg.Title", this.eggTitle);
 		this.set("Egg.Lore", this.eggLore);
 		this.set("Last_Death_From_Spawn_Rule", this.lastDeathFromSpawnRule);
+		set("Native_Attack_Goal_Enabled", this.nativeAttackGoalEnabled);
 
 		// Automatically rerender all Bosses of this instance
 		this.updateBosses();
@@ -978,6 +988,10 @@ public final class Boss extends YamlConfig implements ConfigStringSerializable {
 		} catch (final Throwable t) {
 			// Legacy MC
 		}
+
+		// Set the mob natively aggressive or not
+		if(entity instanceof Mob)
+			GoalManager.makeAggressive((Mob) entity, nativeAttackGoalEnabled);
 
 		// Finish by labeling this entity as Boss
 		CompMetadata.setMetadata(entity, NBT_TAG, this.getName());
@@ -2304,6 +2318,16 @@ public final class Boss extends YamlConfig implements ConfigStringSerializable {
 		this.lastDeathFromSpawnRule.put(spawnRuleName, System.currentTimeMillis());
 
 		this.save();
+	}
+
+	public void setNativeAttackGoalEnabled(boolean enabled) {
+		this.nativeAttackGoalEnabled = enabled;
+
+		this.save();
+
+		for (SpawnedBoss spawned : findBossesAlive())
+			if (spawned.getBoss().getName().equals(getName()) && spawned.getEntity() instanceof Mob)
+				GoalManager.makeAggressive((Mob) spawned.getEntity(), enabled);
 	}
 
 	/*
