@@ -120,7 +120,7 @@ class SettingsMenu extends Menu {
 				"Current: &f" + ("hidden".equals(boss.getAlias()) ? "&dHidden" : boss.getAlias()),
 				"",
 				"Edit the name above",
-				"Boss' head and in",
+				"Boss' head, and in",
 				"messages or commands.",
 				"",
 				"&c[!] &7This does not affect",
