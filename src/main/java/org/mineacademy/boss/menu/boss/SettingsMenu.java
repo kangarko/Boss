@@ -96,6 +96,9 @@ class SettingsMenu extends Menu {
 	@Position(9 * 3 + 7)
 	private final Button customSettingsButton;
 
+	@Position(9 * 5 + 4)
+	private final Button nativeAttackGoalToggleButton;
+
 	SettingsMenu(Menu parent, Boss boss) {
 		super(parent);
 
@@ -257,6 +260,35 @@ class SettingsMenu extends Menu {
 				"",
 				"Edit custom settings only",
 				"applicable for this Boss.");
+
+		this.nativeAttackGoalToggleButton = new Button() {
+
+			final boolean has = Remain.isPaper() && MinecraftVersion.atLeast(V.v1_13);
+
+			@Override
+			public void onClickedInMenu(Player player, Menu menu, ClickType click) {
+				if (has) {
+					final boolean enabled = SettingsMenu.this.boss.isNativeAttackGoalEnabled();
+					SettingsMenu.this.boss.setNativeAttackGoalEnabled(!enabled);
+					SettingsMenu.this.restartMenu((!enabled ? "§aEnabled" : "§cDisabled") + " native attack goal");
+				} else
+					SettingsMenu.this.animateTitle("&4Use Paper 1.13+");
+			}
+
+			@Override
+			public ItemStack getItem() {
+				return ItemCreator.from(
+						CompMaterial.STONE_SWORD,
+						"Native Attack Goal",
+						"",
+						"Status: " + (SettingsMenu.this.boss.isNativeAttackGoalEnabled() ? "§aEnabled" : "§cDisabled"),
+						"",
+						"When enabled, this Boss will use",
+						"the native Paper attack goal.",
+						"",
+						has ? "Click to toggle" : "§cError: §7Use Paper 1.13+").make();
+			}
+		};
 	}
 
 	@Override
@@ -939,6 +971,7 @@ class SettingsMenu extends Menu {
 
 			final boolean isHuman = SettingsMenu.this.boss.getType() == CompEntityType.PLAYER;
 
+			// Duplicate this, either can the user enable citizens or native
 			this.enabledButton = new Button() {
 
 				@Override
@@ -977,6 +1010,7 @@ class SettingsMenu extends Menu {
 				}
 			};
 
+			// Make a new menu inside this menu for Citizens Settings and move this there
 			this.speedButton = Button.makeSimple(ItemCreator.from(
 					CompMaterial.STRING,
 					"Speed",
@@ -1003,6 +1037,7 @@ class SettingsMenu extends Menu {
 
 			final String skinUrl = SettingsMenu.this.boss.getCitizensSettings().getSkinOrAlias().replace("https://", "").replace("www.", "");
 
+			// Also move this to Citizens Settings menu
 			this.skinButton = Button.makeSimple(ItemCreator.from(
 					CompMaterial.PAPER,
 					"Skin",
@@ -1031,6 +1066,7 @@ class SettingsMenu extends Menu {
 						}.show(player);
 					});
 
+			// Also move this to Citizens Settings menu
 			this.soundsButton = new ButtonMenu(new SoundsMenu(),
 					CompMaterial.NOTE_BLOCK,
 					"&6Sounds",
@@ -1039,6 +1075,7 @@ class SettingsMenu extends Menu {
 					"death, idle or damage",
 					"sounds!");
 
+			// Duplicate this and put to each Citizens and Native menus
 			this.goalsButton = new ButtonMenu(new GoalsMenu(),
 					CompMaterial.PURPLE_DYE,
 					"Pathfinders & Goals",
@@ -1204,6 +1241,7 @@ class SettingsMenu extends Menu {
 						"Click to select what",
 						"mobs this Boss targets.");
 
+				// Basically you can disable AI for native
 				this.wanderEnabledButton = SettingsMenu.this.generateBooleanButton(this,
 						"Wander Goal",
 						CitizensMenu.this.citizens::isWanderGoalEnabled, CitizensMenu.this.citizens::setWanderGoalEnabled,
