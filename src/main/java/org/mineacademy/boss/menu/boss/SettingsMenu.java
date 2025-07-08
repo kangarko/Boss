@@ -10,8 +10,10 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import org.bukkit.Bukkit;
 import org.bukkit.conversations.ConversationContext;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Mob;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryAction;
@@ -23,6 +25,7 @@ import org.mineacademy.boss.model.Boss;
 import org.mineacademy.boss.model.BossAttribute;
 import org.mineacademy.boss.model.BossCitizensSettings;
 import org.mineacademy.boss.model.BossCommandType;
+import org.mineacademy.boss.model.SpawnedBoss;
 import org.mineacademy.fo.ChatUtil;
 import org.mineacademy.fo.Common;
 import org.mineacademy.fo.MathUtil;
@@ -55,6 +58,7 @@ import org.mineacademy.fo.remain.CompMonsterEgg;
 import org.mineacademy.fo.remain.CompPotionEffectType;
 import org.mineacademy.fo.remain.CompSound;
 import org.mineacademy.fo.remain.Remain;
+import org.mineacademy.boss.goal.GoalManager;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -96,6 +100,9 @@ class SettingsMenu extends Menu {
 	@Position(9 * 3 + 7)
 	private final Button customSettingsButton;
 
+	@Position(9 * 5 + 4)
+	private final Button nativeAttackGoalToggleButton;
+
 	SettingsMenu(Menu parent, Boss boss) {
 		super(parent);
 
@@ -113,7 +120,7 @@ class SettingsMenu extends Menu {
 				"Current: &f" + ("hidden".equals(boss.getAlias()) ? "&dHidden" : boss.getAlias()),
 				"",
 				"Edit the name above",
-				"Boss' head, and in",
+				"and in",
 				"messages or commands.",
 				"",
 				"&c[!] &7This does not affect",
@@ -257,6 +264,36 @@ class SettingsMenu extends Menu {
 				"",
 				"Edit custom settings only",
 				"applicable for this Boss.");
+
+		this.nativeAttackGoalToggleButton = new Button() {
+
+			final boolean has = Remain.isPaper() && MinecraftVersion.atLeast(V.v1_13);
+
+			@Override
+			public void onClickedInMenu(Player player, Menu menu, ClickType click) {
+				if(has) {
+					final boolean enabled = SettingsMenu.this.boss.isNativeAttackGoalEnabled();
+					SettingsMenu.this.boss.setNativeAttackGoalEnabled(!enabled);
+					SettingsMenu.this.restartMenu((!enabled ? "§aEnabled" : "§cDisabled") + " native attack goal");
+				}
+				else
+					SettingsMenu.this.animateTitle("&4Use Paper 1.13+");
+			}
+
+			@Override
+			public ItemStack getItem() {
+				return ItemCreator.from(
+						CompMaterial.STONE_SWORD,
+						"Native Attack Goal",
+						"",
+						"Status: " + (SettingsMenu.this.boss.isNativeAttackGoalEnabled() ? "§aEnabled" : "§cDisabled"),
+						"",
+						"When enabled, this Boss will use",
+						"the native Paper attack goal.",
+						"",
+						has ? "Click to toggle" : "§cError: §7Use Paper 1.13+").make();
+			}
+		};
 	}
 
 	@Override
