@@ -1188,8 +1188,8 @@ public final class Boss extends YamlConfig implements ConfigStringSerializable {
 
 				if (damage > 0) {
 					final double damagePercent = totalDamage > 0 ? (damage / totalDamage) * 100 : 0;
-					
-					Platform.toPlayer(damager).sendMessage(this.replaceVariables(SimpleComponent.fromMiniAmpersand(message
+
+					Platform.toPlayer(damager).sendMessage(this.replaceVariables(SimpleComponent.fromMiniAmpersand(replaceTopDamagePercents(recentDamagers, totalDamage, message)
 							.replace("{damager}", damager.getName())
 							.replace("{damage}", MathUtil.formatTwoDigits(damage))
 							.replace("{damage_percent}", MathUtil.formatTwoDigits(damagePercent) + "%")), bossEntity, player));
@@ -1223,7 +1223,7 @@ public final class Boss extends YamlConfig implements ConfigStringSerializable {
 				final double damagePercent = totalDamage > 0 ? (damage / totalDamage) * 100 : 0;
 
 				for (final String line : content.split("\\|"))
-					messages.add(this.replaceVariables(SimpleComponent.fromMiniAmpersand(line
+					messages.add(this.replaceVariables(SimpleComponent.fromMiniAmpersand(replaceTopDamagePercents(recentDamagers, totalDamage, line)
 							.replace("{order}", order++ + "")
 							.replace("{damager}", damager.getName())
 							.replace("{damage}", MathUtil.formatTwoDigits(damage))
@@ -1291,6 +1291,36 @@ public final class Boss extends YamlConfig implements ConfigStringSerializable {
 			Platform.toPlayer(player).dispatchCommand(command);
 
 		return true;
+	}
+
+	/**
+	 * Replaces {damage_percent_X} placeholders in the given line with the top 10 damagers' damage percentages.
+	 *
+	 * @param recentDamagers Map of damage to Player, where the key is the amount of damage dealt.
+	 * @param totalDamage    The total damage dealt to the boss.
+	 * @param lineToReplace  The string containing placeholders to replace.
+	 * @return The string with {damage_percent_X} replaced by the corresponding player's damage percent.
+	 */
+	private String replaceTopDamagePercents(Map<Double, Player> recentDamagers, double totalDamage, String lineToReplace) {
+		if (recentDamagers == null || recentDamagers.isEmpty())
+			return lineToReplace;
+
+		// Sort entries by damage descending
+		List<Double> sortedDamages = recentDamagers.keySet().stream()
+				.sorted(Comparator.reverseOrder())
+				.collect(Collectors.toList());
+
+		for (int i = 1; i <= 10; i++) {
+			if (i - 1 >= sortedDamages.size()) {
+				lineToReplace = lineToReplace.replace("{damage_percent_" + i + "}", "0%");
+				continue;
+			}
+
+			double damage = sortedDamages.get(i - 1);
+			double percent = totalDamage > 0 ? (damage / totalDamage) * 100 : 0;
+			lineToReplace = lineToReplace.replace("{damage_percent_" + i + "}", MathUtil.formatTwoDigits(percent) + "%");
+		}
+		return lineToReplace;
 	}
 
 	/*
