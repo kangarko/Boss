@@ -50,6 +50,7 @@ public final class GoalManager {
 	 * Makes the given mob aggressive or not towards players, allowing it to attack them and become peaceful again.
 	 *
 	 * @param mob the mob to make aggressive
+	 * @param aggressive 
 	 */
 	public static void makeAggressive(Mob mob, boolean aggressive) {
 		if (!available)
@@ -60,17 +61,17 @@ public final class GoalManager {
 			mob.registerAttribute(Attribute.ATTACK_DAMAGE);
 
 			mob.getAttribute(Attribute.ATTACK_DAMAGE).setBaseValue(3.0);
-		} else if(!aggressive && mob.getAttribute(Attribute.ATTACK_DAMAGE) != null) {
+		} else if (!aggressive && mob.getAttribute(Attribute.ATTACK_DAMAGE) != null) {
 			// Reset attack damage attribute to zero if it exists
 			mob.getAttribute(Attribute.ATTACK_DAMAGE).setBaseValue(0.0);
 		}
 
 		Bukkit.getMobGoals().removeAllGoals(mob, GoalType.TARGET);
 
-		if(aggressive) {
+		if (aggressive) {
 			Bukkit.getMobGoals().addGoal(mob, 0, new GoalPlayerTarget<>(mob));
 			Bukkit.getMobGoals().addGoal(mob, 1, new GoalMeleeAttackPlayer<>(mob));
-		} else if(mob instanceof Creature)
+		} else if (mob instanceof Creature)
 			mob.setTarget(null);
 
 		// Ensure AI remains active
