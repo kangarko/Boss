@@ -990,7 +990,7 @@ public final class Boss extends YamlConfig implements ConfigStringSerializable {
 		}
 
 		// Set the mob natively aggressive or not
-		if(entity instanceof Mob)
+		if(Remain.isPaper() && MinecraftVersion.atLeast(V.v1_13) && entity instanceof Mob)
 			GoalManager.makeAggressive((Mob) entity, nativeAttackGoalEnabled);
 
 		// Finish by labeling this entity as Boss
