@@ -2355,9 +2355,11 @@ public final class Boss extends YamlConfig implements ConfigStringSerializable {
 
 		this.save();
 
-		for (SpawnedBoss spawned : findBossesAlive())
-			if (spawned.getBoss().getName().equals(getName()) && spawned.getEntity() instanceof Mob)
-				GoalManager.makeAggressive((Mob) spawned.getEntity(), enabled);
+		if(Remain.isPaper() && MinecraftVersion.atLeast(V.v1_13)) {
+			for (SpawnedBoss spawned : findBossesAlive())
+				if (spawned.getBoss().getName().equals(getName()) && spawned.getEntity() instanceof Mob)
+					GoalManager.makeAggressive((Mob) spawned.getEntity(), enabled);
+		}
 	}
 
 	/*
