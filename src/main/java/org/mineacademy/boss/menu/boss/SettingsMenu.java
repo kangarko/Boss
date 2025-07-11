@@ -19,6 +19,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffectType;
 import org.mineacademy.boss.custom.CustomSetting;
+import org.mineacademy.boss.goal.GoalManagerCheck;
 import org.mineacademy.boss.model.Boss;
 import org.mineacademy.boss.model.BossAttribute;
 import org.mineacademy.boss.model.BossCitizensSettings;
@@ -261,18 +262,13 @@ class SettingsMenu extends Menu {
 				"Edit custom settings only",
 				"applicable for this Boss.");
 
-		this.nativeAttackGoalToggleButton = new Button() {
-
-			final boolean has = Remain.isPaper() && MinecraftVersion.atLeast(V.v1_13);
+		this.nativeAttackGoalToggleButton = GoalManagerCheck.isAvailable() ? new Button() {
 
 			@Override
 			public void onClickedInMenu(Player player, Menu menu, ClickType click) {
-				if (has) {
-					final boolean enabled = SettingsMenu.this.boss.isNativeAttackGoalEnabled();
-					SettingsMenu.this.boss.setNativeAttackGoalEnabled(!enabled);
-					SettingsMenu.this.restartMenu((!enabled ? "§aEnabled" : "§cDisabled") + " native attack goal");
-				} else
-					SettingsMenu.this.animateTitle("&4Use Paper 1.13+");
+				final boolean enabled = SettingsMenu.this.boss.isNativeAttackGoalEnabled();
+				SettingsMenu.this.boss.setNativeAttackGoalEnabled(!enabled);
+				SettingsMenu.this.restartMenu((!enabled ? "§aEnabled" : "§cDisabled") + " native attack goal");
 			}
 
 			@Override
@@ -284,11 +280,17 @@ class SettingsMenu extends Menu {
 						"Status: " + (SettingsMenu.this.boss.isNativeAttackGoalEnabled() ? "§aEnabled" : "§cDisabled"),
 						"",
 						"When enabled, this Boss will use",
-						"the native Paper attack goal.",
-						"",
-						has ? "Click to toggle" : "§cError: §7Use Paper 1.13+").make();
+						"the native Paper attack goal.").make();
 			}
-		};
+		} : Button.makeDummy(ItemCreator.from(
+				CompMaterial.STONE_SWORD,
+				"Native Attack Goal",
+				"",
+				"When enabled, this Boss will use",
+				"the native Paper attack goal.",
+				"",
+				"§cError: §7This feature requires",
+				"official Paper 1.15.2 or newer.").make());
 	}
 
 	@Override

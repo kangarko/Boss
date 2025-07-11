@@ -41,6 +41,7 @@ import org.bukkit.potion.PotionEffectType;
 import org.mineacademy.boss.api.event.BossSpawnEvent;
 import org.mineacademy.boss.custom.CustomSetting;
 import org.mineacademy.boss.goal.GoalManager;
+import org.mineacademy.boss.goal.GoalManagerCheck;
 import org.mineacademy.boss.hook.CitizensHook;
 import org.mineacademy.boss.hook.LandsHook;
 import org.mineacademy.boss.hook.WorldGuardHook;
@@ -482,7 +483,7 @@ public final class Boss extends YamlConfig implements ConfigStringSerializable {
 		this.eggTitle = this.getString("Egg.Title");
 		this.eggLore = this.getStringList("Egg.Lore");
 		this.lastDeathFromSpawnRule = this.getMap("Last_Death_From_Spawn_Rule", String.class, Long.class);
-		this.nativeAttackGoalEnabled = getBoolean("Native_Attack_Goal_Enabled", false);
+		this.nativeAttackGoalEnabled = GoalManagerCheck.isAvailable() ? getBoolean("Native_Attack_Goal_Enabled", false) : false;
 
 		this.initDefaultAttributes();
 
@@ -990,7 +991,7 @@ public final class Boss extends YamlConfig implements ConfigStringSerializable {
 		}
 
 		// Set the mob natively aggressive or not
-		if(Remain.isPaper() && MinecraftVersion.atLeast(V.v1_13) && entity instanceof Mob)
+		if(GoalManagerCheck.isAvailable() && entity instanceof Mob)
 			GoalManager.makeAggressive((Mob) entity, nativeAttackGoalEnabled);
 
 		// Finish by labeling this entity as Boss
@@ -2355,7 +2356,7 @@ public final class Boss extends YamlConfig implements ConfigStringSerializable {
 
 		this.save();
 
-		if(Remain.isPaper() && MinecraftVersion.atLeast(V.v1_13)) {
+		if(GoalManagerCheck.isAvailable()) {
 			for (SpawnedBoss spawned : findBossesAlive())
 				if (spawned.getBoss().getName().equals(getName()) && spawned.getEntity() instanceof Mob)
 					GoalManager.makeAggressive((Mob) spawned.getEntity(), enabled);
