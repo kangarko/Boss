@@ -17,43 +17,13 @@ import lombok.NoArgsConstructor;
 public final class GoalManager {
 
 	/**
-	 * If the Goal API is available.
-	 */
-	private static final boolean available;
-
-	static {
-		boolean isAvailable = false;
-
-		try {
-			Class.forName("com.destroystokyo.paper.entity.ai.Goal");
-
-			Bukkit.class.getMethod("getMobGoals");
-			isAvailable = true;
-
-		} catch (final ClassNotFoundException | NoSuchMethodException e) {
-			// Goal API is not available
-		}
-
-		available = isAvailable;
-	}
-
-	/**
-	 * Checks if the Goal API is available.
-	 *
-	 * @return true if the Goal API is available, false otherwise
-	 */
-	public static boolean isAvailable() {
-		return available;
-	}
-
-	/**
 	 * Makes the given mob aggressive or not towards players, allowing it to attack them and become peaceful again.
 	 *
 	 * @param mob the mob to make aggressive
 	 * @param aggressive 
 	 */
 	public static void makeAggressive(Mob mob, boolean aggressive) {
-		if (!available)
+		if (!GoalManagerCheck.isAvailable())
 			return;
 
 		if (aggressive && mob.getAttribute(Attribute.ATTACK_DAMAGE) == null) {
