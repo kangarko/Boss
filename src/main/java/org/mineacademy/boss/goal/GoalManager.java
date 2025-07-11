@@ -1,7 +1,6 @@
 package org.mineacademy.boss.goal;
 
 import org.bukkit.Bukkit;
-import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.Mob;
 
@@ -9,6 +8,7 @@ import com.destroystokyo.paper.entity.ai.GoalType;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import org.mineacademy.fo.remain.CompAttribute;
 
 /**
  * A utility class for managing pathfinders in Paper API.
@@ -26,14 +26,14 @@ public final class GoalManager {
 		if (!GoalManagerCheck.isAvailable())
 			return;
 
-		if (aggressive && mob.getAttribute(Attribute.ATTACK_DAMAGE) == null) {
+		if (aggressive && CompAttribute.ATTACK_DAMAGE.get(mob) == null) {
 			// Check and register attack damage attribute if missing
-			mob.registerAttribute(Attribute.ATTACK_DAMAGE);
 
-			mob.getAttribute(Attribute.ATTACK_DAMAGE).setBaseValue(3.0);
-		} else if (!aggressive && mob.getAttribute(Attribute.ATTACK_DAMAGE) != null) {
+			CompAttribute.ATTACK_DAMAGE.set(mob, 3.0);
+		} else if (!aggressive && CompAttribute.ATTACK_DAMAGE.get(mob) != null) {
 			// Reset attack damage attribute to zero if it exists
-			mob.getAttribute(Attribute.ATTACK_DAMAGE).setBaseValue(0.0);
+
+			CompAttribute.ATTACK_DAMAGE.set(mob, 0.0);
 		}
 
 		Bukkit.getMobGoals().removeAllGoals(mob, GoalType.TARGET);

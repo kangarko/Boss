@@ -2,7 +2,6 @@ package org.mineacademy.boss.goal;
 
 import lombok.Getter;
 import org.bukkit.Bukkit;
-import org.bukkit.attribute.Attribute;
 import org.mineacademy.fo.Common;
 import org.mineacademy.fo.MinecraftVersion;
 import org.mineacademy.fo.remain.Remain;
@@ -19,16 +18,12 @@ public class GoalManagerCheck {
         boolean isAvailable = false;
 
         try {
-            Class.forName("org.bukkit.attribute.Attribute");
-
-            Attribute.class.getField("ATTACK_DAMAGE");
-
             Class.forName("com.destroystokyo.paper.entity.ai.Goal");
 
             Bukkit.class.getMethod("getMobGoals");
 
             isAvailable = true;
-        } catch (final ClassNotFoundException | NoSuchMethodException | NoSuchFieldException e) {
+        } catch (final ClassNotFoundException | NoSuchMethodException e) {
             // Goal API is not available
         }
 
