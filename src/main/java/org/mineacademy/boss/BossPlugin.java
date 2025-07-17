@@ -98,7 +98,7 @@ public final class BossPlugin extends BukkitPlugin {
 		DiskRegion.setCreatedPlayerRegionGetter(player -> PlayerCache.from(player).getCreatedRegion());
 		DiskRegion.setCreatedPlayerRegionResetter(player -> PlayerCache.from(player).setCreatedRegion(new VisualizedRegion()));
 
-		if (MinecraftVersion.atLeast(V.v1_16) && Platform.isPluginInstalled("WorldGuard"))
+		if (MinecraftVersion.atLeast(V.v1_16) && Bukkit.getPluginManager().getPlugin("WorldGuard") != null)
 			WorldGuardHook.init();
 	}
 
