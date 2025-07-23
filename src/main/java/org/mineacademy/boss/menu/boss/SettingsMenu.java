@@ -83,7 +83,7 @@ class SettingsMenu extends Menu {
 	private final Button lightningButton;
 
 	@Position(9 * 3 + 2)
-	private final Button citizensButton;
+	private final Button pathfindersButton;
 
 	@Position(9 * 3 + 3)
 	private final Button ridingButton;
@@ -96,9 +96,6 @@ class SettingsMenu extends Menu {
 
 	@Position(9 * 3 + 7)
 	private final Button customSettingsButton;
-
-	@Position(9 * 5 + 4)
-	private final Button nativeAttackGoalToggleButton;
 
 	SettingsMenu(Menu parent, Boss boss) {
 		super(parent);
@@ -122,19 +119,19 @@ class SettingsMenu extends Menu {
 				"",
 				"&c[!] &7This does not affect",
 				"the file name: &f" + boss.getFile().getName()), player -> {
-					new SimpleStringPrompt("Enter the Boss alias (for NPCs this is limited to 16 letters including colors). Use & color colors or minimessage tags (put hex colors in <>) Current: '" + boss.getAlias() + "&7' Type 'hidden' to hide, or 'default' to reset to '" + boss.getName() + "'.") {
+			new SimpleStringPrompt("Enter the Boss alias (for NPCs this is limited to 16 letters including colors). Use & color colors or minimessage tags (put hex colors in <>) Current: '" + boss.getAlias() + "&7' Type 'hidden' to hide, or 'default' to reset to '" + boss.getName() + "'.") {
 
-						@Override
-						protected boolean isInputValid(ConversationContext context, String input) {
-							return Valid.isInRange(input.length(), 3, 256);
-						}
+				@Override
+				protected boolean isInputValid(ConversationContext context, String input) {
+					return Valid.isInRange(input.length(), 3, 256);
+				}
 
-						@Override
-						protected void onValidatedInput(ConversationContext context, String input) {
-							boss.setAlias(input);
-						}
-					}.show(player);
-				});
+				@Override
+				protected void onValidatedInput(ConversationContext context, String input) {
+					boss.setAlias(input);
+				}
+			}.show(player);
+		});
 
 		this.healthButton = Button.makeSimple(ItemCreator.from(
 				Remain.getMaterial("BEETROOT", CompMaterial.REDSTONE),
@@ -144,37 +141,37 @@ class SettingsMenu extends Menu {
 				"",
 				"Click to edit Boss'",
 				"spawn health."), player -> {
-					new SimpleDecimalPrompt("Please enter the Boss max health. Current: " + boss.getMaxHealth() + " HP. Maximum (editable in spigot.yml): "
-							+ Remain.getMaxHealth() + ". Or type '0' to reset back to the vanilla HP.") {
+			new SimpleDecimalPrompt("Please enter the Boss max health. Current: " + boss.getMaxHealth() + " HP. Maximum (editable in spigot.yml): "
+									+ Remain.getMaxHealth() + ". Or type '0' to reset back to the vanilla HP.") {
 
-						@Override
-						protected boolean isInputValid(ConversationContext context, String input) {
-							return Valid.isDecimal(input) && Valid.isInRange(Double.parseDouble(input), 0, Remain.getMaxHealth());
-						}
+				@Override
+				protected boolean isInputValid(ConversationContext context, String input) {
+					return Valid.isDecimal(input) && Valid.isInRange(Double.parseDouble(input), 0, Remain.getMaxHealth());
+				}
 
-						@Override
-						protected String getFailedValidationText(final ConversationContext context, final String invalidInput) {
+				@Override
+				protected String getFailedValidationText(final ConversationContext context, final String invalidInput) {
 
-							if (Valid.isDecimal(invalidInput)) {
-								final double health = Double.parseDouble(invalidInput);
+					if (Valid.isDecimal(invalidInput)) {
+						final double health = Double.parseDouble(invalidInput);
 
-								if (health < 0)
-									return "Health cannot be negative!";
+						if (health < 0)
+							return "Health cannot be negative!";
 
-								else if (health > Remain.getMaxHealth())
-									return "Health can't be over " + Remain.getMaxHealth() + ". Please increase 'settings.attribute.maxHealth' in spigot.yml file first. "
-											+ "Keep in mind the server might not keep up with too high values because mobs were never designed to have them.";
-							}
+						else if (health > Remain.getMaxHealth())
+							return "Health can't be over " + Remain.getMaxHealth() + ". Please increase 'settings.attribute.maxHealth' in spigot.yml file first. "
+								   + "Keep in mind the server might not keep up with too high values because mobs were never designed to have them.";
+					}
 
-							return super.getFailedValidationText(context, invalidInput);
-						}
+					return super.getFailedValidationText(context, invalidInput);
+				}
 
-						@Override
-						protected void onValidatedInput(ConversationContext context, double input) {
-							boss.setMaxHealth(input == 0 ? boss.getDefaultHealth() : input);
-						}
-					}.show(player);
-				});
+				@Override
+				protected void onValidatedInput(ConversationContext context, double input) {
+					boss.setMaxHealth(input == 0 ? boss.getDefaultHealth() : input);
+				}
+			}.show(player);
+		});
 
 		this.potionsButton = new ButtonMenu(new PotionsMenu(),
 				CompMaterial.POTION,
@@ -190,10 +187,10 @@ class SettingsMenu extends Menu {
 				"Edit Boss' hand item",
 				"and armor items.")
 				: Button.makeDummy(CompMaterial.LEATHER_CHESTPLATE,
-						"Equipment",
-						"",
-						"&cThis Boss type does",
-						"&cnot support equipment.");
+				"Equipment",
+				"",
+				"&cThis Boss type does",
+				"&cnot support equipment.");
 
 		this.lightningButton = new ButtonMenu(new LightningMenu(),
 				CompMaterial.ENDER_PEARL,
@@ -202,32 +199,13 @@ class SettingsMenu extends Menu {
 				"Select when Boss",
 				"strikes lightning.");
 
-		this.citizensButton = new Button() {
-
-			boolean has = HookManager.isCitizensLoaded();
-
-			@Override
-			public void onClickedInMenu(Player player, Menu menu, ClickType click) {
-				if (this.has)
-					new CitizensMenu().displayTo(player);
-				else
-					SettingsMenu.this.animateTitle("&4Install Citizens plugin!");
-			}
-
-			@Override
-			public ItemStack getItem() {
-				return ItemCreator.from(
-						CompMaterial.WITHER_SKELETON_SKULL,
-						"Citizens",
-						"",
-						"Edit behavior, sounds",
-						"and other advanced",
-						"settings via Citizens.",
-						"",
-						this.has ? "&6Warning: &7This will only apply" : "&cError: &7These settings",
-						this.has ? "&7to newly spawned Bosses." : "require Citizens plugin.").make();
-			}
-		};
+		this.pathfindersButton = new ButtonMenu(new PathfindersMenu(),
+				CompMaterial.ITEM_FRAME,
+				"&8Pathfinders",
+				"",
+				"Edit how Boss",
+				"should behave and what",
+				"pathfinders it should use.");
 
 		this.ridingButton = new ButtonMenu(new RidingMenu(),
 				CompMaterial.CARROT_ON_A_STICK,
@@ -261,36 +239,6 @@ class SettingsMenu extends Menu {
 				"",
 				"Edit custom settings only",
 				"applicable for this Boss.");
-
-		this.nativeAttackGoalToggleButton = GoalManagerCheck.isAvailable() ? new Button() {
-
-			@Override
-			public void onClickedInMenu(Player player, Menu menu, ClickType click) {
-				final boolean enabled = SettingsMenu.this.boss.isNativeAttackGoalEnabled();
-				SettingsMenu.this.boss.setNativeAttackGoalEnabled(!enabled);
-				SettingsMenu.this.restartMenu((!enabled ? "§aEnabled" : "§cDisabled") + " native attack goal");
-			}
-
-			@Override
-			public ItemStack getItem() {
-				return ItemCreator.from(
-						CompMaterial.STONE_SWORD,
-						"Native Attack Goal",
-						"",
-						"Status: " + (SettingsMenu.this.boss.isNativeAttackGoalEnabled() ? "§aEnabled" : "§cDisabled"),
-						"",
-						"When enabled, this Boss will use",
-						"the native Paper attack goal.").make();
-			}
-		} : Button.makeDummy(ItemCreator.from(
-				CompMaterial.STONE_SWORD,
-				"Native Attack Goal",
-				"",
-				"When enabled, this Boss will use",
-				"the native Paper attack goal.",
-				"",
-				"§cError: §7This feature requires",
-				"official Paper 1.15.2 or newer.").make());
 	}
 
 	@Override
@@ -322,11 +270,11 @@ class SettingsMenu extends Menu {
 				final boolean has = isEnabled.get();
 
 				return ItemCreator.from(
-						has ? CompMaterial.BEACON : CompMaterial.GLASS,
-						"Enable " + type + "?",
-						"",
-						"Status: " + (has ? "&aEnabled" : "&cDisabled"),
-						"")
+								has ? CompMaterial.BEACON : CompMaterial.GLASS,
+								"Enable " + type + "?",
+								"",
+								"Status: " + (has ? "&aEnabled" : "&cDisabled"),
+								"")
 						.lore(lore)
 						.glow(has)
 						.make();
@@ -661,16 +609,16 @@ class SettingsMenu extends Menu {
 					"&cbecause Citizens mobs",
 					"&cdo not support it.")
 					: new ButtonMenu(new RidingVanillaMenu(),
-							CompMaterial.SPAWNER,
-							"Mobs To Ride",
-							"",
-							"Select vanilla mobs",
-							"this Boss will ride.",
-							"",
-							"&cNotice:",
-							"Due to Bukkit limits,",
-							"either use this or the",
-							"other option, not both.");
+					CompMaterial.SPAWNER,
+					"Mobs To Ride",
+					"",
+					"Select vanilla mobs",
+					"this Boss will ride.",
+					"",
+					"&cNotice:",
+					"Due to Bukkit limits,",
+					"either use this or the",
+					"other option, not both.");
 
 			this.removeOnDeathButton = new Button() {
 
@@ -917,16 +865,16 @@ class SettingsMenu extends Menu {
 					"a given threshold.");
 
 			this.stopAfterFirstButton = Button.makeBoolean(ItemCreator.from(
-					CompMaterial.GREEN_DYE,
-					"&2One Command Mode",
-					"",
-					"Status: {status}",
-					"",
-					"If enabled, we stop running",
-					"more commands after the first",
-					"successful one. Useful to have",
-					"two different commands, one for",
-					"killer and one when there is none."),
+							CompMaterial.GREEN_DYE,
+							"&2One Command Mode",
+							"",
+							"Status: {status}",
+							"",
+							"If enabled, we stop running",
+							"more commands after the first",
+							"successful one. Useful to have",
+							"two different commands, one for",
+							"killer and one when there is none."),
 					SettingsMenu.this.boss::isCommandsStoppedAfterFirst, SettingsMenu.this.boss::setCommandsStoppedAfterFirst);
 		}
 
@@ -945,386 +893,518 @@ class SettingsMenu extends Menu {
 		}
 	}
 
-	private class CitizensMenu extends Menu {
-
-		private final BossCitizensSettings citizens;
-
-		@Position(9 * 1 + 1)
-		private final Button enabledButton;
-
-		@Position(9 * 1 + 2)
-		private final Button speedButton;
+	private class PathfindersMenu extends Menu {
 
 		@Position(9 * 1 + 3)
-		private final Button skinButton;
+		private final Button citizensButton;
 
 		@Position(9 * 1 + 5)
-		private final Button soundsButton;
+		private final Button nativeButton;
 
-		@Position(9 * 1 + 7)
-		private final Button goalsButton;
-
-		private CitizensMenu() {
+		private PathfindersMenu() {
 			super(SettingsMenu.this);
 
-			this.citizens = SettingsMenu.this.boss.getCitizensSettings();
+			this.setTitle("Pathfinders");
 
-			this.setTitle("Citizens Integration");
+			this.citizensButton = new Button() {
 
-			final boolean isHuman = SettingsMenu.this.boss.getType() == CompEntityType.PLAYER;
-
-			// Duplicate this, either can the user enable citizens or native
-			this.enabledButton = new Button() {
+				final boolean has = HookManager.isCitizensLoaded();
 
 				@Override
 				public void onClickedInMenu(Player player, Menu menu, ClickType click) {
-					if (isHuman) {
-						CitizensMenu.this.animateTitle("&4Can't disable for human NPCs!");
-
-						return;
-					}
-
-					final boolean has = CitizensMenu.this.citizens.isEnabled();
-
-					CitizensMenu.this.citizens.setEnabled(!has);
-
-					final Menu newInstance = CitizensMenu.this.newInstance();
-					newInstance.displayTo(player);
-
-					Platform.runTask(1, () -> newInstance.restartMenu(!has ? "&2Enabled Citizens hook :)" : "&4Disabled Citizens hook :("));
+					if(this.has)
+						new CitizensMenu().displayTo(player);
+					else
+						SettingsMenu.this.animateTitle("&4Install Citizens plugin!");
 				}
 
 				@Override
 				public ItemStack getItem() {
-					final boolean has = CitizensMenu.this.citizens.isEnabled();
-
 					return ItemCreator.from(
-							isHuman || has ? CompMaterial.BEACON : CompMaterial.GLASS,
-							"Use Citizens?",
+							CompMaterial.WITHER_SKELETON_SKULL,
+							"Citizens",
 							"",
-							"Status: " + (has || isHuman ? "&aEnabled" : "&cDisabled"),
+							"Edit behavior, sounds",
+							"and other advanced",
+							"settings via Citizens.",
 							"",
-							isHuman ? "&oCan't disable for" : "Enable Citizens integration?",
-							isHuman ? "&ohuman NPCs." : "&cWarning: &7Options here",
-							isHuman ? null : "will only apply to new Bosses.")
-							.glow(isHuman || has)
-							.make();
+							this.has ? "&cWarning: &7This will only apply" : "&cError: &7These settings",
+							this.has ? "&7to newly spawned Bosses." : "require Citizens plugin.").make();
 				}
 			};
 
-			// Make a new menu inside this menu for Citizens Settings and move this there
-			this.speedButton = Button.makeSimple(ItemCreator.from(
-					CompMaterial.STRING,
-					"Speed",
-					"",
-					"Current: " + CitizensMenu.this.citizens.getSpeed(),
-					"",
-					"How fast should this NPC move?",
-					"Defaults to " + boss.getDefaultBaseSpeed() + "."),
-					player -> new SimpleDecimalPrompt("Please enter the Boss speed. Current: " + CitizensMenu.this.citizens.getSpeed() +
-							". Or type '0' to reset back to default.") {
+			this.nativeButton = new Button() {
 
-						@Override
-						protected boolean isInputValid(ConversationContext context, String input) {
-							return Valid.isDecimal(input) && Valid.isInRange(Double.parseDouble(input), 0, 100);
-						}
+				final boolean has = GoalManagerCheck.isAvailable();
 
-						@Override
-						protected void onValidatedInput(ConversationContext context, double input) {
-							CitizensMenu.this.citizens.setSpeed(input);
+				@Override
+				public void onClickedInMenu(Player player, Menu menu, ClickType click) {
+					if(this.has)
+						new NativeGoalsMenu().displayTo(player);
+					else
+						SettingsMenu.this.animateTitle("&4Use paper 1.15.2 or newer!");
+				}
 
-							boss.setMaxHealth(input == 0 ? boss.getDefaultBaseSpeed() : input);
-						}
-					}.show(player));
-
-			final String skinUrl = SettingsMenu.this.boss.getCitizensSettings().getSkinOrAlias().replace("https://", "").replace("www.", "");
-
-			// Also move this to Citizens Settings menu
-			this.skinButton = Button.makeSimple(ItemCreator.from(
-					CompMaterial.PAPER,
-					"Skin",
-					"",
-					"Current: &f" + (skinUrl.length() > 40 ? skinUrl.substring(0, 20) + "..." + skinUrl.substring(skinUrl.length() - 20) : skinUrl),
-					"",
-					"Edit the skin of the Boss.",
-					"Your skin can be independent",
-					"from your Boss alias or name.",
-					"",
-					"If not set, we use skin from",
-					"your Boss' alias."), player -> {
-						new SimpleStringPrompt("Please enter the Boss skin (username or URL ending with a .png skin - check console for errors on Boss spawn to see if it was valid)."
-								+ " Current: '" + Common.getOrDefault(SettingsMenu.this.boss.getCitizensSettings().getSkin(), "none")
-								+ "&7' Type 'default' to use skin from Boss' alias '" + SettingsMenu.this.boss.getAlias() + "&7'.") {
-
-							@Override
-							protected boolean isInputValid(ConversationContext context, String input) {
-								return Valid.isInRange(input.length(), 3, 256);
-							}
-
-							@Override
-							protected void onValidatedInput(ConversationContext context, String input) {
-								SettingsMenu.this.boss.getCitizensSettings().setSkin(input);
-							}
-						}.show(player);
-					});
-
-			// Also move this to Citizens Settings menu
-			this.soundsButton = new ButtonMenu(new SoundsMenu(),
-					CompMaterial.NOTE_BLOCK,
-					"&6Sounds",
-					"",
-					"Give the Boss custom",
-					"death, idle or damage",
-					"sounds!");
-
-			// Duplicate this and put to each Citizens and Native menus
-			this.goalsButton = new ButtonMenu(new GoalsMenu(),
-					CompMaterial.PURPLE_DYE,
-					"Pathfinders & Goals",
-					"",
-					"Assign custom behavior",
-					"to your Boss here.");
+				@Override
+				public ItemStack getItem() {
+					return ItemCreator.from(
+							CompMaterial.SKELETON_SKULL,
+							"Native",
+							"",
+							"Edit behavior using",
+							"Paper native goals.",
+							"",
+							this.has ? "&cWarning: &7This feature is" : "&cError: &7These settings",
+							this.has ? "&7under heavy development." : "&7require Paper 1.15 or newer.").make();
+				}
+			};
 		}
 
 		@Override
 		public Menu newInstance() {
-			return new CitizensMenu();
+			return new PathfindersMenu();
 		}
 
 		@Override
 		protected String[] getInfo() {
-			return new String[] {
-					"Make our plugin use Citizens",
-					"for spawning Bosses. &6This",
-					"&6will only apply for newly",
-					"&6spawned Bosses.",
-					"",
-					"&6TIP: &7To change Boss skin, use",
-					"&6/npc skin &7command from Citizens.",
-					"Visit their wiki page for help:",
-					"wiki.citizensnpcs.co/Commands"
+			return new String[]{
+					"Configure how your Boss",
+					"should behave and what",
+					"pathfinders it should use.",
 			};
 		}
 
-		private class SoundsMenu extends Menu {
-
-			@Position(9 * 1 + 2)
-			private final Button deathSoundButton;
+		private class NativeGoalsMenu extends Menu {
 
 			@Position(9 * 1 + 4)
-			private final Button hurtSoundButton;
+			private final Button nativeAttackGoalToggleButton;
 
-			@Position(9 * 1 + 6)
-			private final Button ambientSoundButton;
+			NativeGoalsMenu() {
+				super(PathfindersMenu.this);
 
-			@Position(start = StartPosition.BOTTOM_CENTER)
-			private final Button wikiLinkSoundButton;
+				this.setTitle("Native Goals");
 
-			SoundsMenu() {
-				super(CitizensMenu.this);
+				this.nativeAttackGoalToggleButton = new Button() {
 
-				this.setSize(9 * 4);
-				this.setTitle("Boss Sounds");
+					@Override
+					public void onClickedInMenu(Player player, Menu menu, ClickType click) {
+						final boolean enabled = SettingsMenu.this.boss.isNativeAttackGoalEnabled();
+						SettingsMenu.this.boss.setNativeAttackGoalEnabled(!enabled);
+						SettingsMenu.this.restartMenu((!enabled ? "§aEnabled" : "§cDisabled") + " native attack goal");
+					}
 
-				this.deathSoundButton = Button.makeSimple(ItemCreator.from(
-						CompMaterial.BONE,
-						"Death Sound",
-						"",
-						"Current: &7" + Common.getOrDefault(CitizensMenu.this.citizens.getDeathSound(), "default"),
-						"",
-						"Click to change",
-						"Boss death sound."),
-						player -> SettingsMenu.this.generateSoundPrompt("death", CitizensMenu.this.citizens::getDeathSound, CitizensMenu.this.citizens::setDeathSound).show(player));
-
-				this.hurtSoundButton = Button.makeSimple(ItemCreator.from(
-						CompMaterial.RED_DYE,
-						"Hurt Sound",
-						"",
-						"Current: &7" + Common.getOrDefault(CitizensMenu.this.citizens.getHurtSound(), "default"),
-						"",
-						"Click to change",
-						"sound when damaged."),
-						player -> SettingsMenu.this.generateSoundPrompt("hurt", CitizensMenu.this.citizens::getHurtSound, CitizensMenu.this.citizens::setHurtSound).show(player));
-
-				this.ambientSoundButton = Button.makeSimple(ItemCreator.from(
-						CompMaterial.FEATHER,
-						"Ambient Sound",
-						"",
-						"Current: &7" + Common.getOrDefault(CitizensMenu.this.citizens.getAmbientSound(), "default"),
-						"",
-						"Click to change",
-						"sound when idle."),
-						player -> SettingsMenu.this.generateSoundPrompt("ambient", CitizensMenu.this.citizens::getAmbientSound, CitizensMenu.this.citizens::setAmbientSound).show(player));
-
-				this.wikiLinkSoundButton = Button.makeSimple(ItemCreator.from(
-						CompMaterial.PAPER,
-						"Sound Names Help",
-						"",
-						"Sound names are different",
-						"internally. Click this",
-						"icon to get a list."), player -> {
-							player.closeInventory();
-
-							Messenger.info(player, "See <click:open_url:'https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Sound.html'><u>hub.spigotmc.org/javadocs/bukkit/org/bukkit/Sound.html</u></click>"
-									+ " for valid sound names. For legacy Minecraft versions, we translate those sounds that exist automatically.");
-						});
-			}
-
-			@Override
-			protected String[] getInfo() {
-				return new String[] {
-						"Remap what sounds this Boss",
-						"emits, using NMS item names.",
-						"Click the Paper icon for help."
+					@Override
+					public ItemStack getItem() {
+						return ItemCreator.from(
+								CompMaterial.STONE_SWORD,
+								"Attack Goal",
+								"",
+								"Status: " + (SettingsMenu.this.boss.isNativeAttackGoalEnabled() ? "§aEnabled" : "§cDisabled"),
+								"",
+								"When enabled, this Boss will use",
+								"the native Paper attack goal.").make();
+					}
 				};
 			}
 
 			@Override
 			public Menu newInstance() {
-				return new SoundsMenu();
+				return new NativeGoalsMenu();
+			}
+
+			@Override
+			protected String[] getInfo() {
+				return new String[]{
+						"Configure native goals",
+						"for your Boss.",
+						"",
+						"&cWarning: &7This feature is",
+						"under heavy development.",
+				};
 			}
 		}
 
-		private class GoalsMenu extends Menu {
+		private class CitizensMenu extends Menu {
+
+			private final BossCitizensSettings citizens;
 
 			@Position(9 * 1 + 1)
-			private final Button targetEnabledButton;
+			private final Button enabledButton;
+
+			@Position(9 * 1 + 2)
+			private final Button speedButton;
 
 			@Position(9 * 1 + 3)
-			private final Button targetAggressiveButton;
+			private final Button skinButton;
 
 			@Position(9 * 1 + 5)
-			private final Button targetRadiusButton;
+			private final Button soundsButton;
 
 			@Position(9 * 1 + 7)
-			private final Button targetEntitiesButton;
+			private final Button goalsButton;
 
-			@Position(9 * 3 + 3)
-			private final Button wanderEnabledButton;
+			CitizensMenu() {
+				super(PathfindersMenu.this);
 
-			@Position(9 * 3 + 5)
-			private final Button wanderRadiusButton;
+				this.citizens = SettingsMenu.this.boss.getCitizensSettings();
 
-			GoalsMenu() {
-				super(CitizensMenu.this);
+				this.setTitle("Citizens Integration");
 
-				this.setSize(9 * 6);
-				this.setTitle("Pathfinder & AI");
+				final boolean isHuman = SettingsMenu.this.boss.getType() == CompEntityType.PLAYER;
 
-				this.targetEnabledButton = SettingsMenu.this.generateBooleanButton(this,
-						"Target Goal",
-						CitizensMenu.this.citizens::isTargetGoalEnabled, CitizensMenu.this.citizens::setTargetGoalEnabled,
-						"Make this Boss target",
-						"and follow another",
-						"entities nearby?");
+				// Duplicate this, either can the user enable citizens or native
+				this.enabledButton = new Button() {
 
-				this.targetAggressiveButton = SettingsMenu.this.generateBooleanButton(this,
-						"Kill Target",
-						CitizensMenu.this.citizens::isTargetGoalAggressive, CitizensMenu.this.citizens::setTargetGoalAggressive,
-						"Make this Boss attack",
-						"and kill its target?");
+					@Override
+					public void onClickedInMenu(Player player, Menu menu, ClickType click) {
+						if (isHuman) {
+							CitizensMenu.this.animateTitle("&4Can't disable for human NPCs!");
 
-				this.targetRadiusButton = Button.makeSimple(ItemCreator.from(
-						CompMaterial.LEAD,
-						"Target Radius",
+							return;
+						}
+
+						final boolean has = CitizensMenu.this.citizens.isEnabled();
+
+						CitizensMenu.this.citizens.setEnabled(!has);
+
+						final Menu newInstance = CitizensMenu.this.newInstance();
+						newInstance.displayTo(player);
+
+						Platform.runTask(1, () -> newInstance.restartMenu(!has ? "&2Enabled Citizens hook :)" : "&4Disabled Citizens hook :("));
+					}
+
+					@Override
+					public ItemStack getItem() {
+						final boolean has = CitizensMenu.this.citizens.isEnabled();
+
+						return ItemCreator.from(
+										isHuman || has ? CompMaterial.BEACON : CompMaterial.GLASS,
+										"Use Citizens?",
+										"",
+										"Status: " + (has || isHuman ? "&aEnabled" : "&cDisabled"),
+										"",
+										isHuman ? "&oCan't disable for" : "Enable Citizens integration?",
+										isHuman ? "&ohuman NPCs." : "&cWarning: &7Options here",
+										isHuman ? null : "will only apply to new Bosses.")
+								.glow(isHuman || has)
+								.make();
+					}
+				};
+
+				// Make a new menu inside this menu for Citizens Settings and move this there
+				this.speedButton = Button.makeSimple(ItemCreator.from(
+								CompMaterial.STRING,
+								"Speed",
+								"",
+								"Current: " + CitizensMenu.this.citizens.getSpeed(),
+								"",
+								"How fast should this NPC move?",
+								"Defaults to " + boss.getDefaultBaseSpeed() + "."),
+						player -> new SimpleDecimalPrompt("Please enter the Boss speed. Current: " + CitizensMenu.this.citizens.getSpeed() +
+														  ". Or type '0' to reset back to default.") {
+
+							@Override
+							protected boolean isInputValid(ConversationContext context, String input) {
+								return Valid.isDecimal(input) && Valid.isInRange(Double.parseDouble(input), 0, 100);
+							}
+
+							@Override
+							protected void onValidatedInput(ConversationContext context, double input) {
+								CitizensMenu.this.citizens.setSpeed(input);
+
+								boss.setMaxHealth(input == 0 ? boss.getDefaultBaseSpeed() : input);
+							}
+						}.show(player));
+
+				final String skinUrl = SettingsMenu.this.boss.getCitizensSettings().getSkinOrAlias().replace("https://", "").replace("www.", "");
+
+				// Also move this to Citizens Settings menu
+				this.skinButton = Button.makeSimple(ItemCreator.from(
+						CompMaterial.PAPER,
+						"Skin",
 						"",
-						"Current: " + CitizensMenu.this.citizens.getTargetGoalRadius() + " blocks",
+						"Current: &f" + (skinUrl.length() > 40 ? skinUrl.substring(0, 20) + "..." + skinUrl.substring(skinUrl.length() - 20) : skinUrl),
 						"",
-						"How far should Boss find",
-						"and follow entities? High",
-						"values impact performance."), player -> {
-							SettingsMenu.this.generateRadiusPrompt("target", CitizensMenu.this.citizens::getTargetGoalRadius, CitizensMenu.this.citizens::setTargetGoalRadius).show(player);
-						});
+						"Edit the skin of the Boss.",
+						"Your skin can be independent",
+						"from your Boss alias or name.",
+						"",
+						"If not set, we use skin from",
+						"your Boss' alias."), player -> {
+					new SimpleStringPrompt("Please enter the Boss skin (username or URL ending with a .png skin - check console for errors on Boss spawn to see if it was valid)."
+										   + " Current: '" + Common.getOrDefault(SettingsMenu.this.boss.getCitizensSettings().getSkin(), "none")
+										   + "&7' Type 'default' to use skin from Boss' alias '" + SettingsMenu.this.boss.getAlias() + "&7'.") {
 
-				this.targetEntitiesButton = new ButtonMenu(new MenuTargetEntites(),
-						CompMaterial.SKELETON_SPAWN_EGG,
-						"Targets",
-						"",
-						"Click to select what",
-						"mobs this Boss targets.");
+						@Override
+						protected boolean isInputValid(ConversationContext context, String input) {
+							return Valid.isInRange(input.length(), 3, 256);
+						}
 
-				// Basically you can disable AI for native
-				this.wanderEnabledButton = SettingsMenu.this.generateBooleanButton(this,
-						"Wander Goal",
-						CitizensMenu.this.citizens::isWanderGoalEnabled, CitizensMenu.this.citizens::setWanderGoalEnabled,
-						"Make this Boss wander",
-						"around in an area?");
+						@Override
+						protected void onValidatedInput(ConversationContext context, String input) {
+							SettingsMenu.this.boss.getCitizensSettings().setSkin(input);
+						}
+					}.show(player);
+				});
 
-				this.wanderRadiusButton = Button.makeSimple(ItemCreator.from(
-						CompMaterial.LEAD,
-						"Wander Radius",
+				// Also move this to Citizens Settings menu
+				this.soundsButton = new ButtonMenu(new SoundsMenu(),
+						CompMaterial.NOTE_BLOCK,
+						"&6Sounds",
 						"",
-						"Current: " + CitizensMenu.this.citizens.getWanderGoalRadius() + " blocks",
+						"Give the Boss custom",
+						"death, idle or damage",
+						"sounds!");
+
+				// Duplicate this and put to each Citizens and Native menus
+				this.goalsButton = new ButtonMenu(new GoalsMenu(),
+						CompMaterial.PURPLE_DYE,
+						"Pathfinders & Goals",
 						"",
-						"How far should Boss walk",
-						"around his spawn point? High",
-						"values impact performance."), player -> {
-							SettingsMenu.this.generateRadiusPrompt("wander", CitizensMenu.this.citizens::getWanderGoalRadius, CitizensMenu.this.citizens::setWanderGoalRadius).show(player);
-						});
+						"Assign custom behavior",
+						"to your Boss here.");
 			}
 
 			@Override
 			public Menu newInstance() {
-				return new GoalsMenu();
+				return new CitizensMenu();
 			}
 
 			@Override
 			protected String[] getInfo() {
 				return new String[] {
-						"Configure custom pathfinder",
-						"and navigation for this Boss."
+						"Make our plugin use Citizens",
+						"for spawning Bosses. &6This",
+						"&6will only apply for newly",
+						"&6spawned Bosses.",
+						"",
+						"&6TIP: &7To change Boss skin, use",
+						"&6/npc skin &7command from Citizens.",
+						"Visit their wiki page for help:",
+						"wiki.citizensnpcs.co/Commands"
 				};
 			}
 
-			private class MenuTargetEntites extends MenuPaged<EntityType> {
+			private class SoundsMenu extends Menu {
 
-				MenuTargetEntites() {
-					super(GoalsMenu.this, CompEntityType.getAvailable()
-							.stream()
-							.filter(type -> type == CompEntityType.PLAYER || (type.isAlive() && type.isSpawnable()))
-							.sorted(Comparator.comparing(EntityType::name))
-							.collect(Collectors.toList()), true);
+				@Position(9 * 1 + 2)
+				private final Button deathSoundButton;
 
-					this.setTitle("Select Target Entities");
-				}
+				@Position(9 * 1 + 4)
+				private final Button hurtSoundButton;
 
-				@Override
-				protected ItemStack convertToItemStack(EntityType type) {
-					final boolean has = CitizensMenu.this.citizens.getTargetGoalEntities().contains(type);
+				@Position(9 * 1 + 6)
+				private final Button ambientSoundButton;
 
-					return ItemCreator.fromItemStack((type == CompEntityType.PLAYER ? ItemCreator.fromMaterial(CompMaterial.PLAYER_HEAD) : ItemCreator.fromMonsterEgg(type)).make())
-							.name("Target " + ChatUtil.capitalizeFully(type))
-							.lore("")
-							.lore("Status: " + (has ? "&aTargetting" : "&cIgnoring"))
-							.lore("")
-							.lore("Click to toggle Boss")
-							.lore("following this entity.")
-							.glow(has)
-							.make();
-				}
+				@Position(start = StartPosition.BOTTOM_CENTER)
+				private final Button wikiLinkSoundButton;
 
-				@Override
-				protected void onPageClick(Player player, EntityType type, ClickType click) {
-					final Set<EntityType> targets = CitizensMenu.this.citizens.getTargetGoalEntities();
-					final boolean has = targets.contains(type);
+				SoundsMenu() {
+					super(CitizensMenu.this);
 
-					if (has)
-						targets.remove(type);
-					else
-						targets.add(type);
+					this.setSize(9 * 4);
+					this.setTitle("Boss Sounds");
 
-					CitizensMenu.this.citizens.setTargetGoalEntities(targets);
+					this.deathSoundButton = Button.makeSimple(ItemCreator.from(
+									CompMaterial.BONE,
+									"Death Sound",
+									"",
+									"Current: &7" + Common.getOrDefault(CitizensMenu.this.citizens.getDeathSound(), "default"),
+									"",
+									"Click to change",
+									"Boss death sound."),
+							player -> SettingsMenu.this.generateSoundPrompt("death", CitizensMenu.this.citizens::getDeathSound, CitizensMenu.this.citizens::setDeathSound).show(player));
 
-					this.restartMenu(has ? "&4Target disabled!" : "&2Now targets " + ChatUtil.capitalizeFully(type) + "!");
+					this.hurtSoundButton = Button.makeSimple(ItemCreator.from(
+									CompMaterial.RED_DYE,
+									"Hurt Sound",
+									"",
+									"Current: &7" + Common.getOrDefault(CitizensMenu.this.citizens.getHurtSound(), "default"),
+									"",
+									"Click to change",
+									"sound when damaged."),
+							player -> SettingsMenu.this.generateSoundPrompt("hurt", CitizensMenu.this.citizens::getHurtSound, CitizensMenu.this.citizens::setHurtSound).show(player));
+
+					this.ambientSoundButton = Button.makeSimple(ItemCreator.from(
+									CompMaterial.FEATHER,
+									"Ambient Sound",
+									"",
+									"Current: &7" + Common.getOrDefault(CitizensMenu.this.citizens.getAmbientSound(), "default"),
+									"",
+									"Click to change",
+									"sound when idle."),
+							player -> SettingsMenu.this.generateSoundPrompt("ambient", CitizensMenu.this.citizens::getAmbientSound, CitizensMenu.this.citizens::setAmbientSound).show(player));
+
+					this.wikiLinkSoundButton = Button.makeSimple(ItemCreator.from(
+							CompMaterial.PAPER,
+							"Sound Names Help",
+							"",
+							"Sound names are different",
+							"internally. Click this",
+							"icon to get a list."), player -> {
+						player.closeInventory();
+
+						Messenger.info(player, "See <click:open_url:'https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Sound.html'><u>hub.spigotmc.org/javadocs/bukkit/org/bukkit/Sound.html</u></click>"
+											   + " for valid sound names. For legacy Minecraft versions, we translate those sounds that exist automatically.");
+					});
 				}
 
 				@Override
 				protected String[] getInfo() {
 					return new String[] {
-							"Pick what entities this Boss",
-							"will follow, or even attack if",
-							"configured as aggressive."
+							"Remap what sounds this Boss",
+							"emits, using NMS item names.",
+							"Click the Paper icon for help."
 					};
+				}
+
+				@Override
+				public Menu newInstance() {
+					return new SoundsMenu();
+				}
+			}
+
+			private class GoalsMenu extends Menu {
+
+				@Position(9 * 1 + 1)
+				private final Button targetEnabledButton;
+
+				@Position(9 * 1 + 3)
+				private final Button targetAggressiveButton;
+
+				@Position(9 * 1 + 5)
+				private final Button targetRadiusButton;
+
+				@Position(9 * 1 + 7)
+				private final Button targetEntitiesButton;
+
+				@Position(9 * 3 + 3)
+				private final Button wanderEnabledButton;
+
+				@Position(9 * 3 + 5)
+				private final Button wanderRadiusButton;
+
+				GoalsMenu() {
+					super(CitizensMenu.this);
+
+					this.setSize(9 * 6);
+					this.setTitle("Pathfinder & AI");
+
+					this.targetEnabledButton = SettingsMenu.this.generateBooleanButton(this,
+							"Target Goal",
+							CitizensMenu.this.citizens::isTargetGoalEnabled, CitizensMenu.this.citizens::setTargetGoalEnabled,
+							"Make this Boss target",
+							"and follow another",
+							"entities nearby?");
+
+					this.targetAggressiveButton = SettingsMenu.this.generateBooleanButton(this,
+							"Kill Target",
+							CitizensMenu.this.citizens::isTargetGoalAggressive, CitizensMenu.this.citizens::setTargetGoalAggressive,
+							"Make this Boss attack",
+							"and kill its target?");
+
+					this.targetRadiusButton = Button.makeSimple(ItemCreator.from(
+							CompMaterial.LEAD,
+							"Target Radius",
+							"",
+							"Current: " + CitizensMenu.this.citizens.getTargetGoalRadius() + " blocks",
+							"",
+							"How far should Boss find",
+							"and follow entities? High",
+							"values impact performance."), player -> {
+						SettingsMenu.this.generateRadiusPrompt("target", CitizensMenu.this.citizens::getTargetGoalRadius, CitizensMenu.this.citizens::setTargetGoalRadius).show(player);
+					});
+
+					this.targetEntitiesButton = new ButtonMenu(new MenuTargetEntites(),
+							CompMaterial.SKELETON_SPAWN_EGG,
+							"Targets",
+							"",
+							"Click to select what",
+							"mobs this Boss targets.");
+
+					// Basically you can disable AI for native
+					this.wanderEnabledButton = SettingsMenu.this.generateBooleanButton(this,
+							"Wander Goal",
+							CitizensMenu.this.citizens::isWanderGoalEnabled, CitizensMenu.this.citizens::setWanderGoalEnabled,
+							"Make this Boss wander",
+							"around in an area?");
+
+					this.wanderRadiusButton = Button.makeSimple(ItemCreator.from(
+							CompMaterial.LEAD,
+							"Wander Radius",
+							"",
+							"Current: " + CitizensMenu.this.citizens.getWanderGoalRadius() + " blocks",
+							"",
+							"How far should Boss walk",
+							"around his spawn point? High",
+							"values impact performance."), player -> {
+						SettingsMenu.this.generateRadiusPrompt("wander", CitizensMenu.this.citizens::getWanderGoalRadius, CitizensMenu.this.citizens::setWanderGoalRadius).show(player);
+					});
+				}
+
+				@Override
+				public Menu newInstance() {
+					return new GoalsMenu();
+				}
+
+				@Override
+				protected String[] getInfo() {
+					return new String[] {
+							"Configure custom pathfinder",
+							"and navigation for this Boss."
+					};
+				}
+
+				private class MenuTargetEntites extends MenuPaged<EntityType> {
+
+					MenuTargetEntites() {
+						super(GoalsMenu.this, CompEntityType.getAvailable()
+								.stream()
+								.filter(type -> type == CompEntityType.PLAYER || (type.isAlive() && type.isSpawnable()))
+								.sorted(Comparator.comparing(EntityType::name))
+								.collect(Collectors.toList()), true);
+
+						this.setTitle("Select Target Entities");
+					}
+
+					@Override
+					protected ItemStack convertToItemStack(EntityType type) {
+						final boolean has = CitizensMenu.this.citizens.getTargetGoalEntities().contains(type);
+
+						return ItemCreator.fromItemStack((type == CompEntityType.PLAYER ? ItemCreator.fromMaterial(CompMaterial.PLAYER_HEAD) : ItemCreator.fromMonsterEgg(type)).make())
+								.name("Target " + ChatUtil.capitalizeFully(type))
+								.lore("")
+								.lore("Status: " + (has ? "&aTargetting" : "&cIgnoring"))
+								.lore("")
+								.lore("Click to toggle Boss")
+								.lore("following this entity.")
+								.glow(has)
+								.make();
+					}
+
+					@Override
+					protected void onPageClick(Player player, EntityType type, ClickType click) {
+						final Set<EntityType> targets = CitizensMenu.this.citizens.getTargetGoalEntities();
+						final boolean has = targets.contains(type);
+
+						if (has)
+							targets.remove(type);
+						else
+							targets.add(type);
+
+						CitizensMenu.this.citizens.setTargetGoalEntities(targets);
+
+						this.restartMenu(has ? "&4Target disabled!" : "&2Now targets " + ChatUtil.capitalizeFully(type) + "!");
+					}
+
+					@Override
+					protected String[] getInfo() {
+						return new String[] {
+								"Pick what entities this Boss",
+								"will follow, or even attack if",
+								"configured as aggressive."
+						};
+					}
 				}
 			}
 		}
@@ -1358,13 +1438,13 @@ class SettingsMenu extends Menu {
 					final boolean has = SettingsMenu.this.boss.hasLightningOnSpawn();
 
 					return ItemCreator.from(
-							CompMaterial.ENDER_PEARL,
-							"Lightning On Spawn",
-							"",
-							"Status: " + (has ? "&aEnabled" : "&cDisabled"),
-							"",
-							"Click to toggle if Boss",
-							"strikes a lightning on spawn.")
+									CompMaterial.ENDER_PEARL,
+									"Lightning On Spawn",
+									"",
+									"Status: " + (has ? "&aEnabled" : "&cDisabled"),
+									"",
+									"Click to toggle if Boss",
+									"strikes a lightning on spawn.")
 							.glow(has)
 							.make();
 				}
@@ -1385,13 +1465,13 @@ class SettingsMenu extends Menu {
 					final boolean has = SettingsMenu.this.boss.hasLightningOnDeath();
 
 					return ItemCreator.from(
-							CompMaterial.BONE,
-							"Lightning On Death",
-							"",
-							"Status: " + (has ? "&aEnabled" : "&cDisabled"),
-							"",
-							"Click to toggle if Boss",
-							"strikes a lightning on death.")
+									CompMaterial.BONE,
+									"Lightning On Death",
+									"",
+									"Status: " + (has ? "&aEnabled" : "&cDisabled"),
+									"",
+									"Click to toggle if Boss",
+									"strikes a lightning on death.")
 							.glow(has)
 							.make();
 				}
