@@ -2760,6 +2760,35 @@ public final class Boss extends YamlConfig implements ConfigStringSerializable {
 	}
 
 	/**
+	 * Find closest damaged boss in range
+	 *
+	 * @param center
+	 * @param radius
+	 * @return
+	 */
+	public static SpawnedBoss findClosestDamagedBoss(Location center, double radius) {
+		SpawnedBoss closestBoss = null;
+		double closestDistance = -1;
+
+		for (final Entity entity : Remain.getNearbyEntities(center, radius)) {
+			final double distance = entity.getLocation().distance(center);
+
+			if (closestDistance == -1 || distance < closestDistance) {
+				final SpawnedBoss boss = findBoss(entity);
+
+				if (boss != null) {
+					if(boss.getBoss().getRecentDamagerPlayer(entity, false).isEmpty())
+						continue;
+					closestDistance = distance;
+					closestBoss = boss;
+				}
+			}
+		}
+
+		return closestBoss;
+	}
+
+	/**
 	 * Find alive bosses in range
 	 *
 	 * @param center
