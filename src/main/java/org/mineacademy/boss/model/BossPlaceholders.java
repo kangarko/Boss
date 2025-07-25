@@ -201,7 +201,7 @@ public final class BossPlaceholders extends SimpleExpansion {
 				return "";
 			}
 
-			final SpawnedBoss closestBoss = player != null ? Boss.findClosestBoss(player.getLocation(), Settings.Variables.NEARBY_BOSS_RADIUS) : null;
+			final SpawnedBoss closestBoss = player != null ? Boss.findClosestDamagedBoss(player.getLocation(), Settings.Variables.NEARBY_BOSS_RADIUS) : null;
 			final boolean hasBoss = closestBoss != null;
 
 			final Location location = hasBoss ? closestBoss.getEntity().getLocation() : null;
