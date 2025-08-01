@@ -991,8 +991,8 @@ public final class Boss extends YamlConfig implements ConfigStringSerializable {
 		}
 
 		// Set the mob natively aggressive or not
-		if(GoalManagerCheck.isAvailable() && entity instanceof Mob)
-			GoalManager.makeAggressive((Mob) entity, nativeAttackGoalEnabled);
+		if(this.nativeAttackGoalEnabled && GoalManagerCheck.isAvailable() && entity instanceof Mob)
+			GoalManager.makeAggressive((Mob) entity, true);
 
 		// Finish by labeling this entity as Boss
 		CompMetadata.setMetadata(entity, NBT_TAG, this.getName());
