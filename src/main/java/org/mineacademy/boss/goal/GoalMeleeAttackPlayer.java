@@ -36,7 +36,7 @@ public class GoalMeleeAttackPlayer<T extends Mob> implements Goal<T> {
 	@Override
 	public boolean shouldStayActive() {
 		final LivingEntity target = this.mob.getTarget();
-		return target != null && target.isValid() && !target.isDead() && this.mob.getLocation().distance(target.getLocation()) < 20.0;
+		return target != null && target.isValid() && !target.isDead() && this.mob.getWorld().equals(target.getWorld()) && this.mob.getLocation().distance(target.getLocation()) < 20.0;
 	}
 
 	@Override
