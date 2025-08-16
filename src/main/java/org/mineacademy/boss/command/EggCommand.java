@@ -50,7 +50,7 @@ final class EggCommand extends BossSubCommand {
 		}
 
 		// Find amount
-		final int amount = this.args.length > 2 ? this.findNumber(2, Lang.component("command-invalid-amount")) : 1;
+		final int amount = this.args.length > 2 ? this.findInt(2, Lang.component("command-invalid-amount")) : 1;
 
 		// Add items to players inventory and drop leftovers
 		final ItemStack eggItem = boss.getEgg(amount);
