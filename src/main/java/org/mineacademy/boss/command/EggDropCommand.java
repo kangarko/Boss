@@ -39,9 +39,9 @@ final class EggDropCommand extends BossEggAbstractCommand {
 	protected void onCommand() {
 		final World world = this.findWorld(this.args[0]);
 
-		final int x = this.parseCoordinate(1);
-		final int y = this.parseCoordinate(2);
-		final int z = this.parseCoordinate(3);
+		final double x = this.parseCoordinate(1);
+		final double y = this.parseCoordinate(2);
+		final double z = this.parseCoordinate(3);
 
 		final Location location = new Location(world, x, y, z);
 

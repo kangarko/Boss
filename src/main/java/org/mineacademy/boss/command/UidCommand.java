@@ -78,9 +78,9 @@ final class UidCommand extends BossSubCommand {
 			this.checkArgs(6, Lang.component("command-uid-tpto-usage"));
 
 			final World world = "~".equals(this.args[2]) && this.isPlayer() ? this.getPlayer().getWorld() : this.findWorld(this.args[2]);
-			final int x = "~".equals(this.args[3]) && this.isPlayer() ? this.getPlayer().getLocation().getBlockX() : this.findNumber(3, Lang.component("command-uid-invalid-coordinate", "coordinate", "x"));
-			final int y = "~".equals(this.args[4]) && this.isPlayer() ? this.getPlayer().getLocation().getBlockY() : this.findNumber(4, Lang.component("command-uid-invalid-coordinate", "coordinate", "y"));
-			final int z = "~".equals(this.args[5]) && this.isPlayer() ? this.getPlayer().getLocation().getBlockZ() : this.findNumber(5, Lang.component("command-uid-invalid-coordinate", "coordinate", "Z"));
+			final int x = "~".equals(this.args[3]) && this.isPlayer() ? this.getPlayer().getLocation().getBlockX() : this.findInt(3, Lang.component("command-uid-invalid-coordinate", "coordinate", "x"));
+			final int y = "~".equals(this.args[4]) && this.isPlayer() ? this.getPlayer().getLocation().getBlockY() : this.findInt(4, Lang.component("command-uid-invalid-coordinate", "coordinate", "y"));
+			final int z = "~".equals(this.args[5]) && this.isPlayer() ? this.getPlayer().getLocation().getBlockZ() : this.findInt(5, Lang.component("command-uid-invalid-coordinate", "coordinate", "Z"));
 
 			final Location location = new Location(world, x, y, z);
 
