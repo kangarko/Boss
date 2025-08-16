@@ -16,7 +16,7 @@ public abstract class BossEggAbstractCommand extends BossSubCommand {
 	/*
 	 * Parse coordinate from the given index, either X, Y, or Z for indexes 1, 2 and 3 respectivelly.
 	 */
-	protected final int parseCoordinate(final int index) throws CommandException {
+	protected final double parseCoordinate(final int index) throws CommandException {
 		final String raw = this.args[index];
 
 		if ("~".equals(raw)) {
@@ -33,7 +33,7 @@ public abstract class BossEggAbstractCommand extends BossSubCommand {
 			}
 		}
 
-		return this.findNumber(index, Lang.component("command-spawn-invalid-position", "position", raw));
+		return this.findDouble(index, Lang.component("command-spawn-invalid-position", "position", raw));
 	}
 
 	@Override
