@@ -55,7 +55,7 @@ final class ButcherCommand extends BossSubCommand {
 		if (mode == RadiusMode.BLOCKS) {
 			this.checkBoolean(this.isPlayer(), Lang.component("command-butcher-no-player"));
 
-			final int radius = this.findNumber(0, 0, 10_000, Lang.component("command-invalid-radius", "min", "0", "max", "10,000"));
+			final int radius = this.findInt(0, 0, 10_000, Lang.component("command-invalid-radius", "min", "0", "max", "10,000"));
 			final int count = Boss.killAliveInRange(this.getPlayer().getLocation(), radius, boss);
 
 			this.tellSuccess(Lang.component("command-butcher-success-radius",
