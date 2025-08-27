@@ -990,7 +990,7 @@ class SettingsMenu extends Menu {
 					public void onClickedInMenu(Player player, Menu menu, ClickType click) {
 						final boolean enabled = SettingsMenu.this.boss.isNativeAttackGoalEnabled();
 						SettingsMenu.this.boss.setNativeAttackGoalEnabled(!enabled);
-						SettingsMenu.this.restartMenu((!enabled ? "§aEnabled" : "§cDisabled") + " native attack goal");
+						NativeGoalsMenu.this.restartMenu((!enabled ? "§aEnabled" : "§cDisabled") + " native attack goal");
 					}
 
 					@Override
