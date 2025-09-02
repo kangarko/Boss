@@ -47,7 +47,7 @@ public class GoalPlayerTarget<T extends Mob> implements Goal<T> {
 	@Override
 	public GoalKey<T> getKey() {
 		return (GoalKey<T>) GoalKey.of(Mob.class,
-				new org.bukkit.NamespacedKey("yourplugin", "player_target"));
+				new org.bukkit.NamespacedKey("Boss", "player_target"));
 	}
 
 	@Override

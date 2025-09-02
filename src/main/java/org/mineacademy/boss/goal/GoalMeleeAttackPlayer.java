@@ -80,7 +80,7 @@ public class GoalMeleeAttackPlayer<T extends Mob> implements Goal<T> {
 
 	@Override
 	public GoalKey<T> getKey() {
-		return (GoalKey<T>) GoalKey.of(Mob.class, new NamespacedKey("yourplugin", "melee_attack"));
+		return (GoalKey<T>) GoalKey.of(Mob.class, new NamespacedKey("Boss", "melee_attack"));
 	}
 
 	@Override
