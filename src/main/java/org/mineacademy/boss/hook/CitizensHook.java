@@ -69,6 +69,7 @@ public final class CitizensHook {
 		if (MinecraftVersion.atLeast(V.v1_8))
 			try {
 				net.citizensnpcs.api.CitizensAPI.getTraitFactory().registerTrait(net.citizensnpcs.api.trait.TraitInfo.create(MaxHealthTrait.class));
+				net.citizensnpcs.api.CitizensAPI.getTraitFactory().registerTrait(net.citizensnpcs.api.trait.TraitInfo.create(ScaleTrait.class));
 
 			} catch (final Throwable t) {
 				t.printStackTrace();
@@ -247,8 +248,11 @@ public final class CitizensHook {
 		// Remove teleporting to players when far away
 		npc.getNavigator().getDefaultParameters().stuckAction(null);
 
-		// Set skin and finalize
+		// Set skin
 		setSkinUrl(boss, npc);
+
+		// Set scale and finalize
+		npc.getOrAddTrait(ScaleTrait.class);
 	}
 
 	/*

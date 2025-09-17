@@ -44,6 +44,7 @@ import org.mineacademy.boss.goal.GoalManager;
 import org.mineacademy.boss.goal.GoalManagerCheck;
 import org.mineacademy.boss.hook.CitizensHook;
 import org.mineacademy.boss.hook.LandsHook;
+import org.mineacademy.boss.hook.ScaleTrait;
 import org.mineacademy.boss.hook.WorldGuardHook;
 import org.mineacademy.boss.listener.ChunkListener;
 import org.mineacademy.boss.settings.Settings;
@@ -578,6 +579,8 @@ public final class Boss extends YamlConfig implements ConfigStringSerializable {
 
 		if (this.type == CompEntityType.PLAYER) {
 			this.defaultAttributes.put(BossAttribute.DAMAGE_MULTIPLIER, 1D);
+			if (MinecraftVersion.atLeast(V.v1_20))
+				this.defaultAttributes.put(BossAttribute.SCALE, 1D);
 
 			return;
 		}
@@ -950,20 +953,28 @@ public final class Boss extends YamlConfig implements ConfigStringSerializable {
 		}
 
 		// Attributes
-		for (final BossAttribute attribute : BossAttribute.values())
+		for (final BossAttribute attribute : BossAttribute.values()) {
+
+			if (attribute.equals(BossAttribute.SCALE) && this.type.equals(EntityType.PLAYER) && (this.attributes.containsKey(attribute) || this.defaultAttributes.containsKey(attribute))) {
+				final double value = this.attributes.containsKey(attribute) ? this.attributes.get(attribute) : this.defaultAttributes.get(attribute);
+
+				ScaleTrait.updateScale(entity, value);
+				continue;
+			}
+
 			if (this.attributes.containsKey(attribute)) {
 				final double value = this.attributes.get(attribute);
 
 				try {
 					attribute.apply(entity, value);
 
-				} catch (final IllegalStateException e) {
+				} catch(final IllegalStateException e) {
 					Common.logTimed(60 * 60, "Failed to apply attribute " + attribute + " to " + this.getName() + ": " + e.getMessage() + ". Most likely your server does not support this. This message will be shown once per hour.");
 				}
-			}
 
-			else if (this.defaultAttributes.containsKey(attribute))
+			} else if (this.defaultAttributes.containsKey(attribute))
 				attribute.apply(entity, this.defaultAttributes.get(attribute));
+		}
 
 		// Custom settings
 		for (final CustomSetting<?> customSetting : CustomSetting.getRegisteredSettings()) {
