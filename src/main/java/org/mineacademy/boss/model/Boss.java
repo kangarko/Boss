@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
 
+import com.ticxo.modelengine.api.ModelEngineAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.GameMode;
@@ -52,6 +53,7 @@ import org.mineacademy.boss.skill.BossSkill;
 import org.mineacademy.boss.spawn.SpawnRule;
 import org.mineacademy.fo.ChatUtil;
 import org.mineacademy.fo.Common;
+import org.mineacademy.fo.CommonCore;
 import org.mineacademy.fo.EntityUtil;
 import org.mineacademy.fo.MathUtil;
 import org.mineacademy.fo.MinecraftVersion;
@@ -362,10 +364,10 @@ public final class Boss extends YamlConfig implements ConfigStringSerializable {
 	private boolean useCustomModel = false;
 
 	/*
-	 * The custom model name, if {@link #useCustomModel} is true.
+	 * List of custom models to choose from randomly when the Boss spawns
 	 */
 	@Getter
-	private String customModelName;
+	private List<String> customModels;
 
 	//
 	// Non saveable fields below
@@ -498,7 +500,16 @@ public final class Boss extends YamlConfig implements ConfigStringSerializable {
 		this.lastDeathFromSpawnRule = this.getMap("Last_Death_From_Spawn_Rule", String.class, Long.class);
 		this.nativeAttackGoalEnabled = GoalManagerCheck.isAvailable() ? getBoolean("Native_Attack_Goal_Enabled", false) : false;
 		this.useCustomModel = ModelEngineHook.isAvailable() ? getBoolean("Use_Custom_Model", false) : false;
-		this.customModelName = ModelEngineHook.isAvailable() ? getString("Custom_Model_Name") : null;
+//		this.customModelName = ModelEngineHook.isAvailable() ? getString("Custom_Model_Name") : null;
+		this.customModels = ModelEngineHook.isAvailable() ? getList("Custom_Models", String.class, new ArrayList<>()) : null;
+
+		if (this.customModels != null)
+			this.customModels.removeIf(model -> {
+				final boolean invalid = !ModelEngineAPI.getAPI().getModelRegistry().getKeys().contains(model);
+				if(invalid)
+					CommonCore.warning("Removing " + model + " custom model from Boss " + this.getName() + " because it is not registered in ModelEnigne anymore.");
+				return invalid;
+			});
 
 		this.initDefaultAttributes();
 
@@ -671,7 +682,8 @@ public final class Boss extends YamlConfig implements ConfigStringSerializable {
 		this.set("Last_Death_From_Spawn_Rule", this.lastDeathFromSpawnRule);
 		this.set("Native_Attack_Goal_Enabled", this.nativeAttackGoalEnabled);
 		this.set("Use_Custom_Model", this.useCustomModel);
-		this.set("Custom_Model_Name", this.customModelName);
+//		this.set("Custom_Model_Name", this.customModelName);
+		this.set("Custom_Models", this.customModels);
 
 		// Automatically rerender all Bosses of this instance
 		this.updateBosses();
@@ -700,10 +712,10 @@ public final class Boss extends YamlConfig implements ConfigStringSerializable {
 
 		this.save();
 
-		this.updateCustomModels(null);
+		this.updateCustomModels();
 	}
 
-	public String getCustomModelNameOrNone() {
+	/*public String getCustomModelNameOrNone() {
 		return customModelName == null ? "none" : customModelName;
 	}
 
@@ -714,21 +726,48 @@ public final class Boss extends YamlConfig implements ConfigStringSerializable {
 		this.save();
 
 		this.updateCustomModels(oldModelName);
+	}*/
+
+	public void addCustomModel(String modelName) {
+		if (this.customModels == null || this.customModels.contains(modelName))
+			return;
+
+		this.customModels.add(modelName);
+
+		this.updateCustomModels();
 	}
 
-	public void updateCustomModels(final String oldModelName) {
-		if(!ModelEngineHook.isAvailable())
+	public void removeCustomModel(String modelName) {
+		if (this.customModels == null || !this.customModels.contains(modelName))
+			return;
+
+		this.customModels.remove(modelName);
+
+		this.updateCustomModels();
+	}
+
+	public String getRandomCustomModel() {
+		if (this.customModels == null || this.customModels.isEmpty())
+			return null;
+
+		return RandomUtil.nextItem(this.customModels);
+	}
+
+	public void updateCustomModels() {
+		if (!ModelEngineHook.isAvailable())
 			return;
 
 		for (final SpawnedBoss spawned : findBossesAlive()) {
-			if (spawned.getBoss().equals(this)) {
-				if (this.useCustomModel && this.customModelName != null) {
-					if(oldModelName != null)
-						ModelEngineHook.removeModel(spawned.getEntity(), oldModelName);
-					ModelEngineHook.applyModel(spawned.getEntity(), this.customModelName);
-				} else if(!this.useCustomModel && this.customModelName != null) {
-					ModelEngineHook.removeModel(spawned.getEntity(), this.customModelName);
-				}
+			if (!spawned.getBoss().equals(this)) continue;
+
+			if (this.useCustomModel) {
+				final String customModelName = this.getRandomCustomModel();
+
+				if (customModelName != null)
+					ModelEngineHook.applyModel(spawned.getEntity(), customModelName);
+
+			} else {
+				ModelEngineHook.removeAllModels(spawned.getEntity());
 			}
 		}
 	}
@@ -907,8 +946,12 @@ public final class Boss extends YamlConfig implements ConfigStringSerializable {
 	 */
 	private void applyProperties(LivingEntity entity, boolean keepOldHealth) {
 
-		if(this.useCustomModel && this.customModelName != null && ModelEngineHook.isAvailable())
-			ModelEngineHook.applyModel(entity, this.customModelName);
+		if (this.useCustomModel && ModelEngineHook.isAvailable()) {
+			final String customModelName = this.getRandomCustomModel();
+
+			if (customModelName != null)
+				ModelEngineHook.applyModel(entity, customModelName);
+		}
 
 		// Set health
 		try {

@@ -100,7 +100,7 @@ class SettingsMenu extends Menu {
 	private final Button customSettingsButton;
 
 	@Position(9 * 5 + 7)
-	private final Button customModelButton;
+	private final Button customModelsButton;
 
 	SettingsMenu(Menu parent, Boss boss) {
 		super(parent);
@@ -245,9 +245,9 @@ class SettingsMenu extends Menu {
 				"Edit custom settings only",
 				"applicable for this Boss.");
 
-		this.customModelButton = ModelEngineHook.isAvailable() ? new ButtonMenu(new CustomModelMenu(),
+		this.customModelsButton = ModelEngineHook.isAvailable() ? new ButtonMenu(new CustomModelMenu(),
 				CompMaterial.ARMOR_STAND,
-				"&bCustom Model",
+				"&bCustom Models",
 				"",
 				"Enable and edit",
 				"custom models.",
@@ -255,7 +255,7 @@ class SettingsMenu extends Menu {
 				"&cWarning: &7This feature is",
 				"&7under heavy development.")
 				: Button.makeDummy(CompMaterial.ARMOR_STAND,
-				"&bCustom Model",
+				"&bCustom Models",
 				"",
 				"Enable and edit",
 				"custom models.",
@@ -1616,19 +1616,19 @@ class SettingsMenu extends Menu {
 		private final Button enableCustomModelButton;
 
 		@Position(9 * 1 + 5)
-		private final Button setCustomModelNameButton;
+		private final Button selectCustomModelsButton;
 
 		public CustomModelMenu() {
 			super(SettingsMenu.this);
 
-			this.setTitle("Custom Model");
+			this.setTitle("Custom Models");
 
 			this.enableCustomModelButton = new Button() {
 				@Override
 				public void onClickedInMenu(Player player, Menu menu, ClickType click) {
 					final boolean enabled = SettingsMenu.this.boss.isUseCustomModel();
 					SettingsMenu.this.boss.setUseCustomModel(!enabled);
-					SettingsMenu.CustomModelMenu.this.restartMenu(!enabled ? "&2Enabled custom model." : "&4Disabled custom model.");
+					SettingsMenu.CustomModelMenu.this.restartMenu(!enabled ? "&2Enabled Custom Models" : "&4Disabled Custom Models");
 				}
 
 				@Override
@@ -1646,11 +1646,14 @@ class SettingsMenu extends Menu {
 				}
 			};
 
-			this.setCustomModelNameButton = new ButtonMenu(new SelectCustomModelMenu(),
+			this.selectCustomModelsButton = new ButtonMenu(new SelectCustomModelsMenu(),
 					CompMaterial.ARMOR_STAND,
-					"Select Custom Model",
+					"Select Custom Models",
 					"",
-					"Current: &f" + SettingsMenu.this.boss.getCustomModelNameOrNone(),
+					"If you select more than 1 model,",
+					"the plugin will choose a random",
+					"one every time a Boss spawns or",
+					"updates.",
 					"",
 					"Click to change the",
 					"custom model to use.");
@@ -1672,28 +1675,30 @@ class SettingsMenu extends Menu {
 			return new CustomModelMenu();
 		}
 
-		private class SelectCustomModelMenu extends MenuPaged<String> {
+		private class SelectCustomModelsMenu extends MenuPaged<String> {
 
-			public SelectCustomModelMenu() {
+			public SelectCustomModelsMenu() {
 				super(CustomModelMenu.this, new ArrayList<>(ModelEngineAPI.getAPI().getModelRegistry().getKeys()));
 			}
 
 			@Override
 			public Menu newInstance() {
-				return new SelectCustomModelMenu();
+				return new SelectCustomModelsMenu();
 			}
 
 			@Override
 			protected String[] getInfo() {
 				return new String[]{
-						"Select a custom model",
-						"to use for this Boss."
+						"If you select more than 1 model,",
+						"the plugin will choose a random",
+						"one every time a Boss spawns or",
+						"updates."
 				};
 			}
 
 			@Override
 			protected ItemStack convertToItemStack(String item) {
-				final boolean selected = SettingsMenu.this.boss.getCustomModelNameOrNone().equals(item);
+				final boolean selected = SettingsMenu.this.boss.getCustomModels().contains(item);
 				return ItemCreator.from(
 						CompMaterial.ARMOR_STAND,
 						item + (selected ? " &7&o(Selected)" : ""),
@@ -1704,8 +1709,14 @@ class SettingsMenu extends Menu {
 
 			@Override
 			protected void onPageClick(Player player, String item, ClickType click) {
-				SettingsMenu.this.boss.setCustomModelName(SettingsMenu.this.boss.getCustomModelNameOrNone().equals(item) ? null : item);
-				CustomModelMenu.this.newInstance().displayTo(player);
+				final Boss boss = SettingsMenu.this.boss;
+
+				if (boss.getCustomModels().contains(item))
+					boss.removeCustomModel(item);
+				else
+					boss.addCustomModel(item);
+
+				this.restartMenu((boss.getCustomModels().contains(item) ? "§2Selected " : "§cRemoved ") + item);
 			}
 		}
 	}

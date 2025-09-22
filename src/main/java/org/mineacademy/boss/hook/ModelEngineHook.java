@@ -28,7 +28,7 @@ public class ModelEngineHook {
             return;
         }
 
-        removeModel(entity, modelName);
+        removeAllModels(entity);
 
         final ModeledEntity modeledEntity = ModelEngineAPI.getOrCreateModeledEntity(entity);
 
@@ -37,7 +37,7 @@ public class ModelEngineHook {
         modeledEntity.addModel(activeModel, true);
     }
 
-    public static void removeModel(final Entity entity, final String modelName) {
+    public static void removeAllModels(final Entity entity) {
         if (!available)
             return;
 
@@ -46,9 +46,10 @@ public class ModelEngineHook {
         if (modeledEntity == null)
             return;
 
-        modeledEntity.getModel(modelName).ifPresent(ActiveModel::destroy);
-
-        modeledEntity.removeModel(modelName);
+        modeledEntity.getModels().forEach((name, model) -> {
+            model.destroy();
+            modeledEntity.removeModel(name);
+        });
 
         modeledEntity.setBaseEntityVisible(true);
     }
