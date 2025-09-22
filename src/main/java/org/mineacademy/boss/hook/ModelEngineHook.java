@@ -17,14 +17,14 @@ public class ModelEngineHook {
     }
 
     public static void applyModel(final Entity entity, final String modelName) {
-        if(!available)
+        if (!available)
             return;
 
         final ActiveModel activeModel;
 
         try {
             activeModel = ModelEngineAPI.createActiveModel(modelName);
-        } catch(RuntimeException exception) {
+        } catch (RuntimeException exception) {
             return;
         }
 
@@ -38,12 +38,12 @@ public class ModelEngineHook {
     }
 
     public static void removeModel(final Entity entity, final String modelName) {
-        if(!available)
+        if (!available)
             return;
 
         final ModeledEntity modeledEntity = ModelEngineAPI.getModeledEntity(entity);
 
-        if(modeledEntity == null)
+        if (modeledEntity == null)
             return;
 
         modeledEntity.getModel(modelName).ifPresent(ActiveModel::destroy);
