@@ -44,6 +44,7 @@ import org.mineacademy.boss.goal.GoalManager;
 import org.mineacademy.boss.goal.GoalManagerCheck;
 import org.mineacademy.boss.hook.CitizensHook;
 import org.mineacademy.boss.hook.LandsHook;
+import org.mineacademy.boss.hook.ModelEngineHook;
 import org.mineacademy.boss.hook.WorldGuardHook;
 import org.mineacademy.boss.listener.ChunkListener;
 import org.mineacademy.boss.settings.Settings;
@@ -354,6 +355,18 @@ public final class Boss extends YamlConfig implements ConfigStringSerializable {
 	@Getter
 	private boolean nativeAttackGoalEnabled = false;
 
+	/*
+	 * Returns the default health for this Boss, if not set, returns 20.0D.
+	 */
+	@Getter
+	private boolean useCustomModel = false;
+
+	/*
+	 * The custom model name, if {@link #useCustomModel} is true.
+	 */
+	@Getter
+	private String customModelName;
+
 	//
 	// Non saveable fields below
 	//
@@ -484,6 +497,8 @@ public final class Boss extends YamlConfig implements ConfigStringSerializable {
 		this.eggLore = this.getStringList("Egg.Lore");
 		this.lastDeathFromSpawnRule = this.getMap("Last_Death_From_Spawn_Rule", String.class, Long.class);
 		this.nativeAttackGoalEnabled = GoalManagerCheck.isAvailable() ? getBoolean("Native_Attack_Goal_Enabled", false) : false;
+		this.useCustomModel = ModelEngineHook.isAvailable() ? getBoolean("Use_Custom_Model", false) : false;
+		this.customModelName = ModelEngineHook.isAvailable() ? getString("Custom_Model_Name") : null;
 
 		this.initDefaultAttributes();
 
@@ -654,7 +669,9 @@ public final class Boss extends YamlConfig implements ConfigStringSerializable {
 		this.set("Egg.Title", this.eggTitle);
 		this.set("Egg.Lore", this.eggLore);
 		this.set("Last_Death_From_Spawn_Rule", this.lastDeathFromSpawnRule);
-		set("Native_Attack_Goal_Enabled", this.nativeAttackGoalEnabled);
+		this.set("Native_Attack_Goal_Enabled", this.nativeAttackGoalEnabled);
+		this.set("Use_Custom_Model", this.useCustomModel);
+		this.set("Custom_Model_Name", this.customModelName);
 
 		// Automatically rerender all Bosses of this instance
 		this.updateBosses();
@@ -676,6 +693,44 @@ public final class Boss extends YamlConfig implements ConfigStringSerializable {
 							CitizensHook.update(boss.getBoss(), entity);
 					}
 				}
+	}
+
+	public void setUseCustomModel(boolean useCustomModel) {
+		this.useCustomModel = useCustomModel;
+
+		this.save();
+
+		this.updateCustomModels(null);
+	}
+
+	public String getCustomModelNameOrNone() {
+		return customModelName == null ? "none" : customModelName;
+	}
+
+	public void setCustomModelName(String customModelName) {
+		final String oldModelName = this.customModelName;
+		this.customModelName = customModelName;
+
+		this.save();
+
+		this.updateCustomModels(oldModelName);
+	}
+
+	public void updateCustomModels(final String oldModelName) {
+		if(!ModelEngineHook.isAvailable())
+			return;
+
+		for (final SpawnedBoss spawned : findBossesAlive()) {
+			if (spawned.getBoss().equals(this)) {
+				if (this.useCustomModel && this.customModelName != null) {
+					if(oldModelName != null)
+						ModelEngineHook.removeModel(spawned.getEntity(), oldModelName);
+					ModelEngineHook.applyModel(spawned.getEntity(), this.customModelName);
+				} else if(!this.useCustomModel && this.customModelName != null) {
+					ModelEngineHook.removeModel(spawned.getEntity(), this.customModelName);
+				}
+			}
+		}
 	}
 
 	/*
@@ -851,6 +906,9 @@ public final class Boss extends YamlConfig implements ConfigStringSerializable {
 	 * Applies our custom settings that will make the entity a Boss.
 	 */
 	private void applyProperties(LivingEntity entity, boolean keepOldHealth) {
+
+		if(this.useCustomModel && this.customModelName != null && ModelEngineHook.isAvailable())
+			ModelEngineHook.applyModel(entity, this.customModelName);
 
 		// Set health
 		try {

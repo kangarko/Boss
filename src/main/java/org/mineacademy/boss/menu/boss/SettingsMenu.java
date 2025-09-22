@@ -10,6 +10,7 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import com.ticxo.modelengine.api.ModelEngineAPI;
 import org.bukkit.conversations.ConversationContext;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -20,6 +21,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffectType;
 import org.mineacademy.boss.custom.CustomSetting;
 import org.mineacademy.boss.goal.GoalManagerCheck;
+import org.mineacademy.boss.hook.ModelEngineHook;
 import org.mineacademy.boss.model.Boss;
 import org.mineacademy.boss.model.BossAttribute;
 import org.mineacademy.boss.model.BossCitizensSettings;
@@ -96,6 +98,9 @@ class SettingsMenu extends Menu {
 
 	@Position(9 * 3 + 7)
 	private final Button customSettingsButton;
+
+	@Position(9 * 5 + 7)
+	private final Button customModelButton;
 
 	SettingsMenu(Menu parent, Boss boss) {
 		super(parent);
@@ -239,6 +244,24 @@ class SettingsMenu extends Menu {
 				"",
 				"Edit custom settings only",
 				"applicable for this Boss.");
+
+		this.customModelButton = ModelEngineHook.isAvailable() ? new ButtonMenu(new CustomModelMenu(),
+				CompMaterial.ARMOR_STAND,
+				"&bCustom Model",
+				"",
+				"Enable and edit",
+				"custom models.",
+				"",
+				"&cWarning: &7This feature is",
+				"&7under heavy development.")
+				: Button.makeDummy(CompMaterial.ARMOR_STAND,
+				"&bCustom Model",
+				"",
+				"Enable and edit",
+				"custom models.",
+				"",
+				"&cError: &7ModelEngine required!");
+
 	}
 
 	@Override
@@ -1584,6 +1607,106 @@ class SettingsMenu extends Menu {
 		@Override
 		public Menu newInstance() {
 			return new CustomSettingsMenu();
+		}
+	}
+
+	private class CustomModelMenu extends Menu {
+
+		@Position(9 * 1 + 3)
+		private final Button enableCustomModelButton;
+
+		@Position(9 * 1 + 5)
+		private final Button setCustomModelNameButton;
+
+		public CustomModelMenu() {
+			super(SettingsMenu.this);
+
+			this.setTitle("Custom Model");
+
+			this.enableCustomModelButton = new Button() {
+				@Override
+				public void onClickedInMenu(Player player, Menu menu, ClickType click) {
+					final boolean enabled = SettingsMenu.this.boss.isUseCustomModel();
+					SettingsMenu.this.boss.setUseCustomModel(!enabled);
+					SettingsMenu.CustomModelMenu.this.restartMenu(!enabled ? "&2Enabled custom model." : "&4Disabled custom model.");
+				}
+
+				@Override
+				public ItemStack getItem() {
+					return ItemCreator.from(
+							CompMaterial.BEACON,
+							"Use Custom Model",
+							"",
+							"Status: " + (SettingsMenu.this.boss.isUseCustomModel() ? "§aEnabled" : "§cDisabled"),
+							"",
+							"When enabled, we will use ModelEngine",
+							"to render a custom model in your Boss.",
+							"",
+							"Click to toggle").make();
+				}
+			};
+
+			this.setCustomModelNameButton = new ButtonMenu(new SelectCustomModelMenu(),
+					CompMaterial.ARMOR_STAND,
+					"Select Custom Model",
+					"",
+					"Current: &f" + SettingsMenu.this.boss.getCustomModelNameOrNone(),
+					"",
+					"Click to change the",
+					"custom model to use.");
+		}
+
+		@Override
+		protected String[] getInfo() {
+			return new String[] {
+					"Configure custom model for this Boss",
+					"with ModelEngine.",
+					"",
+					"&cWarning: &7This feature is",
+					"&7under heavy development."
+			};
+		}
+
+		@Override
+		public Menu newInstance() {
+			return new CustomModelMenu();
+		}
+
+		private class SelectCustomModelMenu extends MenuPaged<String> {
+
+			public SelectCustomModelMenu() {
+				super(CustomModelMenu.this, new ArrayList<>(ModelEngineAPI.getAPI().getModelRegistry().getKeys()));
+			}
+
+			@Override
+			public Menu newInstance() {
+				return new SelectCustomModelMenu();
+			}
+
+			@Override
+			protected String[] getInfo() {
+				return new String[]{
+						"Select a custom model",
+						"to use for this Boss."
+				};
+			}
+
+			@Override
+			protected ItemStack convertToItemStack(String item) {
+				final boolean selected = SettingsMenu.this.boss.getCustomModelNameOrNone().equals(item);
+				return ItemCreator.from(
+						CompMaterial.ARMOR_STAND,
+						item + (selected ? " &7&o(Selected)" : ""),
+						"",
+						selected ? "Click to remove" : "Click to select"
+				).glow(selected).make();
+			}
+
+			@Override
+			protected void onPageClick(Player player, String item, ClickType click) {
+				SettingsMenu.this.boss.setCustomModelName(SettingsMenu.this.boss.getCustomModelNameOrNone().equals(item) ? null : item);
+				CustomModelMenu.this.newInstance().displayTo(player);
+			}
 		}
 	}
 }
