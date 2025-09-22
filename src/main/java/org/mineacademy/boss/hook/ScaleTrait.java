@@ -41,7 +41,6 @@ public final class ScaleTrait extends Trait {
             final NPC npc = registry.getNPC(entity);
 
             if (npc != null)
-
                 npc.getTraitNullable(ScaleTrait.class).scale = scale;
         }
     }
