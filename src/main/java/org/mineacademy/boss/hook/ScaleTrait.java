@@ -29,7 +29,7 @@ public final class ScaleTrait extends Trait {
      * Update last known health
      */
     public static void updateScale(Entity entity, double scale) {
-        if(scale < 0) scale = -1;
+        if (scale < 0) scale = -1;
 
         final SpawnedBoss boss = Boss.findBoss(entity);
 
@@ -40,7 +40,7 @@ public final class ScaleTrait extends Trait {
 
             final NPC npc = registry.getNPC(entity);
 
-            if(npc != null)
+            if (npc != null)
 
                 npc.getTraitNullable(ScaleTrait.class).scale = scale;
         }
@@ -51,14 +51,14 @@ public final class ScaleTrait extends Trait {
      */
     @Override
     public void onSpawn() {
-        if(!this.npc.isSpawned())
+        if (!this.npc.isSpawned())
             return;
 
         final LivingEntity entity = (LivingEntity) this.npc.getEntity();
         final SpawnedBoss spawnedBoss = Boss.findBoss(entity);
 
-        if(spawnedBoss != null) {
-            if(this.scale > 0)
+        if (spawnedBoss != null) {
+            if (this.scale > 0)
                 CompAttribute.SCALE.set(entity, this.scale);
         }
     }
