@@ -45,6 +45,7 @@ import org.mineacademy.fo.menu.button.Button;
 import org.mineacademy.fo.menu.button.ButtonMenu;
 import org.mineacademy.fo.menu.button.StartPosition;
 import org.mineacademy.fo.menu.button.annotation.Position;
+import org.mineacademy.fo.menu.model.InventoryDrawer;
 import org.mineacademy.fo.menu.model.ItemCreator;
 import org.mineacademy.fo.menu.model.MenuClickLocation;
 import org.mineacademy.fo.menu.model.MenuQuantity;
@@ -245,7 +246,7 @@ class SettingsMenu extends Menu {
 				"Edit custom settings only",
 				"applicable for this Boss.");
 
-		this.customModelsButton = ModelEngineHook.isAvailable() ? new ButtonMenu(new CustomModelMenu(),
+		this.customModelsButton = ModelEngineHook.isAvailable() ? new ButtonMenu(new CustomModelsMenu(),
 				CompMaterial.ARMOR_STAND,
 				"&bCustom Models",
 				"",
@@ -1610,7 +1611,7 @@ class SettingsMenu extends Menu {
 		}
 	}
 
-	private class CustomModelMenu extends Menu {
+	private class CustomModelsMenu extends Menu {
 
 		@Position(9 * 1 + 3)
 		private final Button enableCustomModelButton;
@@ -1618,7 +1619,7 @@ class SettingsMenu extends Menu {
 		@Position(9 * 1 + 5)
 		private final Button selectCustomModelsButton;
 
-		public CustomModelMenu() {
+		public CustomModelsMenu() {
 			super(SettingsMenu.this);
 
 			this.setTitle("Custom Models");
@@ -1628,7 +1629,7 @@ class SettingsMenu extends Menu {
 				public void onClickedInMenu(Player player, Menu menu, ClickType click) {
 					final boolean enabled = SettingsMenu.this.boss.isUseCustomModel();
 					SettingsMenu.this.boss.setUseCustomModel(!enabled);
-					SettingsMenu.CustomModelMenu.this.restartMenu(!enabled ? "&2Enabled Custom Models" : "&4Disabled Custom Models");
+					CustomModelsMenu.this.restartMenu(!enabled ? "&2Enabled Custom Models" : "&4Disabled Custom Models");
 				}
 
 				@Override
@@ -1672,18 +1673,105 @@ class SettingsMenu extends Menu {
 
 		@Override
 		public Menu newInstance() {
-			return new CustomModelMenu();
+			return new CustomModelsMenu();
 		}
 
 		private class SelectCustomModelsMenu extends MenuPaged<String> {
 
+			private String filter = "";
+
+			private boolean reverseOrder = false;
+
+			@Position(9 * 3 + 1)
+			private final Button checkAllButton;
+
+			@Position(9 * 3 + 6)
+			private final Button orderButton;
+
+			@Position(9 * 3 + 7)
+			private final Button filterButton;
+
+			public SelectCustomModelsMenu(String filter, boolean reverseOrder, List<String> items) {
+				super(CustomModelsMenu.this, items, true);
+				this.filter = filter;
+				this.reverseOrder = reverseOrder;
+
+				this.setTitle("Select Models (" + SettingsMenu.this.boss.getCustomModels().size() + "/" + items.size() + ")");
+				this.setSize(4 * 9);
+
+				this.orderButton = Button.makeSimple(
+						ItemCreator.from(
+								CompMaterial.SLIME_BALL,
+								"Order",
+								"",
+								"Current: &f" + (SelectCustomModelsMenu.this.reverseOrder ? "Z-A" : "A-Z"),
+								"",
+								"Click to switch"
+						),
+						player -> {
+							this.reverseOrder = !this.reverseOrder;
+							this.newInstance().displayTo(this.getViewer());
+						}
+				);
+
+				this.filterButton = Button.makeSimple(
+						CompMaterial.HOPPER,
+						"Filter",
+						"Current filter: &f" + (this.filter.isEmpty() ? "none" : this.filter) + "\n" +
+						"\n" +
+						"&aLeft click: &fset\n" +
+						"&cRight click: &fremove",
+						(player, clickType) -> {
+							if (clickType.name().startsWith("LEFT"))
+								new SimpleStringPrompt("Please enter the new filter: ", newFilter -> this.filter = newFilter.replace("clear", "")).show(this.getViewer());
+							else {
+								this.filter = "";
+								this.newInstance().displayTo(this.getViewer());
+							}
+						}
+				);
+
+				final Boss boss = SettingsMenu.this.boss;
+				final List<String> bossModels = boss.getCustomModels();
+
+				this.checkAllButton = Button.makeSimple(
+						ItemCreator.from(
+								CompMaterial.LEVER,
+								"> " + (bossModels.isEmpty() ? "Check" : "Uncheck") + " All",
+								"> " + (bossModels.isEmpty() ? "Uncheck" : "Check") + " All"
+						),
+						player -> {
+							if (bossModels.isEmpty())
+								items.forEach(boss::addCustomModel);
+							else
+								items.forEach(boss::removeCustomModel);
+							this.newInstance().displayTo(this.getViewer());
+						}
+				);
+			}
+
+			public SelectCustomModelsMenu(String filter, boolean reverseOrder) {
+				this(filter, reverseOrder, new ArrayList<>(ModelEngineAPI.getAPI().getModelRegistry().getKeys().stream().sorted(reverseOrder ? Comparator.reverseOrder() : Comparator.naturalOrder()).filter(s -> s.contains(filter)).collect(Collectors.toList())));
+			}
+
 			public SelectCustomModelsMenu() {
-				super(CustomModelMenu.this, new ArrayList<>(ModelEngineAPI.getAPI().getModelRegistry().getKeys()));
+				this("", false);
+			}
+
+			@Override
+			protected void onPostDisplay(InventoryDrawer drawer) {
+				if (ModelEngineAPI.getAPI().getModelRegistry().getKeys().stream().noneMatch(s -> s.contains(filter)))
+					drawer.setItem(this.getCenterSlot(), ItemCreator.from(
+							CompMaterial.BARRIER,
+							"&cNo results for this filter :("
+					).make());
+
+				super.onPostDisplay(drawer);
 			}
 
 			@Override
 			public Menu newInstance() {
-				return new SelectCustomModelsMenu();
+				return new SelectCustomModelsMenu(this.filter, this.reverseOrder);
 			}
 
 			@Override
@@ -1701,7 +1789,10 @@ class SettingsMenu extends Menu {
 				final boolean selected = SettingsMenu.this.boss.getCustomModels().contains(item);
 				return ItemCreator.from(
 						CompMaterial.ARMOR_STAND,
-						item + (selected ? " &7&o(Selected)" : ""),
+						"&7Model: &f" + item,
+						selected
+								? String.format("&7Chance: &f%.1f", (double) 100 / SettingsMenu.this.boss.getCustomModels().size()) + "%"
+								: "&7&oNot Selected",
 						"",
 						selected ? "Click to remove" : "Click to select"
 				).glow(selected).make();
@@ -1716,7 +1807,7 @@ class SettingsMenu extends Menu {
 				else
 					boss.addCustomModel(item);
 
-				this.restartMenu((boss.getCustomModels().contains(item) ? "§2Selected " : "§cRemoved ") + item);
+				this.newInstance().displayTo(player);
 			}
 		}
 	}
