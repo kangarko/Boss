@@ -500,7 +500,6 @@ public final class Boss extends YamlConfig implements ConfigStringSerializable {
 		this.lastDeathFromSpawnRule = this.getMap("Last_Death_From_Spawn_Rule", String.class, Long.class);
 		this.nativeAttackGoalEnabled = GoalManagerCheck.isAvailable() ? getBoolean("Native_Attack_Goal_Enabled", false) : false;
 		this.useCustomModel = ModelEngineHook.isAvailable() ? getBoolean("Use_Custom_Model", false) : false;
-//		this.customModelName = ModelEngineHook.isAvailable() ? getString("Custom_Model_Name") : null;
 		this.customModels = ModelEngineHook.isAvailable() ? getList("Custom_Models", String.class, new ArrayList<>()) : null;
 
 		if (this.customModels != null)
@@ -682,7 +681,6 @@ public final class Boss extends YamlConfig implements ConfigStringSerializable {
 		this.set("Last_Death_From_Spawn_Rule", this.lastDeathFromSpawnRule);
 		this.set("Native_Attack_Goal_Enabled", this.nativeAttackGoalEnabled);
 		this.set("Use_Custom_Model", this.useCustomModel);
-//		this.set("Custom_Model_Name", this.customModelName);
 		this.set("Custom_Models", this.customModels);
 
 		// Automatically rerender all Bosses of this instance
@@ -714,19 +712,6 @@ public final class Boss extends YamlConfig implements ConfigStringSerializable {
 
 		this.updateCustomModels();
 	}
-
-	/*public String getCustomModelNameOrNone() {
-		return customModelName == null ? "none" : customModelName;
-	}
-
-	public void setCustomModelName(String customModelName) {
-		final String oldModelName = this.customModelName;
-		this.customModelName = customModelName;
-
-		this.save();
-
-		this.updateCustomModels(oldModelName);
-	}*/
 
 	public void addCustomModel(String modelName) {
 		if (this.customModels == null || this.customModels.contains(modelName))
