@@ -45,6 +45,7 @@ import org.mineacademy.boss.goal.GoalManager;
 import org.mineacademy.boss.goal.GoalManagerCheck;
 import org.mineacademy.boss.hook.CitizensHook;
 import org.mineacademy.boss.hook.LandsHook;
+import org.mineacademy.boss.hook.ModelEngineHook;
 import org.mineacademy.boss.hook.ScaleTrait;
 import org.mineacademy.boss.hook.WorldGuardHook;
 import org.mineacademy.boss.listener.ChunkListener;
