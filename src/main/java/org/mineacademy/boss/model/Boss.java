@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
 
+import com.ticxo.modelengine.api.ModelEngineAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.GameMode;
@@ -52,6 +53,7 @@ import org.mineacademy.boss.skill.BossSkill;
 import org.mineacademy.boss.spawn.SpawnRule;
 import org.mineacademy.fo.ChatUtil;
 import org.mineacademy.fo.Common;
+import org.mineacademy.fo.CommonCore;
 import org.mineacademy.fo.EntityUtil;
 import org.mineacademy.fo.MathUtil;
 import org.mineacademy.fo.MinecraftVersion;
@@ -355,6 +357,18 @@ public final class Boss extends YamlConfig implements ConfigStringSerializable {
 	@Getter
 	private boolean nativeAttackGoalEnabled = false;
 
+	/*
+	 * Returns the default health for this Boss, if not set, returns 20.0D.
+	 */
+	@Getter
+	private boolean useCustomModel = false;
+
+	/*
+	 * List of custom models to choose from randomly when the Boss spawns
+	 */
+	@Getter
+	private List<String> customModels;
+
 	//
 	// Non saveable fields below
 	//
@@ -485,6 +499,16 @@ public final class Boss extends YamlConfig implements ConfigStringSerializable {
 		this.eggLore = this.getStringList("Egg.Lore");
 		this.lastDeathFromSpawnRule = this.getMap("Last_Death_From_Spawn_Rule", String.class, Long.class);
 		this.nativeAttackGoalEnabled = GoalManagerCheck.isAvailable() ? getBoolean("Native_Attack_Goal_Enabled", false) : false;
+		this.useCustomModel = ModelEngineHook.isAvailable() ? getBoolean("Use_Custom_Model", false) : false;
+		this.customModels = ModelEngineHook.isAvailable() ? getList("Custom_Models", String.class, new ArrayList<>()) : null;
+
+		if (this.customModels != null)
+			this.customModels.removeIf(model -> {
+				final boolean invalid = !ModelEngineAPI.getAPI().getModelRegistry().getKeys().contains(model);
+				if(invalid)
+					CommonCore.warning("Removing " + model + " custom model from Boss " + this.getName() + " because it is not registered in ModelEnigne anymore.");
+				return invalid;
+			});
 
 		this.initDefaultAttributes();
 
@@ -657,7 +681,9 @@ public final class Boss extends YamlConfig implements ConfigStringSerializable {
 		this.set("Egg.Title", this.eggTitle);
 		this.set("Egg.Lore", this.eggLore);
 		this.set("Last_Death_From_Spawn_Rule", this.lastDeathFromSpawnRule);
-		set("Native_Attack_Goal_Enabled", this.nativeAttackGoalEnabled);
+		this.set("Native_Attack_Goal_Enabled", this.nativeAttackGoalEnabled);
+		this.set("Use_Custom_Model", this.useCustomModel);
+		this.set("Custom_Models", this.customModels);
 
 		// Automatically rerender all Bosses of this instance
 		this.updateBosses();
@@ -679,6 +705,58 @@ public final class Boss extends YamlConfig implements ConfigStringSerializable {
 							CitizensHook.update(boss.getBoss(), entity);
 					}
 				}
+	}
+
+	public void setUseCustomModel(boolean useCustomModel) {
+		this.useCustomModel = useCustomModel;
+
+		this.save();
+
+		this.updateCustomModels();
+	}
+
+	public void addCustomModel(String modelName) {
+		if (this.customModels == null || this.customModels.contains(modelName))
+			return;
+
+		this.customModels.add(modelName);
+
+		this.updateCustomModels();
+	}
+
+	public void removeCustomModel(String modelName) {
+		if (this.customModels == null || !this.customModels.contains(modelName))
+			return;
+
+		this.customModels.remove(modelName);
+
+		this.updateCustomModels();
+	}
+
+	public String getRandomCustomModel() {
+		if (this.customModels == null || this.customModels.isEmpty())
+			return null;
+
+		return RandomUtil.nextItem(this.customModels);
+	}
+
+	public void updateCustomModels() {
+		if (!ModelEngineHook.isAvailable())
+			return;
+
+		for (final SpawnedBoss spawned : findBossesAlive()) {
+			if (!spawned.getBoss().equals(this)) continue;
+
+			if (this.useCustomModel) {
+				final String customModelName = this.getRandomCustomModel();
+
+				if (customModelName != null)
+					ModelEngineHook.applyModel(spawned.getEntity(), customModelName);
+
+			} else {
+				ModelEngineHook.removeAllModels(spawned.getEntity());
+			}
+		}
 	}
 
 	/*
@@ -855,6 +933,13 @@ public final class Boss extends YamlConfig implements ConfigStringSerializable {
 	 */
 	private void applyProperties(LivingEntity entity, boolean keepOldHealth) {
 
+		if (this.useCustomModel && ModelEngineHook.isAvailable()) {
+			final String customModelName = this.getRandomCustomModel();
+
+			if (customModelName != null)
+				ModelEngineHook.applyModel(entity, customModelName);
+		}
+
 		// Set health
 		try {
 			entity.setMaxHealth(this.maxHealth);
@@ -968,7 +1053,7 @@ public final class Boss extends YamlConfig implements ConfigStringSerializable {
 				try {
 					attribute.apply(entity, value);
 
-				} catch(final IllegalStateException e) {
+				} catch (final IllegalStateException e) {
 					Common.logTimed(60 * 60, "Failed to apply attribute " + attribute + " to " + this.getName() + ": " + e.getMessage() + ". Most likely your server does not support this. This message will be shown once per hour.");
 				}
 
