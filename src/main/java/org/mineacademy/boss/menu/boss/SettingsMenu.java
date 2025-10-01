@@ -20,6 +20,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffectType;
 import org.mineacademy.boss.custom.CustomSetting;
 import org.mineacademy.boss.goal.GoalManagerCheck;
+import org.mineacademy.boss.hook.ModelEngineHook;
 import org.mineacademy.boss.model.Boss;
 import org.mineacademy.boss.model.BossAttribute;
 import org.mineacademy.boss.model.BossCitizensSettings;
@@ -43,6 +44,7 @@ import org.mineacademy.fo.menu.button.Button;
 import org.mineacademy.fo.menu.button.ButtonMenu;
 import org.mineacademy.fo.menu.button.StartPosition;
 import org.mineacademy.fo.menu.button.annotation.Position;
+import org.mineacademy.fo.menu.model.InventoryDrawer;
 import org.mineacademy.fo.menu.model.ItemCreator;
 import org.mineacademy.fo.menu.model.MenuClickLocation;
 import org.mineacademy.fo.menu.model.MenuQuantity;
@@ -57,13 +59,15 @@ import org.mineacademy.fo.remain.CompPotionEffectType;
 import org.mineacademy.fo.remain.CompSound;
 import org.mineacademy.fo.remain.Remain;
 
+import com.ticxo.modelengine.api.ModelEngineAPI;
+
 import lombok.Getter;
 import lombok.Setter;
 
 /**
  * The menu with main Boss settings.
  */
-class SettingsMenu extends Menu {
+final class SettingsMenu extends Menu {
 
 	private final Boss boss;
 
@@ -97,6 +101,9 @@ class SettingsMenu extends Menu {
 	@Position(9 * 3 + 7)
 	private final Button customSettingsButton;
 
+	@Position(9 * 5 + 7)
+	private final Button customModelsButton;
+
 	SettingsMenu(Menu parent, Boss boss) {
 		super(parent);
 
@@ -119,19 +126,19 @@ class SettingsMenu extends Menu {
 				"",
 				"&c[!] &7This does not affect",
 				"the file name: &f" + boss.getFile().getName()), player -> {
-			new SimpleStringPrompt("Enter the Boss alias (for NPCs this is limited to 16 letters including colors). Use & color colors or minimessage tags (put hex colors in <>) Current: '" + boss.getAlias() + "&7' Type 'hidden' to hide, or 'default' to reset to '" + boss.getName() + "'.") {
+					new SimpleStringPrompt("Enter the Boss alias (for NPCs this is limited to 16 letters including colors). Use & color colors or minimessage tags (put hex colors in <>) Current: '" + boss.getAlias() + "&7' Type 'hidden' to hide, or 'default' to reset to '" + boss.getName() + "'.") {
 
-				@Override
-				protected boolean isInputValid(ConversationContext context, String input) {
-					return Valid.isInRange(input.length(), 3, 256);
-				}
+						@Override
+						protected boolean isInputValid(ConversationContext context, String input) {
+							return Valid.isInRange(input.length(), 3, 256);
+						}
 
-				@Override
-				protected void onValidatedInput(ConversationContext context, String input) {
-					boss.setAlias(input);
-				}
-			}.show(player);
-		});
+						@Override
+						protected void onValidatedInput(ConversationContext context, String input) {
+							boss.setAlias(input);
+						}
+					}.show(player);
+				});
 
 		this.healthButton = Button.makeSimple(ItemCreator.from(
 				Remain.getMaterial("BEETROOT", CompMaterial.REDSTONE),
@@ -141,37 +148,37 @@ class SettingsMenu extends Menu {
 				"",
 				"Click to edit Boss'",
 				"spawn health."), player -> {
-			new SimpleDecimalPrompt("Please enter the Boss max health. Current: " + boss.getMaxHealth() + " HP. Maximum (editable in spigot.yml): "
-									+ Remain.getMaxHealth() + ". Or type '0' to reset back to the vanilla HP.") {
+					new SimpleDecimalPrompt("Please enter the Boss max health. Current: " + boss.getMaxHealth() + " HP. Maximum (editable in spigot.yml): "
+							+ Remain.getMaxHealth() + ". Or type '0' to reset back to the vanilla HP.") {
 
-				@Override
-				protected boolean isInputValid(ConversationContext context, String input) {
-					return Valid.isDecimal(input) && Valid.isInRange(Double.parseDouble(input), 0, Remain.getMaxHealth());
-				}
+						@Override
+						protected boolean isInputValid(ConversationContext context, String input) {
+							return Valid.isDecimal(input) && Valid.isInRange(Double.parseDouble(input), 0, Remain.getMaxHealth());
+						}
 
-				@Override
-				protected String getFailedValidationText(final ConversationContext context, final String invalidInput) {
+						@Override
+						protected String getFailedValidationText(final ConversationContext context, final String invalidInput) {
 
-					if (Valid.isDecimal(invalidInput)) {
-						final double health = Double.parseDouble(invalidInput);
+							if (Valid.isDecimal(invalidInput)) {
+								final double health = Double.parseDouble(invalidInput);
 
-						if (health < 0)
-							return "Health cannot be negative!";
+								if (health < 0)
+									return "Health cannot be negative!";
 
-						else if (health > Remain.getMaxHealth())
-							return "Health can't be over " + Remain.getMaxHealth() + ". Please increase 'settings.attribute.maxHealth' in spigot.yml file first. "
-								   + "Keep in mind the server might not keep up with too high values because mobs were never designed to have them.";
-					}
+								else if (health > Remain.getMaxHealth())
+									return "Health can't be over " + Remain.getMaxHealth() + ". Please increase 'settings.attribute.maxHealth' in spigot.yml file first. "
+											+ "Keep in mind the server might not keep up with too high values because mobs were never designed to have them.";
+							}
 
-					return super.getFailedValidationText(context, invalidInput);
-				}
+							return super.getFailedValidationText(context, invalidInput);
+						}
 
-				@Override
-				protected void onValidatedInput(ConversationContext context, double input) {
-					boss.setMaxHealth(input == 0 ? boss.getDefaultHealth() : input);
-				}
-			}.show(player);
-		});
+						@Override
+						protected void onValidatedInput(ConversationContext context, double input) {
+							boss.setMaxHealth(input == 0 ? boss.getDefaultHealth() : input);
+						}
+					}.show(player);
+				});
 
 		this.potionsButton = new ButtonMenu(new PotionsMenu(),
 				CompMaterial.POTION,
@@ -187,10 +194,10 @@ class SettingsMenu extends Menu {
 				"Edit Boss' hand item",
 				"and armor items.")
 				: Button.makeDummy(CompMaterial.LEATHER_CHESTPLATE,
-				"Equipment",
-				"",
-				"&cThis Boss type does",
-				"&cnot support equipment.");
+						"Equipment",
+						"",
+						"&cThis Boss type does",
+						"&cnot support equipment.");
 
 		this.lightningButton = new ButtonMenu(new LightningMenu(),
 				CompMaterial.ENDER_PEARL,
@@ -239,6 +246,24 @@ class SettingsMenu extends Menu {
 				"",
 				"Edit custom settings only",
 				"applicable for this Boss.");
+
+		this.customModelsButton = ModelEngineHook.isAvailable() ? new ButtonMenu(new CustomModelsMenu(),
+				CompMaterial.ARMOR_STAND,
+				"&bCustom Models",
+				"",
+				"Enable and edit",
+				"custom models.",
+				"",
+				"&cWarning: &7This feature is",
+				"&7under heavy development.")
+				: Button.makeDummy(CompMaterial.ARMOR_STAND,
+						"&bCustom Models",
+						"",
+						"Enable and edit",
+						"custom models.",
+						"",
+						"&cError: &7ModelEngine required!");
+
 	}
 
 	@Override
@@ -270,11 +295,11 @@ class SettingsMenu extends Menu {
 				final boolean has = isEnabled.get();
 
 				return ItemCreator.from(
-								has ? CompMaterial.BEACON : CompMaterial.GLASS,
-								"Enable " + type + "?",
-								"",
-								"Status: " + (has ? "&aEnabled" : "&cDisabled"),
-								"")
+						has ? CompMaterial.BEACON : CompMaterial.GLASS,
+						"Enable " + type + "?",
+						"",
+						"Status: " + (has ? "&aEnabled" : "&cDisabled"),
+						"")
 						.lore(lore)
 						.glow(has)
 						.make();
@@ -609,16 +634,16 @@ class SettingsMenu extends Menu {
 					"&cbecause Citizens mobs",
 					"&cdo not support it.")
 					: new ButtonMenu(new RidingVanillaMenu(),
-					CompMaterial.SPAWNER,
-					"Mobs To Ride",
-					"",
-					"Select vanilla mobs",
-					"this Boss will ride.",
-					"",
-					"&cNotice:",
-					"Due to Bukkit limits,",
-					"either use this or the",
-					"other option, not both.");
+							CompMaterial.SPAWNER,
+							"Mobs To Ride",
+							"",
+							"Select vanilla mobs",
+							"this Boss will ride.",
+							"",
+							"&cNotice:",
+							"Due to Bukkit limits,",
+							"either use this or the",
+							"other option, not both.");
 
 			this.removeOnDeathButton = new Button() {
 
@@ -865,16 +890,16 @@ class SettingsMenu extends Menu {
 					"a given threshold.");
 
 			this.stopAfterFirstButton = Button.makeBoolean(ItemCreator.from(
-							CompMaterial.GREEN_DYE,
-							"&2One Command Mode",
-							"",
-							"Status: {status}",
-							"",
-							"If enabled, we stop running",
-							"more commands after the first",
-							"successful one. Useful to have",
-							"two different commands, one for",
-							"killer and one when there is none."),
+					CompMaterial.GREEN_DYE,
+					"&2One Command Mode",
+					"",
+					"Status: {status}",
+					"",
+					"If enabled, we stop running",
+					"more commands after the first",
+					"successful one. Useful to have",
+					"two different commands, one for",
+					"killer and one when there is none."),
 					SettingsMenu.this.boss::isCommandsStoppedAfterFirst, SettingsMenu.this.boss::setCommandsStoppedAfterFirst);
 		}
 
@@ -912,7 +937,7 @@ class SettingsMenu extends Menu {
 
 				@Override
 				public void onClickedInMenu(Player player, Menu menu, ClickType click) {
-					if(this.has)
+					if (this.has)
 						new CitizensMenu().displayTo(player);
 					else
 						SettingsMenu.this.animateTitle("&4Install Citizens plugin!");
@@ -939,7 +964,7 @@ class SettingsMenu extends Menu {
 
 				@Override
 				public void onClickedInMenu(Player player, Menu menu, ClickType click) {
-					if(this.has)
+					if (this.has)
 						new NativeGoalsMenu().displayTo(player);
 					else
 						SettingsMenu.this.animateTitle("&4Use paper 1.15.2 or newer!");
@@ -967,7 +992,7 @@ class SettingsMenu extends Menu {
 
 		@Override
 		protected String[] getInfo() {
-			return new String[]{
+			return new String[] {
 					"Configure how your Boss",
 					"should behave and what",
 					"pathfinders it should use.",
@@ -1014,7 +1039,7 @@ class SettingsMenu extends Menu {
 
 			@Override
 			protected String[] getInfo() {
-				return new String[]{
+				return new String[] {
 						"Configure native goals",
 						"for your Boss.",
 						"",
@@ -1078,14 +1103,14 @@ class SettingsMenu extends Menu {
 						final boolean has = CitizensMenu.this.citizens.isEnabled();
 
 						return ItemCreator.from(
-										isHuman || has ? CompMaterial.BEACON : CompMaterial.GLASS,
-										"Use Citizens?",
-										"",
-										"Status: " + (has || isHuman ? "&aEnabled" : "&cDisabled"),
-										"",
-										isHuman ? "&oCan't disable for" : "Enable Citizens integration?",
-										isHuman ? "&ohuman NPCs." : "&cWarning: &7Options here",
-										isHuman ? null : "will only apply to new Bosses.")
+								isHuman || has ? CompMaterial.BEACON : CompMaterial.GLASS,
+								"Use Citizens?",
+								"",
+								"Status: " + (has || isHuman ? "&aEnabled" : "&cDisabled"),
+								"",
+								isHuman ? "&oCan't disable for" : "Enable Citizens integration?",
+								isHuman ? "&ohuman NPCs." : "&cWarning: &7Options here",
+								isHuman ? null : "will only apply to new Bosses.")
 								.glow(isHuman || has)
 								.make();
 					}
@@ -1093,15 +1118,15 @@ class SettingsMenu extends Menu {
 
 				// Make a new menu inside this menu for Citizens Settings and move this there
 				this.speedButton = Button.makeSimple(ItemCreator.from(
-								CompMaterial.STRING,
-								"Speed",
-								"",
-								"Current: " + CitizensMenu.this.citizens.getSpeed(),
-								"",
-								"How fast should this NPC move?",
-								"Defaults to " + boss.getDefaultBaseSpeed() + "."),
+						CompMaterial.STRING,
+						"Speed",
+						"",
+						"Current: " + CitizensMenu.this.citizens.getSpeed(),
+						"",
+						"How fast should this NPC move?",
+						"Defaults to " + boss.getDefaultBaseSpeed() + "."),
 						player -> new SimpleDecimalPrompt("Please enter the Boss speed. Current: " + CitizensMenu.this.citizens.getSpeed() +
-														  ". Or type '0' to reset back to default.") {
+								". Or type '0' to reset back to default.") {
 
 							@Override
 							protected boolean isInputValid(ConversationContext context, String input) {
@@ -1131,21 +1156,21 @@ class SettingsMenu extends Menu {
 						"",
 						"If not set, we use skin from",
 						"your Boss' alias."), player -> {
-					new SimpleStringPrompt("Please enter the Boss skin (username or URL ending with a .png skin - check console for errors on Boss spawn to see if it was valid)."
-										   + " Current: '" + Common.getOrDefault(SettingsMenu.this.boss.getCitizensSettings().getSkin(), "none")
-										   + "&7' Type 'default' to use skin from Boss' alias '" + SettingsMenu.this.boss.getAlias() + "&7'.") {
+							new SimpleStringPrompt("Please enter the Boss skin (username or URL ending with a .png skin - check console for errors on Boss spawn to see if it was valid)."
+									+ " Current: '" + Common.getOrDefault(SettingsMenu.this.boss.getCitizensSettings().getSkin(), "none")
+									+ "&7' Type 'default' to use skin from Boss' alias '" + SettingsMenu.this.boss.getAlias() + "&7'.") {
 
-						@Override
-						protected boolean isInputValid(ConversationContext context, String input) {
-							return Valid.isInRange(input.length(), 3, 256);
-						}
+								@Override
+								protected boolean isInputValid(ConversationContext context, String input) {
+									return Valid.isInRange(input.length(), 3, 256);
+								}
 
-						@Override
-						protected void onValidatedInput(ConversationContext context, String input) {
-							SettingsMenu.this.boss.getCitizensSettings().setSkin(input);
-						}
-					}.show(player);
-				});
+								@Override
+								protected void onValidatedInput(ConversationContext context, String input) {
+									SettingsMenu.this.boss.getCitizensSettings().setSkin(input);
+								}
+							}.show(player);
+						});
 
 				// Also move this to Citizens Settings menu
 				this.soundsButton = new ButtonMenu(new SoundsMenu(),
@@ -1206,33 +1231,33 @@ class SettingsMenu extends Menu {
 					this.setTitle("Boss Sounds");
 
 					this.deathSoundButton = Button.makeSimple(ItemCreator.from(
-									CompMaterial.BONE,
-									"Death Sound",
-									"",
-									"Current: &7" + Common.getOrDefault(CitizensMenu.this.citizens.getDeathSound(), "default"),
-									"",
-									"Click to change",
-									"Boss death sound."),
+							CompMaterial.BONE,
+							"Death Sound",
+							"",
+							"Current: &7" + Common.getOrDefault(CitizensMenu.this.citizens.getDeathSound(), "default"),
+							"",
+							"Click to change",
+							"Boss death sound."),
 							player -> SettingsMenu.this.generateSoundPrompt("death", CitizensMenu.this.citizens::getDeathSound, CitizensMenu.this.citizens::setDeathSound).show(player));
 
 					this.hurtSoundButton = Button.makeSimple(ItemCreator.from(
-									CompMaterial.RED_DYE,
-									"Hurt Sound",
-									"",
-									"Current: &7" + Common.getOrDefault(CitizensMenu.this.citizens.getHurtSound(), "default"),
-									"",
-									"Click to change",
-									"sound when damaged."),
+							CompMaterial.RED_DYE,
+							"Hurt Sound",
+							"",
+							"Current: &7" + Common.getOrDefault(CitizensMenu.this.citizens.getHurtSound(), "default"),
+							"",
+							"Click to change",
+							"sound when damaged."),
 							player -> SettingsMenu.this.generateSoundPrompt("hurt", CitizensMenu.this.citizens::getHurtSound, CitizensMenu.this.citizens::setHurtSound).show(player));
 
 					this.ambientSoundButton = Button.makeSimple(ItemCreator.from(
-									CompMaterial.FEATHER,
-									"Ambient Sound",
-									"",
-									"Current: &7" + Common.getOrDefault(CitizensMenu.this.citizens.getAmbientSound(), "default"),
-									"",
-									"Click to change",
-									"sound when idle."),
+							CompMaterial.FEATHER,
+							"Ambient Sound",
+							"",
+							"Current: &7" + Common.getOrDefault(CitizensMenu.this.citizens.getAmbientSound(), "default"),
+							"",
+							"Click to change",
+							"sound when idle."),
 							player -> SettingsMenu.this.generateSoundPrompt("ambient", CitizensMenu.this.citizens::getAmbientSound, CitizensMenu.this.citizens::setAmbientSound).show(player));
 
 					this.wikiLinkSoundButton = Button.makeSimple(ItemCreator.from(
@@ -1242,11 +1267,11 @@ class SettingsMenu extends Menu {
 							"Sound names are different",
 							"internally. Click this",
 							"icon to get a list."), player -> {
-						player.closeInventory();
+								player.closeInventory();
 
-						Messenger.info(player, "See <click:open_url:'https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Sound.html'><u>hub.spigotmc.org/javadocs/bukkit/org/bukkit/Sound.html</u></click>"
-											   + " for valid sound names. For legacy Minecraft versions, we translate those sounds that exist automatically.");
-					});
+								Messenger.info(player, "See <click:open_url:'https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Sound.html'><u>hub.spigotmc.org/javadocs/bukkit/org/bukkit/Sound.html</u></click>"
+										+ " for valid sound names. For legacy Minecraft versions, we translate those sounds that exist automatically.");
+							});
 				}
 
 				@Override
@@ -1312,8 +1337,8 @@ class SettingsMenu extends Menu {
 							"How far should Boss find",
 							"and follow entities? High",
 							"values impact performance."), player -> {
-						SettingsMenu.this.generateRadiusPrompt("target", CitizensMenu.this.citizens::getTargetGoalRadius, CitizensMenu.this.citizens::setTargetGoalRadius).show(player);
-					});
+								SettingsMenu.this.generateRadiusPrompt("target", CitizensMenu.this.citizens::getTargetGoalRadius, CitizensMenu.this.citizens::setTargetGoalRadius).show(player);
+							});
 
 					this.targetEntitiesButton = new ButtonMenu(new MenuTargetEntites(),
 							CompMaterial.SKELETON_SPAWN_EGG,
@@ -1338,8 +1363,8 @@ class SettingsMenu extends Menu {
 							"How far should Boss walk",
 							"around his spawn point? High",
 							"values impact performance."), player -> {
-						SettingsMenu.this.generateRadiusPrompt("wander", CitizensMenu.this.citizens::getWanderGoalRadius, CitizensMenu.this.citizens::setWanderGoalRadius).show(player);
-					});
+								SettingsMenu.this.generateRadiusPrompt("wander", CitizensMenu.this.citizens::getWanderGoalRadius, CitizensMenu.this.citizens::setWanderGoalRadius).show(player);
+							});
 				}
 
 				@Override
@@ -1438,13 +1463,13 @@ class SettingsMenu extends Menu {
 					final boolean has = SettingsMenu.this.boss.hasLightningOnSpawn();
 
 					return ItemCreator.from(
-									CompMaterial.ENDER_PEARL,
-									"Lightning On Spawn",
-									"",
-									"Status: " + (has ? "&aEnabled" : "&cDisabled"),
-									"",
-									"Click to toggle if Boss",
-									"strikes a lightning on spawn.")
+							CompMaterial.ENDER_PEARL,
+							"Lightning On Spawn",
+							"",
+							"Status: " + (has ? "&aEnabled" : "&cDisabled"),
+							"",
+							"Click to toggle if Boss",
+							"strikes a lightning on spawn.")
 							.glow(has)
 							.make();
 				}
@@ -1465,13 +1490,13 @@ class SettingsMenu extends Menu {
 					final boolean has = SettingsMenu.this.boss.hasLightningOnDeath();
 
 					return ItemCreator.from(
-									CompMaterial.BONE,
-									"Lightning On Death",
-									"",
-									"Status: " + (has ? "&aEnabled" : "&cDisabled"),
-									"",
-									"Click to toggle if Boss",
-									"strikes a lightning on death.")
+							CompMaterial.BONE,
+							"Lightning On Death",
+							"",
+							"Status: " + (has ? "&aEnabled" : "&cDisabled"),
+							"",
+							"Click to toggle if Boss",
+							"strikes a lightning on death.")
 							.glow(has)
 							.make();
 				}
@@ -1584,6 +1609,200 @@ class SettingsMenu extends Menu {
 		@Override
 		public Menu newInstance() {
 			return new CustomSettingsMenu();
+		}
+	}
+
+	private class CustomModelsMenu extends Menu {
+
+		@Position(9 * 1 + 3)
+		private final Button enableCustomModelButton;
+
+		@Position(9 * 1 + 5)
+		private final Button selectCustomModelsButton;
+
+		public CustomModelsMenu() {
+			super(SettingsMenu.this);
+
+			this.setTitle("Custom Models");
+
+			this.enableCustomModelButton = new Button() {
+				@Override
+				public void onClickedInMenu(Player player, Menu menu, ClickType click) {
+					final boolean enabled = SettingsMenu.this.boss.isUseCustomModel();
+					SettingsMenu.this.boss.setUseCustomModel(!enabled);
+					CustomModelsMenu.this.restartMenu(!enabled ? "&2Enabled Custom Models" : "&4Disabled Custom Models");
+				}
+
+				@Override
+				public ItemStack getItem() {
+					return ItemCreator.from(
+							CompMaterial.BEACON,
+							"Use Custom Model",
+							"",
+							"Status: " + (SettingsMenu.this.boss.isUseCustomModel() ? "§aEnabled" : "§cDisabled"),
+							"",
+							"When enabled, we will use ModelEngine",
+							"to render a custom model in your Boss.",
+							"",
+							"Click to toggle").make();
+				}
+			};
+
+			this.selectCustomModelsButton = new ButtonMenu(new SelectCustomModelsMenu(),
+					CompMaterial.ARMOR_STAND,
+					"Select Custom Models",
+					"",
+					"If you select more than 1 model,",
+					"the plugin will choose a random",
+					"one every time a Boss spawns or",
+					"updates.",
+					"",
+					"Click to change the",
+					"custom model to use.");
+		}
+
+		@Override
+		protected String[] getInfo() {
+			return new String[] {
+					"Configure custom model for this Boss",
+					"with ModelEngine.",
+					"",
+					"&cWarning: &7This feature is",
+					"&7under heavy development."
+			};
+		}
+
+		@Override
+		public Menu newInstance() {
+			return new CustomModelsMenu();
+		}
+
+		private class SelectCustomModelsMenu extends MenuPaged<String> {
+
+			private String filter = "";
+
+			private boolean reverseOrder = false;
+
+			@Position(9 * 3 + 1)
+			private final Button checkAllButton;
+
+			@Position(9 * 3 + 6)
+			private final Button orderButton;
+
+			@Position(9 * 3 + 7)
+			private final Button filterButton;
+
+			public SelectCustomModelsMenu(String filter, boolean reverseOrder, List<String> items) {
+				super(CustomModelsMenu.this, items, true);
+				this.filter = filter;
+				this.reverseOrder = reverseOrder;
+
+				this.setTitle("Select Models (" + SettingsMenu.this.boss.getCustomModels().size() + "/" + items.size() + ")");
+				this.setSize(4 * 9);
+
+				this.orderButton = Button.makeSimple(
+						ItemCreator.from(
+								CompMaterial.SLIME_BALL,
+								"Order",
+								"",
+								"Current: &f" + (SelectCustomModelsMenu.this.reverseOrder ? "Z-A" : "A-Z"),
+								"",
+								"Click to switch"),
+						player -> {
+							this.reverseOrder = !this.reverseOrder;
+							this.newInstance().displayTo(this.getViewer());
+						});
+
+				this.filterButton = Button.makeSimple(
+						CompMaterial.HOPPER,
+						"Filter",
+						"Current filter: &f" + (this.filter.isEmpty() ? "none" : this.filter) + "\n" +
+								"\n" +
+								"&aLeft click: &fset\n" +
+								"&cRight click: &fremove",
+						(player, clickType) -> {
+							if (clickType.name().startsWith("LEFT"))
+								new SimpleStringPrompt("Please enter the new filter: ", newFilter -> this.filter = newFilter.replace("clear", "")).show(this.getViewer());
+							else {
+								this.filter = "";
+								this.newInstance().displayTo(this.getViewer());
+							}
+						});
+
+				final Boss boss = SettingsMenu.this.boss;
+				final List<String> bossModels = boss.getCustomModels();
+
+				this.checkAllButton = Button.makeSimple(
+						ItemCreator.from(
+								CompMaterial.LEVER,
+								"> " + (bossModels.isEmpty() ? "Check" : "Uncheck") + " All",
+								"> " + (bossModels.isEmpty() ? "Uncheck" : "Check") + " All"),
+						player -> {
+							if (bossModels.isEmpty())
+								items.forEach(boss::addCustomModel);
+							else
+								items.forEach(boss::removeCustomModel);
+							this.newInstance().displayTo(this.getViewer());
+						});
+			}
+
+			public SelectCustomModelsMenu(String filter, boolean reverseOrder) {
+				this(filter, reverseOrder, new ArrayList<>(ModelEngineAPI.getAPI().getModelRegistry().getKeys().stream().sorted(reverseOrder ? Comparator.reverseOrder() : Comparator.naturalOrder()).filter(s -> s.contains(filter)).collect(Collectors.toList())));
+			}
+
+			public SelectCustomModelsMenu() {
+				this("", false);
+			}
+
+			@Override
+			protected void onPostDisplay(InventoryDrawer drawer) {
+				if (ModelEngineAPI.getAPI().getModelRegistry().getKeys().stream().noneMatch(s -> s.contains(filter)))
+					drawer.setItem(this.getCenterSlot(), ItemCreator.from(
+							CompMaterial.BARRIER,
+							"&cNo results for this filter :(").make());
+
+				super.onPostDisplay(drawer);
+			}
+
+			@Override
+			public Menu newInstance() {
+				return new SelectCustomModelsMenu(this.filter, this.reverseOrder);
+			}
+
+			@Override
+			protected String[] getInfo() {
+				return new String[] {
+						"If you select more than 1 model,",
+						"the plugin will choose a random",
+						"one every time a Boss spawns or",
+						"updates."
+				};
+			}
+
+			@Override
+			protected ItemStack convertToItemStack(String item) {
+				final boolean selected = SettingsMenu.this.boss.getCustomModels().contains(item);
+				return ItemCreator.from(
+						CompMaterial.ARMOR_STAND,
+						"&7Model: &f" + item,
+						selected
+								? String.format("&7Chance: &f%.1f", (double) 100 / SettingsMenu.this.boss.getCustomModels().size()) + "%"
+								: "&7&oNot Selected",
+						"",
+						selected ? "Click to remove" : "Click to select").glow(selected).make();
+			}
+
+			@Override
+			protected void onPageClick(Player player, String item, ClickType click) {
+				final Boss boss = SettingsMenu.this.boss;
+
+				if (boss.getCustomModels().contains(item))
+					boss.removeCustomModel(item);
+				else
+					boss.addCustomModel(item);
+
+				this.newInstance().displayTo(player);
+			}
 		}
 	}
 }
