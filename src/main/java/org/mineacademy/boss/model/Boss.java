@@ -44,6 +44,7 @@ import org.mineacademy.boss.goal.GoalManager;
 import org.mineacademy.boss.goal.GoalManagerCheck;
 import org.mineacademy.boss.hook.CitizensHook;
 import org.mineacademy.boss.hook.LandsHook;
+import org.mineacademy.boss.hook.ModelEngineHook;
 import org.mineacademy.boss.hook.ScaleTrait;
 import org.mineacademy.boss.hook.WorldGuardHook;
 import org.mineacademy.boss.listener.ChunkListener;
@@ -52,6 +53,7 @@ import org.mineacademy.boss.skill.BossSkill;
 import org.mineacademy.boss.spawn.SpawnRule;
 import org.mineacademy.fo.ChatUtil;
 import org.mineacademy.fo.Common;
+import org.mineacademy.fo.CommonCore;
 import org.mineacademy.fo.EntityUtil;
 import org.mineacademy.fo.MathUtil;
 import org.mineacademy.fo.MinecraftVersion;
@@ -82,6 +84,8 @@ import org.mineacademy.fo.remain.CompMetadata;
 import org.mineacademy.fo.remain.Remain;
 import org.mineacademy.fo.settings.ConfigItems;
 import org.mineacademy.fo.settings.YamlConfig;
+
+import com.ticxo.modelengine.api.ModelEngineAPI;
 
 import lombok.Getter;
 import lombok.NonNull;
@@ -124,7 +128,7 @@ public final class Boss extends YamlConfig implements ConfigStringSerializable {
 	private static final ConfigItems<Boss> loadedBosses = ConfigItems.fromFolder("bosses", Boss.class,
 			(Function<List<Boss>, List<Boss>>) list -> {
 				if (Settings.SORT_BY_TYPE) {
-					final Map<EntityType, List<Boss>> grouppedBosses = new TreeMap<>((first, second) -> first.name().compareTo(second.name()));
+					final Map<EntityType, List<Boss>> grouppedBosses = new TreeMap<>(Comparator.comparing(EntityType::name));
 
 					for (final Boss boss : list) {
 						final EntityType type = boss.getType();
@@ -355,6 +359,18 @@ public final class Boss extends YamlConfig implements ConfigStringSerializable {
 	@Getter
 	private boolean nativeAttackGoalEnabled = false;
 
+	/*
+	 * Returns the default health for this Boss, if not set, returns 20.0D.
+	 */
+	@Getter
+	private boolean useCustomModel = false;
+
+	/*
+	 * List of custom models to choose from randomly when the Boss spawns
+	 */
+	@Getter
+	private List<String> customModels;
+
 	//
 	// Non saveable fields below
 	//
@@ -485,6 +501,16 @@ public final class Boss extends YamlConfig implements ConfigStringSerializable {
 		this.eggLore = this.getStringList("Egg.Lore");
 		this.lastDeathFromSpawnRule = this.getMap("Last_Death_From_Spawn_Rule", String.class, Long.class);
 		this.nativeAttackGoalEnabled = GoalManagerCheck.isAvailable() ? getBoolean("Native_Attack_Goal_Enabled", false) : false;
+		this.useCustomModel = ModelEngineHook.isAvailable() ? getBoolean("Use_Custom_Model", false) : false;
+		this.customModels = ModelEngineHook.isAvailable() ? getList("Custom_Models", String.class, new ArrayList<>()) : null;
+
+		if (this.customModels != null)
+			this.customModels.removeIf(model -> {
+				final boolean invalid = !ModelEngineAPI.getAPI().getModelRegistry().getKeys().contains(model);
+				if (invalid)
+					CommonCore.warning("Removing " + model + " custom model from Boss " + this.getName() + " because it is not registered in ModelEnigne anymore.");
+				return invalid;
+			});
 
 		this.initDefaultAttributes();
 
@@ -657,7 +683,9 @@ public final class Boss extends YamlConfig implements ConfigStringSerializable {
 		this.set("Egg.Title", this.eggTitle);
 		this.set("Egg.Lore", this.eggLore);
 		this.set("Last_Death_From_Spawn_Rule", this.lastDeathFromSpawnRule);
-		set("Native_Attack_Goal_Enabled", this.nativeAttackGoalEnabled);
+		this.set("Native_Attack_Goal_Enabled", this.nativeAttackGoalEnabled);
+		this.set("Use_Custom_Model", this.useCustomModel);
+		this.set("Custom_Models", this.customModels);
 
 		// Automatically rerender all Bosses of this instance
 		this.updateBosses();
@@ -679,6 +707,59 @@ public final class Boss extends YamlConfig implements ConfigStringSerializable {
 							CitizensHook.update(boss.getBoss(), entity);
 					}
 				}
+	}
+
+	public void setUseCustomModel(boolean useCustomModel) {
+		this.useCustomModel = useCustomModel;
+
+		this.save();
+
+		this.updateCustomModels();
+	}
+
+	public void addCustomModel(String modelName) {
+		if (this.customModels == null || this.customModels.contains(modelName))
+			return;
+
+		this.customModels.add(modelName);
+
+		this.updateCustomModels();
+	}
+
+	public void removeCustomModel(String modelName) {
+		if (this.customModels == null || !this.customModels.contains(modelName))
+			return;
+
+		this.customModels.remove(modelName);
+
+		this.updateCustomModels();
+	}
+
+	public String getRandomCustomModel() {
+		if (this.customModels == null || this.customModels.isEmpty())
+			return null;
+
+		return RandomUtil.nextItem(this.customModels);
+	}
+
+	public void updateCustomModels() {
+		if (!ModelEngineHook.isAvailable())
+			return;
+
+		for (final SpawnedBoss spawned : findBossesAlive()) {
+			if (!spawned.getBoss().equals(this))
+				continue;
+
+			if (this.useCustomModel) {
+				final String customModelName = this.getRandomCustomModel();
+
+				if (customModelName != null)
+					ModelEngineHook.applyModel(spawned.getEntity(), customModelName);
+
+			} else {
+				ModelEngineHook.removeAllModels(spawned.getEntity());
+			}
+		}
 	}
 
 	/*
@@ -855,6 +936,13 @@ public final class Boss extends YamlConfig implements ConfigStringSerializable {
 	 */
 	private void applyProperties(LivingEntity entity, boolean keepOldHealth) {
 
+		if (this.useCustomModel && ModelEngineHook.isAvailable()) {
+			final String customModelName = this.getRandomCustomModel();
+
+			if (customModelName != null)
+				ModelEngineHook.applyModel(entity, customModelName);
+		}
+
 		// Set health
 		try {
 			entity.setMaxHealth(this.maxHealth);
@@ -968,7 +1056,7 @@ public final class Boss extends YamlConfig implements ConfigStringSerializable {
 				try {
 					attribute.apply(entity, value);
 
-				} catch(final IllegalStateException e) {
+				} catch (final IllegalStateException e) {
 					Common.logTimed(60 * 60, "Failed to apply attribute " + attribute + " to " + this.getName() + ": " + e.getMessage() + ". Most likely your server does not support this. This message will be shown once per hour.");
 				}
 
@@ -1002,7 +1090,7 @@ public final class Boss extends YamlConfig implements ConfigStringSerializable {
 		}
 
 		// Set the mob natively aggressive or not
-		if(this.nativeAttackGoalEnabled && GoalManagerCheck.isAvailable() && entity instanceof Mob)
+		if (this.nativeAttackGoalEnabled && GoalManagerCheck.isAvailable() && entity instanceof Mob)
 			GoalManager.makeAggressive((Mob) entity, true);
 
 		// Finish by labeling this entity as Boss
@@ -1332,7 +1420,7 @@ public final class Boss extends YamlConfig implements ConfigStringSerializable {
 			return lineToReplace;
 
 		// Sort entries by damage descending
-		List<Double> sortedDamages = recentDamagers.keySet().stream()
+		final List<Double> sortedDamages = recentDamagers.keySet().stream()
 				.sorted(Comparator.reverseOrder())
 				.collect(Collectors.toList());
 
@@ -1342,8 +1430,8 @@ public final class Boss extends YamlConfig implements ConfigStringSerializable {
 				continue;
 			}
 
-			double damage = sortedDamages.get(i - 1);
-			double percent = totalDamage > 0 ? (damage / totalDamage) * 100 : 0;
+			final double damage = sortedDamages.get(i - 1);
+			final double percent = totalDamage > 0 ? (damage / totalDamage) * 100 : 0;
 			lineToReplace = lineToReplace.replace("{damage_percent_" + i + "}", MathUtil.formatTwoDigits(percent) + "%");
 		}
 		return lineToReplace;
@@ -1954,7 +2042,7 @@ public final class Boss extends YamlConfig implements ConfigStringSerializable {
 					available.add(instance);
 			}
 
-		Collections.sort(available, (first, second) -> first.getName().compareTo(second.getName()));
+		Collections.sort(available, Comparator.comparing(BossSkill::getName));
 
 		return available;
 	}
@@ -2367,8 +2455,8 @@ public final class Boss extends YamlConfig implements ConfigStringSerializable {
 
 		this.save();
 
-		if(GoalManagerCheck.isAvailable()) {
-			for (SpawnedBoss spawned : findBossesAlive())
+		if (GoalManagerCheck.isAvailable()) {
+			for (final SpawnedBoss spawned : findBossesAlive())
 				if (spawned.getBoss().getName().equals(getName()) && spawned.getEntity() instanceof Mob)
 					GoalManager.makeAggressive((Mob) spawned.getEntity(), enabled);
 		}
@@ -2788,7 +2876,7 @@ public final class Boss extends YamlConfig implements ConfigStringSerializable {
 				final SpawnedBoss boss = findBoss(entity);
 
 				if (boss != null) {
-					if(boss.getBoss().getRecentDamagerPlayer(entity, false).isEmpty())
+					if (boss.getBoss().getRecentDamagerPlayer(entity, false).isEmpty())
 						continue;
 					closestDistance = distance;
 					closestBoss = boss;
