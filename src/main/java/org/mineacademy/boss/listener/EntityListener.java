@@ -513,7 +513,21 @@ public final class EntityListener extends BossListener {
 			final Boss boss = spawnedBoss.getBoss();
 
 			// Adjust damage
-			final double originalDamage = Remain.getFinalDamage(event);
+			/*
+			 * Previous approach:
+			 * Used Remain#getFinalDamage(event), which calls event#getFinalDamage() if available,
+			 * or event#getDamage() as a fallback.
+			 *
+			 * Issue:
+			 * Bosses were healing players instead of killing them when players had high-level enchanted
+			 * weapons or high damage attributes, due to inconsistencies in final damage calculation.
+			 *
+			 * Solution:
+			 * Use event.getDamage() directly to ensure correct damage application and avoid the healing issue.
+			 */
+//			final double originalDamage = Remain.getFinalDamage(event);
+
+			final double originalDamage = event.getDamage();
 			final double newDamage = MathUtil.range(originalDamage, 1, Double.MAX_VALUE) * boss.getAttribute(BossAttribute.DAMAGE_MULTIPLIER);
 
 			Debugger.debug("damage", "Original damage: " + originalDamage + ". After applying damage multiplier attribute: " + newDamage);
@@ -536,7 +550,21 @@ public final class EntityListener extends BossListener {
 				final LivingEntity entity = spawnedBoss.getEntity();
 				final Boss boss = spawnedBoss.getBoss();
 
-				final double damage = Remain.getFinalDamage(event) * Double.parseDouble("1.0" + RandomUtil.nextInt(30));
+				/*
+				 * Previous approach:
+				 * Used Remain#getFinalDamage(event), but this caused inconsistencies
+				 * with high-level enchantments and custom attributes.
+				 *
+				 * Fix:
+				 * The new implementation uses event.getDamage() directly for a more
+				 * predictable and consistent damage calculation.
+				 */
+//				final double damage = Remain.getFinalDamage(event) * Double.parseDouble("1.0" + RandomUtil.nextInt(30));
+
+				/*
+				 * The fix applies the same logic, but uses event.getDamage() for reliability.
+				 */
+				final double damage = event.getDamage() * Double.parseDouble("1.0" + RandomUtil.nextInt(30));
 				final double remainingHealth = Remain.getHealth(entity) - damage;
 
 				// Run commands when Boss takes damage below given thresholds
