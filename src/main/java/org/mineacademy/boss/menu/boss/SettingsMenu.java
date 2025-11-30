@@ -10,6 +10,7 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import com.ticxo.modelengine.api.ModelEngineAPI;
 import org.bukkit.conversations.ConversationContext;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -41,6 +42,7 @@ import org.mineacademy.fo.menu.MenuContainerChances;
 import org.mineacademy.fo.menu.MenuPaged;
 import org.mineacademy.fo.menu.MenuQuantitable;
 import org.mineacademy.fo.menu.button.Button;
+import org.mineacademy.fo.menu.button.ButtonConversation;
 import org.mineacademy.fo.menu.button.ButtonMenu;
 import org.mineacademy.fo.menu.button.StartPosition;
 import org.mineacademy.fo.menu.button.annotation.Position;
@@ -58,8 +60,6 @@ import org.mineacademy.fo.remain.CompMonsterEgg;
 import org.mineacademy.fo.remain.CompPotionEffectType;
 import org.mineacademy.fo.remain.CompSound;
 import org.mineacademy.fo.remain.Remain;
-
-import com.ticxo.modelengine.api.ModelEngineAPI;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -102,7 +102,7 @@ final class SettingsMenu extends Menu {
 	private final Button customSettingsButton;
 
 	@Position(9 * 5 + 7)
-	private final Button customModelsButton;
+	private final Button modelEngineButton;
 
 	SettingsMenu(Menu parent, Boss boss) {
 		super(parent);
@@ -247,9 +247,9 @@ final class SettingsMenu extends Menu {
 				"Edit custom settings only",
 				"applicable for this Boss.");
 
-		this.customModelsButton = ModelEngineHook.isAvailable() ? new ButtonMenu(new CustomModelsMenu(),
+		this.modelEngineButton = ModelEngineHook.isAvailable() ? new ButtonMenu(new ModelEngineMenu(),
 				CompMaterial.ARMOR_STAND,
-				"&bCustom Models",
+				"&bModelEngine",
 				"",
 				"Enable and edit",
 				"custom models.",
@@ -257,12 +257,12 @@ final class SettingsMenu extends Menu {
 				"&cWarning: &7This feature is",
 				"&7under heavy development.")
 				: Button.makeDummy(CompMaterial.ARMOR_STAND,
-						"&bCustom Models",
+						"&bModelEngine",
 						"",
 						"Enable and edit",
 						"custom models.",
 						"",
-						"&cError: &7ModelEngine required!");
+						"&cError: &7ModelEngine plugin required!");
 
 	}
 
@@ -1612,196 +1612,427 @@ final class SettingsMenu extends Menu {
 		}
 	}
 
-	private class CustomModelsMenu extends Menu {
+	private class ModelEngineMenu extends Menu {
 
 		@Position(9 * 1 + 3)
-		private final Button enableCustomModelButton;
+		private final Button customModelsButton;
 
 		@Position(9 * 1 + 5)
-		private final Button selectCustomModelsButton;
+		private final Button customAnimationsButton;
 
-		public CustomModelsMenu() {
+		public ModelEngineMenu() {
 			super(SettingsMenu.this);
 
-			this.setTitle("Custom Models");
+			this.setTitle("ModelEngine");
 
-			this.enableCustomModelButton = new Button() {
-				@Override
-				public void onClickedInMenu(Player player, Menu menu, ClickType click) {
-					final boolean enabled = SettingsMenu.this.boss.isUseCustomModel();
-					SettingsMenu.this.boss.setUseCustomModel(!enabled);
-					CustomModelsMenu.this.restartMenu(!enabled ? "&2Enabled Custom Models" : "&4Disabled Custom Models");
-				}
-
-				@Override
-				public ItemStack getItem() {
-					return ItemCreator.from(
-							CompMaterial.BEACON,
-							"Use Custom Model",
-							"",
-							"Status: " + (SettingsMenu.this.boss.isUseCustomModel() ? "§aEnabled" : "§cDisabled"),
-							"",
-							"When enabled, we will use ModelEngine",
-							"to render a custom model in your Boss.",
-							"",
-							"Click to toggle").make();
-				}
-			};
-
-			this.selectCustomModelsButton = new ButtonMenu(new SelectCustomModelsMenu(),
-					CompMaterial.ARMOR_STAND,
-					"Select Custom Models",
+			this.customModelsButton = new ButtonMenu(new CustomModelsMenu(),
+					CompMaterial.IRON_HORSE_ARMOR,
+					"&bCustom Models",
 					"",
-					"If you select more than 1 model,",
-					"the plugin will choose a random",
-					"one every time a Boss spawns or",
-					"updates.",
+					"Enable and edit",
+					"custom models.",
 					"",
-					"Click to change the",
-					"custom model to use.");
+					"&cWarning: &7This feature is",
+					"&7under heavy development.");
+
+			this.customAnimationsButton = new ButtonMenu(new CustomAnimationsMenu(),
+					CompMaterial.NETHER_STAR,
+					"&bCustom Animations",
+					"",
+					"Select custom",
+					"animations to play",
+					"on your Boss.",
+					"",
+					"&cWarning: &7This feature is",
+					"&7under heavy development.");
+		}
+
+		@Override
+		public Menu newInstance() {
+			return new ModelEngineMenu();
 		}
 
 		@Override
 		protected String[] getInfo() {
-			return new String[] {
-					"Configure custom model for this Boss",
-					"with ModelEngine.",
+			return new String[]{
+					"Configure ModelEngine",
+					"custom models and",
+					"animations for this Boss.",
 					"",
 					"&cWarning: &7This feature is",
 					"&7under heavy development."
 			};
 		}
 
-		@Override
-		public Menu newInstance() {
-			return new CustomModelsMenu();
-		}
+		private class CustomModelsMenu extends Menu {
 
-		private class SelectCustomModelsMenu extends MenuPaged<String> {
+			@Position(9 * 1 + 3)
+			private final Button enableCustomModelButton;
 
-			private String filter = "";
+			@Position(9 * 1 + 5)
+			private final Button selectCustomModelsButton;
 
-			private boolean reverseOrder = false;
+			public CustomModelsMenu() {
+				super(ModelEngineMenu.this);
 
-			@Position(9 * 3 + 1)
-			private final Button checkAllButton;
+				this.setTitle("Custom Models");
 
-			@Position(9 * 3 + 6)
-			private final Button orderButton;
+				this.enableCustomModelButton = new Button() {
+					@Override
+					public void onClickedInMenu(Player player, Menu menu, ClickType click) {
+						final boolean enabled = SettingsMenu.this.boss.isUseCustomModel();
+						SettingsMenu.this.boss.setUseCustomModel(!enabled);
+						CustomModelsMenu.this.restartMenu(!enabled ? "&2Enabled Custom Models" : "&4Disabled Custom Models");
+					}
 
-			@Position(9 * 3 + 7)
-			private final Button filterButton;
-
-			public SelectCustomModelsMenu(String filter, boolean reverseOrder, List<String> items) {
-				super(CustomModelsMenu.this, items, true);
-				this.filter = filter;
-				this.reverseOrder = reverseOrder;
-
-				this.setTitle("Select Models (" + SettingsMenu.this.boss.getCustomModels().size() + "/" + items.size() + ")");
-				this.setSize(4 * 9);
-
-				this.orderButton = Button.makeSimple(
-						ItemCreator.from(
-								CompMaterial.SLIME_BALL,
-								"Order",
+					@Override
+					public ItemStack getItem() {
+						return ItemCreator.from(
+								CompMaterial.BEACON,
+								"Use Custom Model",
 								"",
-								"Current: &f" + (SelectCustomModelsMenu.this.reverseOrder ? "Z-A" : "A-Z"),
+								"Status: " + (SettingsMenu.this.boss.isUseCustomModel() ? "§aEnabled" : "§cDisabled"),
 								"",
-								"Click to switch"),
-						player -> {
-							this.reverseOrder = !this.reverseOrder;
-							this.newInstance().displayTo(this.getViewer());
-						});
+								"When enabled, we will use ModelEngine",
+								"to render a custom model in your Boss.",
+								"",
+								"Click to toggle").make();
+					}
+				};
 
-				this.filterButton = Button.makeSimple(
-						CompMaterial.HOPPER,
-						"Filter",
-						"Current filter: &f" + (this.filter.isEmpty() ? "none" : this.filter) + "\n" +
-								"\n" +
-								"&aLeft click: &fset\n" +
-								"&cRight click: &fremove",
-						(player, clickType) -> {
-							if (clickType.name().startsWith("LEFT"))
-								new SimpleStringPrompt("Please enter the new filter: ", newFilter -> this.filter = newFilter.replace("clear", "")).show(this.getViewer());
-							else {
-								this.filter = "";
-								this.newInstance().displayTo(this.getViewer());
-							}
-						});
-
-				final Boss boss = SettingsMenu.this.boss;
-				final List<String> bossModels = boss.getCustomModels();
-
-				this.checkAllButton = Button.makeSimple(
-						ItemCreator.from(
-								CompMaterial.LEVER,
-								"> " + (bossModels.isEmpty() ? "Check" : "Uncheck") + " All",
-								"> " + (bossModels.isEmpty() ? "Uncheck" : "Check") + " All"),
-						player -> {
-							if (bossModels.isEmpty())
-								items.forEach(boss::addCustomModel);
-							else
-								items.forEach(boss::removeCustomModel);
-							this.newInstance().displayTo(this.getViewer());
-						});
-			}
-
-			public SelectCustomModelsMenu(String filter, boolean reverseOrder) {
-				this(filter, reverseOrder, new ArrayList<>(ModelEngineAPI.getAPI().getModelRegistry().getKeys().stream().sorted(reverseOrder ? Comparator.reverseOrder() : Comparator.naturalOrder()).filter(s -> s.contains(filter)).collect(Collectors.toList())));
-			}
-
-			public SelectCustomModelsMenu() {
-				this("", false);
-			}
-
-			@Override
-			protected void onPostDisplay(InventoryDrawer drawer) {
-				if (ModelEngineAPI.getAPI().getModelRegistry().getKeys().stream().noneMatch(s -> s.contains(filter)))
-					drawer.setItem(this.getCenterSlot(), ItemCreator.from(
-							CompMaterial.BARRIER,
-							"&cNo results for this filter :(").make());
-
-				super.onPostDisplay(drawer);
-			}
-
-			@Override
-			public Menu newInstance() {
-				return new SelectCustomModelsMenu(this.filter, this.reverseOrder);
+				this.selectCustomModelsButton = new ButtonMenu(new SelectCustomModelsMenu(),
+						CompMaterial.IRON_HORSE_ARMOR,
+						"Select Custom Models",
+						"",
+						"If you select more than 1 model,",
+						"the plugin will choose a random",
+						"one every time a Boss spawns or",
+						"updates.",
+						"",
+						"Click to change the",
+						"custom model to use.");
 			}
 
 			@Override
 			protected String[] getInfo() {
 				return new String[] {
-						"If you select more than 1 model,",
-						"the plugin will choose a random",
-						"one every time a Boss spawns or",
-						"updates."
+						"Configure custom model for this Boss",
+						"with ModelEngine.",
+						"",
+						"&cWarning: &7This feature is",
+						"&7under heavy development."
 				};
 			}
 
 			@Override
-			protected ItemStack convertToItemStack(String item) {
-				final boolean selected = SettingsMenu.this.boss.getCustomModels().contains(item);
-				return ItemCreator.from(
-						CompMaterial.ARMOR_STAND,
-						"&7Model: &f" + item,
-						selected
-								? String.format("&7Chance: &f%.1f", (double) 100 / SettingsMenu.this.boss.getCustomModels().size()) + "%"
-								: "&7&oNot Selected",
+			public Menu newInstance() {
+				return new CustomModelsMenu();
+			}
+
+			private class SelectCustomModelsMenu extends MenuPaged<String> {
+
+				private String filter = "";
+
+				private boolean reverseOrder = false;
+
+				@Position(9 * 3 + 1)
+				private final Button checkAllButton;
+
+				@Position(9 * 3 + 6)
+				private final Button orderButton;
+
+				@Position(9 * 3 + 7)
+				private final Button filterButton;
+
+				public SelectCustomModelsMenu(String filter, boolean reverseOrder, List<String> items) {
+					super(CustomModelsMenu.this, items, true);
+					this.filter = filter;
+					this.reverseOrder = reverseOrder;
+
+					this.setTitle("Select Models (" + SettingsMenu.this.boss.getCustomModels().size() + "/" + items.size() + ")");
+					this.setSize(4 * 9);
+
+					this.orderButton = Button.makeSimple(
+							ItemCreator.from(
+									CompMaterial.SLIME_BALL,
+									"Order",
+									"",
+									"Current: &f" + (SelectCustomModelsMenu.this.reverseOrder ? "Z-A" : "A-Z"),
+									"",
+									"Click to switch"),
+							player -> {
+								this.reverseOrder = !this.reverseOrder;
+								this.newInstance().displayTo(this.getViewer());
+							});
+
+					this.filterButton = Button.makeSimple(
+							CompMaterial.HOPPER,
+							"Filter",
+							"Current filter: &f" + (this.filter.isEmpty() ? "none" : this.filter) + "\n" +
+							"\n" +
+							"&aLeft click: &fset\n" +
+							"&cRight click: &fremove",
+							(player, clickType) -> {
+								if (clickType.name().startsWith("LEFT"))
+									new SimpleStringPrompt("Please enter the new filter: ", newFilter -> this.filter = newFilter.replace("clear", "")).show(this.getViewer());
+								else {
+									this.filter = "";
+									this.newInstance().displayTo(this.getViewer());
+								}
+							});
+
+					final Boss boss = SettingsMenu.this.boss;
+					final List<String> bossModels = boss.getCustomModels();
+
+					this.checkAllButton = Button.makeSimple(
+							ItemCreator.from(
+									CompMaterial.LEVER,
+									"> " + (bossModels.isEmpty() ? "Check" : "Uncheck") + " All",
+									"> " + (bossModels.isEmpty() ? "Uncheck" : "Check") + " All"),
+							player -> {
+								if (bossModels.isEmpty())
+									items.forEach(boss::addCustomModel);
+								else
+									items.forEach(boss::removeCustomModel);
+								this.newInstance().displayTo(this.getViewer());
+							});
+				}
+
+				public SelectCustomModelsMenu(String filter, boolean reverseOrder) {
+					this(filter, reverseOrder, new ArrayList<>(ModelEngineAPI.getAPI().getModelRegistry().getKeys().stream().sorted(reverseOrder ? Comparator.reverseOrder() : Comparator.naturalOrder()).filter(s -> s.contains(filter)).collect(Collectors.toList())));
+				}
+
+				public SelectCustomModelsMenu() {
+					this("", false);
+				}
+
+				@Override
+				protected void onPostDisplay(InventoryDrawer drawer) {
+					if (ModelEngineAPI.getAPI().getModelRegistry().getKeys().stream().noneMatch(s -> s.contains(filter)))
+						drawer.setItem(this.getCenterSlot(), ItemCreator.from(
+								CompMaterial.BARRIER,
+								"&cNo results for this filter :(").make());
+
+					super.onPostDisplay(drawer);
+				}
+
+				@Override
+				public Menu newInstance() {
+					return new SelectCustomModelsMenu(this.filter, this.reverseOrder);
+				}
+
+				@Override
+				protected String[] getInfo() {
+					return new String[] {
+							"If you select more than 1 model,",
+							"the plugin will choose a random",
+							"one every time a Boss spawns or",
+							"updates."
+					};
+				}
+
+				@Override
+				protected ItemStack convertToItemStack(String item) {
+					final boolean selected = SettingsMenu.this.boss.getCustomModels().contains(item);
+					return ItemCreator.from(
+							CompMaterial.IRON_HORSE_ARMOR,
+							"&7Model: &f" + item,
+							selected
+									? String.format("&7Chance: &f%.1f", (double) 100 / SettingsMenu.this.boss.getCustomModels().size()) + "%"
+									: "&7&oNot Selected",
+							"",
+							selected ? "Click to remove" : "Click to select").glow(selected).make();
+				}
+
+				@Override
+				protected void onPageClick(Player player, String item, ClickType click) {
+					final Boss boss = SettingsMenu.this.boss;
+
+					if (boss.getCustomModels().contains(item))
+						boss.removeCustomModel(item);
+					else
+						boss.addCustomModel(item);
+
+					this.newInstance().displayTo(player);
+				}
+			}
+		}
+
+		private class CustomAnimationsMenu extends Menu {
+
+			@Position(9 * 1 + 4)
+			private final Button customAttackAnimationsButton;
+
+			public CustomAnimationsMenu() {
+				super(ModelEngineMenu.this);
+
+				this.setTitle("Custom Animations");
+
+				this.customAttackAnimationsButton = new ButtonMenu(new CustomAttackAnimationsMenu(),
+						CompMaterial.DIAMOND_SWORD,
+						"&bCustom Attack Animations",
 						"",
-						selected ? "Click to remove" : "Click to select").glow(selected).make();
+						"Enable and edit",
+						"custom attack animations.");
 			}
 
 			@Override
-			protected void onPageClick(Player player, String item, ClickType click) {
-				final Boss boss = SettingsMenu.this.boss;
+			public Menu newInstance() {
+				return new CustomAnimationsMenu();
+			}
 
-				if (boss.getCustomModels().contains(item))
-					boss.removeCustomModel(item);
-				else
-					boss.addCustomModel(item);
+			@Override
+			protected String[] getInfo() {
+				return new String[]{
+						"Configure custom animations for this Boss",
+						"with ModelEngine.",
+						"",
+						"&cWarning: &7This feature is",
+						"&7under heavy development."
+				};
+			}
 
-				this.newInstance().displayTo(player);
+			private class CustomAttackAnimationsMenu extends Menu {
+
+				@Position(9 * 1 + 3)
+				private final Button enableCustomAttackAnimationButton;
+
+				@Position(9 * 1 + 5)
+				private final Button selectCustomAttackAnimationsButton;
+
+				public CustomAttackAnimationsMenu() {
+					super(CustomAnimationsMenu.this);
+
+					this.setTitle("Custom Attack Animations");
+
+					this.enableCustomAttackAnimationButton = new Button() {
+						@Override
+						public void onClickedInMenu(Player player, Menu menu, ClickType click) {
+							final boolean enabled = SettingsMenu.this.boss.isUseCustomAttackAnimation();
+							SettingsMenu.this.boss.setUseCustomAttackAnimation(!enabled);
+							CustomAttackAnimationsMenu.this.restartMenu(!enabled ? "&2Enabled Custom Attack Animations" : "&4Disabled Custom Attack Animations");
+						}
+
+						@Override
+						public ItemStack getItem() {
+							return ItemCreator.from(
+									CompMaterial.BEACON,
+									"Use Custom Attack Animation",
+									"",
+									"Status: " + (SettingsMenu.this.boss.isUseCustomAttackAnimation() ? "§aEnabled" : "§cDisabled"),
+									"",
+									"When enabled, we will use ModelEngine",
+									"to render a custom attack animation in your Boss.",
+									"",
+									"Click to toggle").make();
+						}
+					};
+
+					this.selectCustomAttackAnimationsButton = new ButtonMenu(new SelectCustomAttackAnimationsMenu(),
+							CompMaterial.DIAMOND_SWORD,
+							"Select Custom Attack Animations",
+							"",
+							"If you select more than 1 animation,",
+							"the plugin will choose a random",
+							"one every time the Boss attacks.",
+							"",
+							"Click to change the",
+							"custom attack animation to use.");
+				}
+
+				@Override
+				public Menu newInstance() {
+					return new CustomAttackAnimationsMenu();
+				}
+
+				@Override
+				protected String[] getInfo() {
+					return new String[]{
+							"Configure custom attack animations",
+							"for this Boss with ModelEngine.",
+							"",
+							"&cWarning: &7This feature is",
+							"&7under heavy development."
+					};
+				}
+
+				private class SelectCustomAttackAnimationsMenu extends MenuPaged<String> {
+
+					@Position(9 * 2 + 1)
+					private final Button addAttackAnimationButton;
+
+					@Position(9 * 2 + 2)
+					private final Button clearAttackAnimationsButton;
+
+					public SelectCustomAttackAnimationsMenu() {
+						super(CustomAttackAnimationsMenu.this, SettingsMenu.this.boss.getCustomAttackAnimations());
+
+						this.setTitle("Select Attack Animations");
+
+						this.setSize(3 * 9);
+
+						this.addAttackAnimationButton = new ButtonConversation(
+								new SimpleStringPrompt("Enter the custom attack animation name to add.", SettingsMenu.this.boss::addCustomAttackAnimation),
+								CompMaterial.OAK_SIGN,
+								"&aAdd Attack Animation",
+								"",
+								"Click to add a new",
+								"custom attack animation."
+						);
+
+						this.clearAttackAnimationsButton = new Button() {
+							@Override
+							public void onClickedInMenu(final Player player, final Menu menu, final ClickType click) {
+								if (SettingsMenu.this.boss.getCustomAttackAnimations().isEmpty())
+									return;
+								final List<String> animations = new ArrayList<>(SettingsMenu.this.boss.getCustomAttackAnimations());
+								animations.forEach(SettingsMenu.this.boss::removeCustomAttackAnimation);
+								SelectCustomAttackAnimationsMenu.this.restartMenu("&4Cleared all attack animations!");
+							}
+
+							@Override
+							public ItemStack getItem() {
+								return ItemCreator.from(
+										CompMaterial.BARRIER,
+										"&cClear All Attack Animations",
+										"",
+										"Click to remove all",
+										"custom attack animations."
+								).make();
+							}
+						};
+					}
+
+					@Override
+					protected ItemStack convertToItemStack(final String item) {
+					    return ItemCreator.from(
+								CompMaterial.PAPER,
+								"&7Animation: &f" + item,
+								String.format("&7Chance: &f%.1f", (double) 100 / SettingsMenu.this.boss.getCustomAttackAnimations().size()) + "%",
+								"",
+								"Click to remove").make();
+					}
+
+					@Override
+					protected void onPageClick(final Player player, final String item, final ClickType click) {
+						SettingsMenu.this.boss.removeCustomAttackAnimation(item);
+						this.restartMenu("&4Removed attack animation!");
+					}
+
+					@Override
+					protected String[] getInfo() {
+						return new String[]{
+								"If you select more than 1 animation,",
+								"the plugin will choose a random",
+								"one every time the Boss attacks."
+						};
+					}
+
+					@Override
+					public Menu newInstance() {
+						return new SelectCustomAttackAnimationsMenu();
+					}
+				}
 			}
 		}
 	}
