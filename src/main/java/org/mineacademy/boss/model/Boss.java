@@ -363,13 +363,25 @@ public final class Boss extends YamlConfig implements ConfigStringSerializable {
 	 * Returns the default health for this Boss, if not set, returns 20.0D.
 	 */
 	@Getter
-	private boolean useCustomModel = false;
+	private boolean useCustomModel;
 
 	/*
 	 * List of custom models to choose from randomly when the Boss spawns
 	 */
 	@Getter
 	private List<String> customModels;
+
+	/*
+	 * Returns the default health for this Boss, if not set, returns 20.0D.
+	 */
+	@Getter
+	private boolean useCustomAttackAnimation;
+
+	/*
+	 * List of custom attack animations to choose from randomly when the Boss attacks something
+	 */
+	@Getter
+	private List<String> customAttackAnimations;
 
 	//
 	// Non saveable fields below
@@ -501,6 +513,7 @@ public final class Boss extends YamlConfig implements ConfigStringSerializable {
 		this.eggLore = this.getStringList("Egg.Lore");
 		this.lastDeathFromSpawnRule = this.getMap("Last_Death_From_Spawn_Rule", String.class, Long.class);
 		this.nativeAttackGoalEnabled = GoalManagerCheck.isAvailable() ? getBoolean("Native_Attack_Goal_Enabled", false) : false;
+
 		this.useCustomModel = ModelEngineHook.isAvailable() ? getBoolean("Use_Custom_Model", false) : false;
 		this.customModels = ModelEngineHook.isAvailable() ? getList("Custom_Models", String.class, new ArrayList<>()) : null;
 
@@ -511,6 +524,9 @@ public final class Boss extends YamlConfig implements ConfigStringSerializable {
 					CommonCore.warning("Removing " + model + " custom model from Boss " + this.getName() + " because it is not registered in ModelEnigne anymore.");
 				return invalid;
 			});
+
+		this.useCustomAttackAnimation = ModelEngineHook.isAvailable() ? getBoolean("Use_Custom_Attack_Animation", false) : false;
+		this.customAttackAnimations = ModelEngineHook.isAvailable() ? getList("Custom_Attack_Animations", String.class, new ArrayList<>()) : null;
 
 		this.initDefaultAttributes();
 
@@ -686,6 +702,8 @@ public final class Boss extends YamlConfig implements ConfigStringSerializable {
 		this.set("Native_Attack_Goal_Enabled", this.nativeAttackGoalEnabled);
 		this.set("Use_Custom_Model", this.useCustomModel);
 		this.set("Custom_Models", this.customModels);
+		this.set("Use_Custom_Attack_Animation", this.useCustomAttackAnimation);
+		this.set("Custom_Attack_Animations", this.customAttackAnimations);
 
 		// Automatically rerender all Bosses of this instance
 		this.updateBosses();
@@ -710,6 +728,9 @@ public final class Boss extends YamlConfig implements ConfigStringSerializable {
 	}
 
 	public void setUseCustomModel(boolean useCustomModel) {
+		if (this.useCustomModel == useCustomModel)
+			return;
+
 		this.useCustomModel = useCustomModel;
 
 		this.save();
@@ -760,6 +781,42 @@ public final class Boss extends YamlConfig implements ConfigStringSerializable {
 				ModelEngineHook.removeAllModels(spawned.getEntity());
 			}
 		}
+	}
+
+	public void setUseCustomAttackAnimation(boolean useCustomAttackAnimation) {
+		if (this.useCustomAttackAnimation == useCustomAttackAnimation)
+			return;
+
+		this.useCustomAttackAnimation = useCustomAttackAnimation;
+
+		this.save();
+
+		this.updateCustomModels();
+	}
+
+	public String getRandomCustomAttackAnimation() {
+		if (this.customAttackAnimations == null || this.customAttackAnimations.isEmpty())
+			return null;
+
+		return RandomUtil.nextItem(this.customAttackAnimations);
+	}
+
+	public void addCustomAttackAnimation(String animationName) {
+		if (animationName == null || animationName.isEmpty() || this.customAttackAnimations.contains(animationName))
+			return;
+
+		this.customAttackAnimations.add(animationName);
+
+		this.save();
+	}
+
+	public void removeCustomAttackAnimation(String animationName) {
+		if (animationName == null || animationName.isEmpty() || !this.customAttackAnimations.contains(animationName))
+			return;
+
+		this.customAttackAnimations.remove(animationName);
+
+		this.save();
 	}
 
 	/*
