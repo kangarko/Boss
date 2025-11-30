@@ -51,6 +51,7 @@ import org.mineacademy.boss.api.event.BossDeathEvent;
 import org.mineacademy.boss.custom.CustomSetting;
 import org.mineacademy.boss.hook.CitizensHook;
 import org.mineacademy.boss.hook.HeroesHook;
+import org.mineacademy.boss.hook.ModelEngineHook;
 import org.mineacademy.boss.model.Boss;
 import org.mineacademy.boss.model.BossAttribute;
 import org.mineacademy.boss.model.BossCheatDisable;
@@ -511,6 +512,10 @@ public final class EntityListener extends BossListener {
 		this.runIfBoss(damager, spawnedBoss -> {
 			final LivingEntity entity = spawnedBoss.getEntity();
 			final Boss boss = spawnedBoss.getBoss();
+
+			// Play attack animation if Boss uses ModelEngine custom models and has attack animations defined
+			if (boss.isUseCustomModel() && boss.isUseCustomAttackAnimation() && !boss.getCustomAttackAnimations().isEmpty())
+				ModelEngineHook.playAnimation(entity, boss.getRandomCustomAttackAnimation());
 
 			// Adjust damage
 			/*
