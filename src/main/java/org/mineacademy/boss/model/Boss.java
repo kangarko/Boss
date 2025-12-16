@@ -2784,6 +2784,9 @@ public final class Boss extends YamlConfig implements ConfigStringSerializable {
 		if (HookManager.isCitizensLoaded())
 			types.add(CompEntityType.PLAYER);
 
+		if (CompEntityType.MANNEQUIN != null)
+			types.add(CompEntityType.MANNEQUIN);
+
 		return types;
 	}
 
