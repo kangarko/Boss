@@ -568,14 +568,16 @@ public final class EntityListener extends BossListener {
 				boss.runTriggerCommands(damagerPlayer, entity, remainingHealth);
 
 				// Show health bar
-				if (Settings.Fighting.HealthBar.ENABLED) {
-					final SimpleComponent fightMessage = SimpleComponent.fromMiniAmpersand(Settings.Fighting.HealthBar.FORMAT.replace("{damage}", MathUtil.formatTwoDigits(damage)));
+				Platform.runTask(5, () -> {
+					if (Settings.Fighting.HealthBar.ENABLED) {
+						final SimpleComponent fightMessage = SimpleComponent.fromMiniAmpersand(Settings.Fighting.HealthBar.FORMAT.replace("{damage}", MathUtil.formatTwoDigits(damage)));
 
-					HealthBarUtil.display(damagerPlayer, entity, boss.replaceVariables(fightMessage, entity, damagerPlayer), damage);
-				}
+						HealthBarUtil.display(damagerPlayer, entity, boss.replaceVariables(fightMessage, entity, damagerPlayer), damage);
+					}
+				});
 
-				Debugger.debug("health", "[damage] [Boss " + boss.getName() + "] Damage: " + MathUtil.formatTwoDigits(damage) + ". Health: " + MathUtil.formatTwoDigits(entity.getHealth())
-						+ "/" + MathUtil.formatTwoDigits(entity.getMaxHealth()) + ". Remaining: " + MathUtil.formatTwoDigits(remainingHealth));
+				Debugger.debug("damage", "[Boss " + boss.getName() + "] Damage: " + MathUtil.formatTwoDigits(damage) + " vs final damage: " + MathUtil.formatTwoDigits(Remain.getFinalDamage(event))
+						+ ". Health: " + MathUtil.formatTwoDigits(entity.getHealth()) + "/" + MathUtil.formatTwoDigits(entity.getMaxHealth()) + ". Remaining: " + MathUtil.formatTwoDigits(remainingHealth));
 
 				// Register damage
 				boss.registerDamage(entity, damagerPlayer, damage);
