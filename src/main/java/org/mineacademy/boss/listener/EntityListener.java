@@ -531,7 +531,7 @@ public final class EntityListener extends BossListener {
 			final double originalDamage = event.getDamage();
 			final double newDamage = MathUtil.range(originalDamage, 1, Double.MAX_VALUE) * boss.getAttribute(BossAttribute.DAMAGE_MULTIPLIER);
 
-			Debugger.debug("damage", "Original damage: " + originalDamage + ". After applying damage multiplier attribute: " + newDamage);
+			Debugger.debug("damage", "Original damage: " + originalDamage + ". After applying damage multiplier attribute: " + newDamage + ". Final damage: " + Remain.getFinalDamage(event));
 
 			event.setDamage(newDamage);
 
