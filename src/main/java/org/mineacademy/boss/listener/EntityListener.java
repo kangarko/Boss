@@ -528,10 +528,11 @@ public final class EntityListener extends BossListener {
 			 * predictable and consistent damage calculation.
 			 */
 
-			final double originalDamage = event.getDamage();
+			// Trying previous approach to help identify root cause of damage inconsistencies.
+			final double originalDamage = Remain.getFinalDamage(event);
 			final double newDamage = MathUtil.range(originalDamage, 1, Double.MAX_VALUE) * boss.getAttribute(BossAttribute.DAMAGE_MULTIPLIER);
 
-			Debugger.debug("damage", "Original damage: " + originalDamage + ". After applying damage multiplier attribute: " + newDamage + ". Final damage: " + Remain.getFinalDamage(event));
+			Debugger.debug("damage", "Original (final) damage: " + originalDamage + ". After applying damage multiplier attribute: " + newDamage + ".");
 
 			event.setDamage(newDamage);
 
