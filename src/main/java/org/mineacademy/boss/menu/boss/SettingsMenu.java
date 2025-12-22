@@ -546,6 +546,11 @@ final class SettingsMenu extends Menu {
 					"Boss to drop them on death."
 			};
 		}
+
+		@Override
+		public EquipmentMenu newInstance() {
+			return this;
+		}
 	}
 
 	private class PotionsMenu extends MenuPaged<PotionEffectType> implements MenuQuantitable {
