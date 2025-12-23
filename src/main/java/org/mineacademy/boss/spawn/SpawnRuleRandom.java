@@ -7,6 +7,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.World.Environment;
+import org.bukkit.conversations.ConversationAbandonedEvent;
 import org.bukkit.conversations.ConversationContext;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
@@ -16,6 +17,8 @@ import org.mineacademy.fo.MathUtil;
 import org.mineacademy.fo.MinecraftVersion;
 import org.mineacademy.fo.MinecraftVersion.V;
 import org.mineacademy.fo.RandomUtil;
+import org.mineacademy.fo.conversation.SimpleConversation;
+import org.mineacademy.fo.conversation.SimpleDecimalPrompt;
 import org.mineacademy.fo.conversation.SimpleStringPrompt;
 import org.mineacademy.fo.debug.Debugger;
 import org.mineacademy.fo.menu.Menu;
@@ -390,12 +393,32 @@ abstract class SpawnRuleRandom extends SpawnRuleRegions {
 		@Override
 		protected void onPageClick(Player player, CompBiome biome, ClickType click) {
 			final double oldChance = SpawnRuleRandom.this.biomesWithChances.getOrDefault(biome, 0D);
-			final double newChance = MathUtil.range(oldChance + this.getNextQuantityDouble(click), 0, 1D);
 
-			SpawnRuleRandom.this.biomesWithChances.put(biome, newChance);
-			SpawnRuleRandom.this.save();
+			if (click.name().startsWith("SHIFT_")) {
+				new SimpleDecimalPrompt("Enter the biome's chance from 0.00% to 100%. Current: " + (oldChance * 100) + "%.", newChance -> {
+					newChance /= 100;
 
-			this.restartMenu("&9Spawn chance set to " + MathUtil.formatTwoDigits(newChance * 100) + "%!");
+					// Save drop chance
+					final double range = MathUtil.range(newChance, 0.D, 1.D);
+
+					SpawnRuleRandom.this.biomesWithChances.put(biome, range);
+					SpawnRuleRandom.this.save();
+				}) {
+					@Override
+					public void onConversationEnd(final SimpleConversation conversation, final ConversationAbandonedEvent event) {
+						super.onConversationEnd(conversation, event);
+
+						BiomesMenu.this.displayTo(player);
+					}
+				}.show(player);
+			} else {
+				final double newChance = MathUtil.range(oldChance + this.getNextQuantityDouble(click), 0, 1D);
+
+				SpawnRuleRandom.this.biomesWithChances.put(biome, newChance);
+				SpawnRuleRandom.this.save();
+
+				this.restartMenu("&9Spawn chance set to " + MathUtil.formatTwoDigits(newChance * 100) + "%!");
+			}
 		}
 	}
 
