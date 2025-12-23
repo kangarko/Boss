@@ -163,5 +163,86 @@
   "tool-tamer-not-applicable": "Entity {entity_name} is not a tameable entity.",
   "tool-tamer-prompt": "Type the name of the owner in the chat, or type 'none' to untame. Current: {current_owner}.",
   "tool-tamer-success": "Set {entity_name}'s owner to {new_owner}.",
-  "tool-tamer-success-reset": "Removed owner from {entity_name}."
+  "tool-tamer-success-reset": "Removed owner from {entity_name}.",
+
+  "menu-main-title": "Boss™ Main Menu",
+  "menu-main-button-bosses": "&6Bosses",
+  "menu-main-button-bosses-lore": [
+    "",
+    "Click to edit",
+    "loaded Bosses",
+    "or create them."
+  ],
+  "menu-main-button-regions": "&eRegions",
+  "menu-main-button-regions-lore": [
+    "",
+    "Click to manage",
+    "Boss regions."
+  ],
+  "menu-main-button-tools": "&bTools",
+  "menu-main-button-tools-lore": [
+    "",
+    "Click to list useful",
+    "Boss tools for regions",
+    "and mob editing."
+  ],
+  "menu-main-button-tools-disabled": "&cTools Disabled!",
+  "menu-main-button-tools-disabled-lore": [
+    "",
+    "To enable tools, set",
+    "&6Register_Tools &7key in",
+    "settings.yml to true."
+  ],
+  "menu-main-button-spawning": "&cSpawning",
+  "menu-main-button-spawning-lore": [
+    "",
+    "Click to manage",
+    "Boss spawning."
+  ],
+
+  "menu-boss-select-title": "Create Or Edit Bosses",
+  "menu-boss-select-button-create": "&aCreate New",
+  "menu-boss-select-button-create-lore": [
+    "",
+    "Click to create",
+    "a new Boss."
+  ],
+  "menu-boss-select-item-lore": [
+    "",
+    "Click to open this Boss",
+    "menu and customize it."
+  ],
+  "menu-boss-select-info": [
+    "Select a Boss to open its",
+    "menu and customize it.",
+    "",
+    "Create a new Boss by",
+    "clicking on the emerald."
+  ],
+
+  "menu-boss-create-title": "Select Boss Type",
+  "menu-boss-create-npc-name": "Player NPC",
+  "menu-boss-create-npc-lore": [
+    "",
+    "Click to create a new",
+    "NPC using Citizens."
+  ],
+  "menu-boss-create-entity-lore": [
+    "",
+    "Click to create a new",
+    "Boss from this mob."
+  ],
+  "menu-boss-create-info": [
+    "To create a new Boss, simply",
+    "select what kind of mob the",
+    "Boss will be created from.",
+    "",
+    "Minecraft server does not allow",
+    "creation of completely new mob",
+    "types without forcing all players",
+    "to download a mod, that is why we",
+    "create new Bosses from mobs that",
+    "your client can render and customize",
+    "them later in your Boss settings."
+  ]
 }
