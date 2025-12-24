@@ -251,6 +251,10 @@ final class DeathMenu extends Menu {
 				};
 			}
 
+			@Override
+			public GeneralDropsMenu newInstance() {
+				return this;
+			}
 		}
 
 		private class PlayerDropsMenu extends MenuPaged<Integer> {
@@ -595,6 +599,11 @@ final class DeathMenu extends Menu {
 					"to this menu to spawn them when",
 					"this Boss dies."
 			};
+		}
+
+		@Override
+		public ReinforcementsMenu newInstance() {
+			return this;
 		}
 	}
 }
