@@ -113,10 +113,10 @@ public final class BossPlaceholders extends SimpleExpansion {
 				}
 
 				if ("kills".equals(thirdArg))
-					return fifthArg.equals("player") ? "" : "0";
+					return fifthArg.equals("player") ? Lang.legacy("placeholder-no-damage-player") : Lang.legacy("placeholder-no-damage-value");
 
 				else if ("damage".equals(thirdArg))
-					return fifthArg.equals("player") ? "" : "0";
+					return fifthArg.equals("player") ? Lang.legacy("placeholder-no-damage-player") : Lang.legacy("placeholder-no-damage-value");
 
 				else
 					return "Invalid stat " + thirdArg;
