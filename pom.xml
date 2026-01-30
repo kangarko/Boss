@@ -61,13 +61,13 @@
 		<dependency>
 			<groupId>org.mineacademy.plugin</groupId>
 			<artifactId>WorldEdit</artifactId>
-			<version>7.3.0</version>
+			<version>7.4.1-SNAPSHOT+7388-aa778af</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.mineacademy.plugin</groupId>
 			<artifactId>WorldGuard</artifactId>
-			<version>7.0.9</version>
+			<version>7.0.16-SNAPSHOT+2351-6b994f0</version>
 			<scope>provided</scope>
 		</dependency>
 
@@ -129,7 +129,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
-				<version>3.4.2</version>
+				<version>3.5.0</version>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
