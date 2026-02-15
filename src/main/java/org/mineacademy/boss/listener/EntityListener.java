@@ -588,8 +588,8 @@ public final class EntityListener extends BossListener {
 			});
 		}
 
-		if (victim.getType().toString().equals("ARMOR_STAND"))
-			// Prevent destroying armor stand bosses if they are invulnerable
+		if (victim.getType().toString().equals("ARMOR_STAND") || victim.getType().toString().equals("MANNEQUIN"))
+			// Prevent destroying armor stand / mannequin bosses if they are invulnerable
 			this.runIfBoss(victim, spawnedBoss -> {
 				if (spawnedBoss.getBoss().getCustomSetting(CustomSetting.INVULNERABLE))
 					event.setCancelled(true);
