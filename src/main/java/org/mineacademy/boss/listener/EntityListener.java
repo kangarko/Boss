@@ -54,6 +54,7 @@ import org.mineacademy.boss.hook.HeroesHook;
 import org.mineacademy.boss.hook.ModelEngineHook;
 import org.mineacademy.boss.model.Boss;
 import org.mineacademy.boss.model.BossAttribute;
+import org.mineacademy.boss.model.BossBossBarManager;
 import org.mineacademy.boss.model.BossCheatDisable;
 import org.mineacademy.boss.model.BossCommandType;
 import org.mineacademy.boss.model.BossReinforcement;
@@ -467,6 +468,9 @@ public final class EntityListener extends BossListener {
 			// Clear up
 			boss.clearLastTriggerCommands(entity);
 
+			// Remove BossBar from all viewers
+			BossBossBarManager.removeAll(entity.getUniqueId());
+
 			// Run commands
 			boss.runCommands(BossCommandType.DEATH, entity);
 
@@ -571,6 +575,9 @@ public final class EntityListener extends BossListener {
 
 						HealthBarUtil.display(damagerPlayer, entity, boss.replaceVariables(fightMessage, entity, damagerPlayer), 0);
 					}
+
+					if (entity.isValid() && !entity.isDead())
+						BossBossBarManager.showOrUpdate(boss, entity, damagerPlayer);
 				});
 
 				Debugger.debug("damage", "[Boss " + boss.getName() + "] Final damage: " + MathUtil.formatTwoDigits(damage)

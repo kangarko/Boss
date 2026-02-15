@@ -10,6 +10,7 @@ import org.mineacademy.boss.hook.WorldGuardHook;
 import org.mineacademy.boss.listener.ChunkListener;
 import org.mineacademy.boss.listener.ThirdPartiesListener;
 import org.mineacademy.boss.model.Boss;
+import org.mineacademy.boss.model.BossBossBarManager;
 import org.mineacademy.boss.model.BossLocation;
 import org.mineacademy.boss.model.BossPlaceholders;
 import org.mineacademy.boss.settings.Settings;
@@ -181,6 +182,8 @@ public final class BossPlugin extends BukkitPlugin {
 	 */
 	@Override
 	protected void onPluginPreReload() {
+		BossBossBarManager.clearAll();
+
 		for (final Boss boss : Boss.getBosses())
 			boss.save();
 	}
@@ -200,6 +203,8 @@ public final class BossPlugin extends BukkitPlugin {
 	 */
 	@Override
 	protected void onPluginStop() {
+		BossBossBarManager.clearAll();
+
 		for (final Boss boss : Boss.getBosses())
 			boss.save();
 

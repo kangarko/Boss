@@ -10,6 +10,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.mineacademy.boss.hook.CitizensHook;
 import org.mineacademy.boss.model.Boss;
+import org.mineacademy.boss.model.BossBossBarManager;
 import org.mineacademy.boss.model.BossLocation;
 import org.mineacademy.boss.model.SpawnedBoss;
 import org.mineacademy.boss.settings.Settings;
@@ -104,6 +105,10 @@ public final class TaskBehavior extends SimpleRunnable {
 			// Retarget
 			if (canRetarget)
 				CitizensHook.retarget(spawned);
+
+			// Remove BossBar from distant players
+			if (spawned.getBoss().isBossBarEnabled())
+				BossBossBarManager.removeDistant(spawned.getBoss(), spawned.getEntity());
 		}
 	}
 

@@ -63,6 +63,7 @@ import org.mineacademy.fo.remain.Remain;
 
 import lombok.Getter;
 import lombok.Setter;
+import net.kyori.adventure.bossbar.BossBar;
 
 /**
  * The menu with main Boss settings.
@@ -100,6 +101,9 @@ final class SettingsMenu extends Menu {
 
 	@Position(9 * 3 + 7)
 	private final Button customSettingsButton;
+
+	@Position(9 * 5 + 1)
+	private final Button bossBarButton;
 
 	@Position(9 * 5 + 7)
 	private final Button modelEngineButton;
@@ -246,6 +250,16 @@ final class SettingsMenu extends Menu {
 				"",
 				"Edit custom settings only",
 				"applicable for this Boss.");
+
+		this.bossBarButton = new ButtonMenu(new BossBarMenu(),
+				CompMaterial.MAGENTA_STAINED_GLASS_PANE,
+				"&dBoss Bar",
+				"",
+				"Status: " + (boss.isBossBarEnabled() ? "&aEnabled" : "&cDisabled"),
+				"",
+				"Configure the health bar",
+				"shown at the top of the",
+				"screen during boss fights.");
 
 		this.modelEngineButton = ModelEngineHook.isAvailable() ? new ButtonMenu(new ModelEngineMenu(),
 				CompMaterial.ARMOR_STAND,
@@ -1515,6 +1529,141 @@ final class SettingsMenu extends Menu {
 					"should strike lightning at",
 					"Boss location. This lightning",
 					"doesn't cause fire or damage."
+			};
+		}
+	}
+
+	private class BossBarMenu extends Menu {
+
+		@Position(9 * 1 + 1)
+		private final Button enabledButton;
+
+		@Position(9 * 1 + 3)
+		private final Button colorButton;
+
+		@Position(9 * 1 + 5)
+		private final Button styleButton;
+
+		@Position(9 * 1 + 7)
+		private final Button radiusButton;
+
+		private BossBarMenu() {
+			super(SettingsMenu.this);
+
+			this.setTitle("Boss Bar Settings");
+
+			this.enabledButton = new Button() {
+
+				@Override
+				public void onClickedInMenu(Player player, Menu menu, ClickType click) {
+					final boolean enabled = SettingsMenu.this.boss.isBossBarEnabled();
+
+					SettingsMenu.this.boss.setBossBarEnabled(!enabled);
+					BossBarMenu.this.restartMenu((enabled ? "&4Disabled" : "&2Enabled") + " Boss Bar");
+				}
+
+				@Override
+				public ItemStack getItem() {
+					final boolean enabled = SettingsMenu.this.boss.isBossBarEnabled();
+
+					return ItemCreator.from(
+							CompMaterial.LEVER,
+							"Enabled",
+							"",
+							"Status: " + (enabled ? "&aEnabled" : "&cDisabled"),
+							"",
+							"Toggle the BossBar",
+							"health display.")
+							.glow(enabled)
+							.make();
+				}
+			};
+
+			this.colorButton = new Button() {
+
+				@Override
+				public void onClickedInMenu(Player player, Menu menu, ClickType click) {
+					final BossBar.Color[] colors = BossBar.Color.values();
+					final BossBar.Color current = SettingsMenu.this.boss.getBossBarColor();
+					final int nextIndex = (java.util.Arrays.asList(colors).indexOf(current) + 1) % colors.length;
+
+					SettingsMenu.this.boss.setBossBarColor(colors[nextIndex]);
+					BossBarMenu.this.restartMenu("&2Set color to " + colors[nextIndex]);
+				}
+
+				@Override
+				public ItemStack getItem() {
+					return ItemCreator.from(
+							CompMaterial.MAGENTA_DYE,
+							"Color",
+							"",
+							"Current: &f" + SettingsMenu.this.boss.getBossBarColor(),
+							"",
+							"Click to cycle through",
+							"BossBar colors.")
+							.make();
+				}
+			};
+
+			this.styleButton = new Button() {
+
+				@Override
+				public void onClickedInMenu(Player player, Menu menu, ClickType click) {
+					final BossBar.Overlay[] styles = BossBar.Overlay.values();
+					final BossBar.Overlay current = SettingsMenu.this.boss.getBossBarStyle();
+					final int nextIndex = (java.util.Arrays.asList(styles).indexOf(current) + 1) % styles.length;
+
+					SettingsMenu.this.boss.setBossBarStyle(styles[nextIndex]);
+					BossBarMenu.this.restartMenu("&2Set style to " + styles[nextIndex]);
+				}
+
+				@Override
+				public ItemStack getItem() {
+					return ItemCreator.from(
+							CompMaterial.PAINTING,
+							"Style",
+							"",
+							"Current: &f" + SettingsMenu.this.boss.getBossBarStyle(),
+							"",
+							"Click to cycle through",
+							"BossBar overlay styles.")
+							.make();
+				}
+			};
+
+			this.radiusButton = Button.makeSimple(ItemCreator.from(
+					CompMaterial.ENDER_EYE,
+					"Radius",
+					"",
+					"Current: &f" + MathUtil.formatTwoDigits(SettingsMenu.this.boss.getBossBarRadius()) + " blocks",
+					"",
+					"The maximum distance from",
+					"Boss to show the bar."),
+					player -> {
+						new SimpleDecimalPrompt("Enter the maximum radius (in blocks) for BossBar visibility. Current: "
+								+ MathUtil.formatTwoDigits(SettingsMenu.this.boss.getBossBarRadius())) {
+
+							@Override
+							protected boolean isInputValid(ConversationContext context, String input) {
+								return Valid.isDecimal(input) && Double.parseDouble(input) > 0;
+							}
+
+							@Override
+							protected void onValidatedInput(ConversationContext context, String input) {
+								SettingsMenu.this.boss.setBossBarRadius(Double.parseDouble(input));
+							}
+						}.show(player);
+					});
+		}
+
+		@Override
+		protected String[] getInfo() {
+			return new String[] {
+					"Configure the BossBar that",
+					"shows at the top of the",
+					"screen during boss fights,",
+					"displaying the Boss name",
+					"and health progress."
 			};
 		}
 	}

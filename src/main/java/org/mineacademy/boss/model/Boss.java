@@ -60,6 +60,7 @@ import org.mineacademy.fo.MinecraftVersion;
 import org.mineacademy.fo.MinecraftVersion.V;
 import org.mineacademy.fo.PlayerUtil;
 import org.mineacademy.fo.RandomUtil;
+import org.mineacademy.fo.ReflectionUtil;
 import org.mineacademy.fo.SerializeUtil;
 import org.mineacademy.fo.Valid;
 import org.mineacademy.fo.collection.SerializedMap;
@@ -89,6 +90,7 @@ import com.ticxo.modelengine.api.ModelEngineAPI;
 
 import lombok.Getter;
 import lombok.NonNull;
+import net.kyori.adventure.bossbar.BossBar;
 
 /**
  * Represents a simple boss
@@ -383,6 +385,36 @@ public final class Boss extends YamlConfig implements ConfigStringSerializable {
 	@Getter
 	private List<String> customAttackAnimations;
 
+	/**
+	 * Whether the BossBar health display is enabled for this Boss.
+	 */
+	@Getter
+	private boolean bossBarEnabled;
+
+	/**
+	 * The BossBar color.
+	 */
+	@Getter
+	private BossBar.Color bossBarColor;
+
+	/**
+	 * The BossBar overlay style.
+	 */
+	@Getter
+	private BossBar.Overlay bossBarStyle;
+
+	/**
+	 * The BossBar title format, supports {boss_alias}, {health}, {max_health}.
+	 */
+	@Getter
+	private String bossBarTitle;
+
+	/**
+	 * The maximum radius for showing the BossBar to players.
+	 */
+	@Getter
+	private double bossBarRadius;
+
 	//
 	// Non saveable fields below
 	//
@@ -527,6 +559,12 @@ public final class Boss extends YamlConfig implements ConfigStringSerializable {
 
 		this.useCustomAttackAnimation = ModelEngineHook.isAvailable() ? getBoolean("Use_Custom_Attack_Animation", false) : false;
 		this.customAttackAnimations = ModelEngineHook.isAvailable() ? getList("Custom_Attack_Animations", String.class, new ArrayList<>()) : null;
+
+		this.bossBarEnabled = this.getBoolean("Boss_Bar.Enabled", false);
+		this.bossBarColor = this.isSet("Boss_Bar.Color") ? ReflectionUtil.lookupEnum(BossBar.Color.class, this.getString("Boss_Bar.Color")) : BossBar.Color.RED;
+		this.bossBarStyle = this.isSet("Boss_Bar.Style") ? ReflectionUtil.lookupEnum(BossBar.Overlay.class, this.getString("Boss_Bar.Style")) : BossBar.Overlay.PROGRESS;
+		this.bossBarTitle = this.getString("Boss_Bar.Title", "{boss_alias} &8- &c{health}&8/&c{max_health}");
+		this.bossBarRadius = this.getDouble("Boss_Bar.Radius", 30.0D);
 
 		this.initDefaultAttributes();
 
@@ -704,6 +742,11 @@ public final class Boss extends YamlConfig implements ConfigStringSerializable {
 		this.set("Custom_Models", this.customModels);
 		this.set("Use_Custom_Attack_Animation", this.useCustomAttackAnimation);
 		this.set("Custom_Attack_Animations", this.customAttackAnimations);
+		this.set("Boss_Bar.Enabled", this.bossBarEnabled);
+		this.set("Boss_Bar.Color", this.bossBarColor.toString());
+		this.set("Boss_Bar.Style", this.bossBarStyle.toString());
+		this.set("Boss_Bar.Title", this.bossBarTitle);
+		this.set("Boss_Bar.Radius", this.bossBarRadius);
 
 		// Automatically rerender all Bosses of this instance
 		this.updateBosses();
@@ -2517,6 +2560,61 @@ public final class Boss extends YamlConfig implements ConfigStringSerializable {
 				if (spawned.getBoss().getName().equals(getName()) && spawned.getEntity() instanceof Mob)
 					GoalManager.makeAggressive((Mob) spawned.getEntity(), enabled);
 		}
+	}
+
+	/**
+	 * Set the BossBar enabled state.
+	 *
+	 * @param enabled
+	 */
+	public void setBossBarEnabled(boolean enabled) {
+		this.bossBarEnabled = enabled;
+
+		this.save();
+	}
+
+	/**
+	 * Set the BossBar color.
+	 *
+	 * @param color
+	 */
+	public void setBossBarColor(BossBar.Color color) {
+		this.bossBarColor = color;
+
+		this.save();
+	}
+
+	/**
+	 * Set the BossBar overlay style.
+	 *
+	 * @param style
+	 */
+	public void setBossBarStyle(BossBar.Overlay style) {
+		this.bossBarStyle = style;
+
+		this.save();
+	}
+
+	/**
+	 * Set the BossBar title format.
+	 *
+	 * @param title
+	 */
+	public void setBossBarTitle(String title) {
+		this.bossBarTitle = title;
+
+		this.save();
+	}
+
+	/**
+	 * Set the BossBar visibility radius.
+	 *
+	 * @param radius
+	 */
+	public void setBossBarRadius(double radius) {
+		this.bossBarRadius = radius;
+
+		this.save();
 	}
 
 	/*
