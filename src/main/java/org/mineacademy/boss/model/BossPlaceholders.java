@@ -52,17 +52,13 @@ public final class BossPlaceholders extends SimpleExpansion {
 		if (args.length == 2) {
 			final String secondArg = args[1];
 
-			if ("alias".equals(secondArg) || "alias_plain".equals(secondArg)) {
+			if ("alias".equals(secondArg)) {
 				final Boss boss = Boss.findBoss(bossName);
 
 				if (boss == null)
 					return "Unknown Boss";
 
-				if ("alias".equals(secondArg))
-					return boss.getAlias();
-
-				else
-					return SimpleComponent.fromMiniAmpersand(boss.getAlias()).toPlain();
+				return boss.getAlias();
 			}
 		}
 
@@ -192,9 +188,18 @@ public final class BossPlaceholders extends SimpleExpansion {
 				} else
 					return Settings.Spawning.RESPAWN_PLACEHOLDER_PAST_DUE;
 			}
+
+			else if ("alias".equals(secondArg) && "plain".equals(thirdArg)) {
+				final Boss boss = Boss.findBoss(bossName);
+
+				if (boss == null)
+					return "Unknown Boss";
+
+				return SimpleComponent.fromMiniAmpersand(boss.getAlias()).toPlain();
+			}
 		}
 
-		if ("name".equals(params) || "alias".equals(params) || "health".equals(params) || "is_nearby".equals(params) || params.startsWith("top_damage") || "location".equals(params) || "location_x".equals(params) || "location_y".equals(params) || "location_z".equals(params) || "location_world".equals(params)) {
+		if ("name".equals(params) || "alias".equals(params) || "alias_plain".equals(params) || "health".equals(params) || "is_nearby".equals(params) || params.startsWith("top_damage") || "location".equals(params) || "location_x".equals(params) || "location_y".equals(params) || "location_z".equals(params) || "location_world".equals(params)) {
 			if (!Bukkit.isPrimaryThread()) {
 				Common.warning("Called Boss placeholder {" + params + "} asynchronoously. It requires getting the closest entity, which must be done on the main thread. Do NOT report this, this is caused by you using the variable in a plugin which replaces them async such as CMI. Adjust your setup or contact their developers and ask how to replace variables on the main thread.");
 
@@ -253,7 +258,7 @@ public final class BossPlaceholders extends SimpleExpansion {
 			}
 		}
 
-		if ("has_region".contains(params) || "region_primary_x".contains(params) || "region_primary_y".contains(params) || "region_primary_z".contains(params) || "region_secondary_x".contains(params) || "region_secondary_y".contains(params) || "region_secondary_z".contains(params) || "region_world".contains(params) || "region_size".contains(params)) {
+		if ("has_region".equals(params) || "region_primary_x".equals(params) || "region_primary_y".equals(params) || "region_primary_z".equals(params) || "region_secondary_x".equals(params) || "region_secondary_y".equals(params) || "region_secondary_z".equals(params) || "region_world".equals(params) || "region_size".equals(params)) {
 			final Region region = player != null ? PlayerCache.from(player).getCreatedRegion() : null;
 
 			switch (params) {
