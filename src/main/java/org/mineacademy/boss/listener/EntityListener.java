@@ -553,31 +553,27 @@ public final class EntityListener extends BossListener {
 				final Boss boss = spawnedBoss.getBoss();
 
 				/*
-				 * Previous approach:
-				 * Used Remain#getFinalDamage(event), but this caused inconsistencies
-				 * with high-level enchantments and custom attributes.
-				 *
-				 * Fix:
-				 * The new implementation uses event.getDamage() directly for a more
-				 * predictable and consistent damage calculation.
+				 * Use final damage (after armor/enchantment reductions) for accurate health tracking.
+				 * The health bar display runs 5 ticks later when entity health is already updated,
+				 * so we pass 0 to avoid double-subtracting the damage.
 				 */
 
-				final double damage = event.getDamage() * Double.parseDouble("1.0" + RandomUtil.nextInt(30));
+				final double damage = Remain.getFinalDamage(event) * Double.parseDouble("1.0" + RandomUtil.nextInt(30));
 				final double remainingHealth = Remain.getHealth(entity) - damage;
 
 				// Run commands when Boss takes damage below given thresholds
 				boss.runTriggerCommands(damagerPlayer, entity, remainingHealth);
 
-				// Show health bar
+				// Show health bar (damage already applied by the time this runs, so pass 0)
 				Platform.runTask(5, () -> {
 					if (Settings.Fighting.HealthBar.ENABLED) {
 						final SimpleComponent fightMessage = SimpleComponent.fromMiniAmpersand(Settings.Fighting.HealthBar.FORMAT.replace("{damage}", MathUtil.formatTwoDigits(damage)));
 
-						HealthBarUtil.display(damagerPlayer, entity, boss.replaceVariables(fightMessage, entity, damagerPlayer), damage);
+						HealthBarUtil.display(damagerPlayer, entity, boss.replaceVariables(fightMessage, entity, damagerPlayer), 0);
 					}
 				});
 
-				Debugger.debug("damage", "[Boss " + boss.getName() + "] Damage: " + MathUtil.formatTwoDigits(damage) + " vs final damage: " + MathUtil.formatTwoDigits(Remain.getFinalDamage(event))
+				Debugger.debug("damage", "[Boss " + boss.getName() + "] Final damage: " + MathUtil.formatTwoDigits(damage)
 						+ ". Health: " + MathUtil.formatTwoDigits(entity.getHealth()) + "/" + MathUtil.formatTwoDigits(entity.getMaxHealth()) + ". Remaining: " + MathUtil.formatTwoDigits(remainingHealth));
 
 				// Register damage
