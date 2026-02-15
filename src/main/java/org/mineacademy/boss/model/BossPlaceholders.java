@@ -9,6 +9,7 @@ import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.mineacademy.boss.PlayerCache;
 import org.mineacademy.boss.settings.Settings;
@@ -48,6 +49,27 @@ public final class BossPlaceholders extends SimpleExpansion {
 	protected String onReplace(FoundationPlayer audience, String params) {
 		final Player player = audience != null && audience.isPlayer() ? audience.getPlayer() : null;
 		final String bossName = args[0];
+
+		// %boss_spawned% - total alive Bosses across all worlds
+		if ("spawned".equals(params)) {
+			if (!Bukkit.isPrimaryThread())
+				return "";
+
+			return String.valueOf(Boss.findBossesAlive().size());
+		}
+
+		// %boss_spawned_<world>% - alive Bosses in a specific world
+		if (params.startsWith("spawned_")) {
+			final String worldName = params.substring("spawned_".length());
+			final World world = Bukkit.getWorld(worldName);
+
+			if (world != null) {
+				if (!Bukkit.isPrimaryThread())
+					return "";
+
+				return String.valueOf(Boss.findBossesAliveIn(world).size());
+			}
+		}
 
 		if (args.length == 2) {
 			final String secondArg = args[1];
@@ -196,6 +218,33 @@ public final class BossPlaceholders extends SimpleExpansion {
 					return "Unknown Boss";
 
 				return SimpleComponent.fromMiniAmpersand(boss.getAlias()).toPlain();
+			}
+		}
+
+		// %boss_<name>_spawned% - alive count for a specific Boss
+		// %boss_<name>_spawned_<world>% - alive count for a specific Boss in a specific world
+		if (args.length >= 2 && "spawned".equals(args[1])) {
+			if (!Bukkit.isPrimaryThread())
+				return "";
+
+			final Boss boss = Boss.findBoss(bossName);
+
+			if (boss == null)
+				return "Unknown Boss";
+
+			if (args.length == 2) {
+				int count = 0;
+
+				for (final SpawnedBoss sb : Boss.findBossesAlive())
+					if (sb.getBoss().getName().equals(boss.getName()))
+						count++;
+
+				return String.valueOf(count);
+			} else {
+				final String worldName = params.substring(bossName.length() + "_spawned_".length());
+				final World world = Bukkit.getWorld(worldName);
+
+				return world != null ? String.valueOf(Boss.findBossesAliveIn(world, boss).size()) : "";
 			}
 		}
 

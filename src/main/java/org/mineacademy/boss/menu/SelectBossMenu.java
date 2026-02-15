@@ -24,6 +24,9 @@ import org.mineacademy.fo.settings.Lang;
  */
 public final class SelectBossMenu extends MenuPaged<Boss> {
 
+	@Position(start = StartPosition.BOTTOM_LEFT)
+	private final Button spawnedButton;
+
 	@Position(start = StartPosition.BOTTOM_RIGHT)
 	private final Button createButton;
 
@@ -31,6 +34,12 @@ public final class SelectBossMenu extends MenuPaged<Boss> {
 		super(parent, Boss.getBosses());
 
 		this.setTitle(Lang.legacy("menu-boss-select-title"));
+
+		this.spawnedButton = new ButtonMenu(
+				() -> new SpawnedBossesMenu(SelectBossMenu.this),
+				ItemCreator.from(CompMaterial.ENDER_EYE,
+						Lang.legacy("menu-spawned-button"),
+						Lang.legacy("menu-spawned-button-lore").split("\n")));
 
 		this.createButton = new ButtonMenu(new CreateMenu(this), CompMaterial.EMERALD,
 				Lang.legacy("menu-boss-select-button-create"),

@@ -200,6 +200,21 @@
     "Boss spawning."
   ],
 
+  "menu-spawned-title": "Spawned Bosses",
+  "menu-spawned-info": [
+    "This menu shows all currently",
+    "alive Bosses in loaded chunks.",
+    "",
+    "Left-click to teleport.",
+    "Right-click to kill."
+  ],
+  "menu-spawned-button": "&aSpawned Bosses",
+  "menu-spawned-button-lore": [
+    "",
+    "Click to view all",
+    "alive Bosses."
+  ],
+
   "menu-boss-select-title": "Create Or Edit Bosses",
   "menu-boss-select-button-create": "&aCreate New",
   "menu-boss-select-button-create-lore": [
