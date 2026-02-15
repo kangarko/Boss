@@ -194,7 +194,7 @@ public final class BossPlaceholders extends SimpleExpansion {
 			}
 		}
 
-		if ("name".equals(params) || "alias".equals(params) || "health".equals(params) || params.startsWith("top_damage") || "location".equals(params) || "location_x".equals(params) || "location_y".equals(params) || "location_z".equals(params) || "location_world".equals(params)) {
+		if ("name".equals(params) || "alias".equals(params) || "health".equals(params) || "is_nearby".equals(params) || params.startsWith("top_damage") || "location".equals(params) || "location_x".equals(params) || "location_y".equals(params) || "location_z".equals(params) || "location_world".equals(params)) {
 			if (!Bukkit.isPrimaryThread()) {
 				Common.warning("Called Boss placeholder {" + params + "} asynchronoously. It requires getting the closest entity, which must be done on the main thread. Do NOT report this, this is caused by you using the variable in a plugin which replaces them async such as CMI. Adjust your setup or contact their developers and ask how to replace variables on the main thread.");
 
@@ -230,6 +230,8 @@ public final class BossPlaceholders extends SimpleExpansion {
 			// Variables that do not require any sender
 			//
 			switch (params) {
+				case "is_nearby":
+					return hasBoss ? "true" : "false";
 				case "name":
 					return hasBoss ? closestBoss.getName() : "";
 				case "alias":
