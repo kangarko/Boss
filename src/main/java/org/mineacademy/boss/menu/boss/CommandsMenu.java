@@ -92,7 +92,7 @@ public final class CommandsMenu extends MenuPaged<BossCommand> {
 	protected String[] getInfo() {
 		return new String[] {
 				"Commands that your Boss",
-				"executes on " + (this.type == BossCommandType.SKILL ? "this" : "his") + this.type.getMenuLabel() + ".",
+				"executes on " + (this.type == BossCommandType.SKILL ? "this " : "his ") + this.type.getMenuLabel() + ".",
 				"",
 				"See this link for help and examples:",
 				"https://docs.mineacademy.org/boss/boss-commands"
