@@ -9,8 +9,10 @@ import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.mineacademy.boss.PlayerCache;
+import org.mineacademy.boss.menu.SpawnedBossesMenu;
 import org.mineacademy.boss.settings.Settings;
 import org.mineacademy.boss.spawn.SpawnRule;
 import org.mineacademy.boss.spawn.SpawnRuleRespawn;
@@ -48,6 +50,26 @@ public final class BossPlaceholders extends SimpleExpansion {
 	protected String onReplace(FoundationPlayer audience, String params) {
 		final Player player = audience != null && audience.isPlayer() ? audience.getPlayer() : null;
 		final String bossName = args[0];
+
+		if ("spawned_total".equals(params))
+			return String.valueOf(SpawnedBossesMenu.countAllSpawnedBosses());
+
+		if ("spawned_world".equals(params)) {
+			if (player == null)
+				return "0";
+
+			return String.valueOf(SpawnedBossesMenu.countSpawnedBossesInWorld(player.getWorld()));
+		}
+
+		if (params.startsWith("spawned_")) {
+			final String worldName = params.substring("spawned_".length());
+			final World world = Bukkit.getWorld(worldName);
+
+			if (world == null)
+				return "0";
+
+			return String.valueOf(SpawnedBossesMenu.countSpawnedBossesInWorld(world));
+		}
 
 		if (args.length == 2) {
 			final String secondArg = args[1];
