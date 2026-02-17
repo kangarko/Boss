@@ -244,5 +244,1463 @@
     "create new Bosses from mobs that",
     "your client can render and customize",
     "them later in your Boss settings."
-  ]
+  ],
+
+  "menu-main-button-spawned-bosses": "&dSpawned Bosses",
+  "menu-main-button-spawned-bosses-lore": [
+    "",
+    "Currently alive: &f{count}",
+    "",
+    "Click to view all",
+    "alive Bosses and",
+    "teleport or kill them."
+  ],
+
+  "menu-spawned-bosses-title": "&0Spawned Bosses",
+  "menu-spawned-bosses-info": [
+    "This menu lists all currently",
+    "spawned Bosses in the server.",
+    "",
+    "&8Bosses from 'Replace Vanilla'",
+    "&8spawn rules are excluded."
+  ],
+  "menu-spawned-bosses-item-lore": [
+    "",
+    "&7Health: &f{health}&7/&f{max_health} &8({health_percent}%)",
+    "",
+    "&7World: &f{world}",
+    "&7Location: &f{x}, {y}, {z}",
+    "",
+    "&eLeft-click: &7teleport to Boss",
+    "&cRight-click: &7kill Boss"
+  ],
+  "menu-spawned-bosses-not-alive": "&4Boss is no longer alive!",
+  "menu-spawned-bosses-teleported": "&7Teleported to Boss &6{boss}&7.",
+  "menu-spawned-bosses-killed": "&2Killed {boss}",
+
+  "menu-tools-info": [
+    "This menu provides tools to help you",
+    "create various parts of Boss. These tools",
+    "are only intended for administrators."
+  ],
+
+  "menu-spawn-rules-title": "Create Or Edit Spawn Rules",
+  "menu-spawn-rules-button-create": "&aCreate New",
+  "menu-spawn-rules-button-create-lore": [
+    "",
+    "Click to add a new",
+    "way for your Boss",
+    "to spawn naturally."
+  ],
+  "menu-spawn-rules-item-lore": [
+    "",
+    "Type: &f{type}",
+    "",
+    "Click to enter and set",
+    "up conditions when",
+    "Bosses will appear."
+  ],
+  "menu-spawn-rules-item-warning": [
+    "",
+    "&cWarning: This rule has no",
+    "&cBosses it applies for.",
+    "&cOpen and configure it."
+  ],
+  "menu-spawn-rules-info": [
+    "Spawns rules make it easy",
+    "to spawn Boss automatically",
+    "on a certain day, or randomly",
+    "around players. You can create",
+    "or edit spawn rules here."
+  ],
+
+  "menu-spawn-rules-condition-title": "Select How To Spawn Bosses",
+  "menu-spawn-rules-condition-location-period": "On A Block At A Given Time",
+  "menu-spawn-rules-condition-location-period-lore": [
+    "",
+    "Spawn Boss at a block",
+    "you select every day",
+    "at 17:00, each Friday",
+    "at noon or every 30 mins."
+  ],
+  "menu-spawn-rules-condition-region-enter": "On Entering A Region",
+  "menu-spawn-rules-condition-region-enter-lore": [
+    "",
+    "Spawn Boss every time on",
+    "your custom location when",
+    "players enter a region.",
+    "(Requires Boss Region and",
+    "Boss Location, see /boss tools)"
+  ],
+  "menu-spawn-rules-condition-region-disabled-lore": [
+    "",
+    "&cThis feature is disabled.",
+    "&cEnable Register_Regions in",
+    "&csettings.yml first."
+  ],
+  "menu-spawn-rules-condition-respawn": "Respawn After Death",
+  "menu-spawn-rules-condition-respawn-lore": [
+    "",
+    "Spawn the next Boss after",
+    "a given delay after the",
+    "previous Boss dies.",
+    "",
+    "This rule only spawns 1 Boss.",
+    "We mark the spawned Boss with",
+    "invisible metadata and wait the",
+    "given delay to respawn it.",
+    "",
+    "This rule is unaffected by other",
+    "rules."
+  ],
+  "menu-spawn-rules-condition-period": "Randomly Around Players",
+  "menu-spawn-rules-condition-period-lore": [
+    "",
+    "Spawn Boss around players",
+    "like vanilla mobs. Your",
+    "vanilla mobs won't be",
+    "affected."
+  ],
+  "menu-spawn-rules-condition-replace": "Replacing Vanilla Mobs",
+  "menu-spawn-rules-condition-replace-lore": [
+    "",
+    "Replace vanilla mobs",
+    "with Bosses, with a",
+    "configurable chance",
+    "and limits."
+  ],
+  "menu-spawn-rules-condition-info": [
+    "Select how we will spawn",
+    "your Boss across worlds."
+  ],
+
+  "menu-spawn-rules-individual-title": "{rule} Settings",
+  "menu-spawn-rules-individual-enabled": "Enabled?",
+  "menu-spawn-rules-individual-enabled-lore": [
+    "",
+    "Status: {status}",
+    "",
+    "Click to toggle this spawn",
+    "rule from functioning."
+  ],
+  "menu-spawn-rules-individual-info": [
+    "Edit the conditions under which",
+    "this spawn rules will function.",
+    "",
+    "&cImportant: &7Please also see the",
+    "Spawning Limits for each boss that",
+    "this rule affects because we will",
+    "take it into account.",
+    "",
+    "&6Tip: &7Set Debug key to [spawning] in",
+    "in settings.yml and reload to see",
+    "console logs why this rule failed."
+  ],
+  "menu-spawn-rules-individual-rule-not-loaded": "&4Rule not loaded!",
+  "menu-spawn-rules-individual-enabled-message": "&2Enabled this spawn rule",
+  "menu-spawn-rules-individual-disabled-message": "&4Disabled spawn rule :(",
+
+  "menu-boss-title": "Boss {boss}",
+  "menu-boss-button-settings": "&6Settings",
+  "menu-boss-button-settings-lore": [
+    "",
+    "Edit how this Boss behaves",
+    "or looks like, when spawned."
+  ],
+  "menu-boss-button-skills": "&bSkills",
+  "menu-boss-button-skills-lore": [
+    "",
+    "Give your Boss special",
+    "functions or abilities."
+  ],
+  "menu-boss-button-death": "Death",
+  "menu-boss-button-death-lore": [
+    "",
+    "Edit what happens when",
+    "your Boss dies."
+  ],
+  "menu-boss-button-spawning": "&aSpawning",
+  "menu-boss-button-spawning-lore": [
+    "",
+    "Select how and when",
+    "to spawn this Boss."
+  ],
+  "menu-boss-button-egg": "Get Spawner Egg",
+  "menu-boss-button-egg-lore": [
+    "",
+    "Receive a Boss egg you",
+    "can use to spawn the Boss.",
+    "",
+    "&cTip: &7Give players permissions",
+    "below to use this spawner egg:",
+    "&c&o{permission_egg}",
+    "&c&o{permission_spawn}"
+  ],
+  "menu-boss-button-butcher": "&cKill Bosses",
+  "menu-boss-button-butcher-lore": [
+    "Remove alive Bosses in all",
+    "worlds in loaded chunks.",
+    "",
+    "&cTip: &7Use /{label} butcher",
+    "command for more options."
+  ],
+  "menu-boss-button-butcher-success": "&4Killed {amount}",
+  "menu-boss-info": [
+    "This the main Boss' menu.",
+    "Edit how the Boss looks",
+    "like or behaves here.",
+    "",
+    "Your Boss on your worlds",
+    "will update automatically."
+  ],
+  "menu-boss-browsing-warning": "&4{player} is browsing this!",
+  "menu-boss-browsing-error": "Cannot open Boss menu while {player} is browsing it!",
+  "menu-boss-not-loaded": "&4Boss not loaded!",
+  "menu-boss-removed": "&4Removed Boss {boss}",
+
+  "menu-commands-title": "{type} Commands",
+  "menu-commands-button-create": "&aCreate new",
+  "menu-commands-button-create-lore": [
+    "",
+    "Click to add a",
+    "{type} command."
+  ],
+  "menu-commands-item-name": "Command",
+  "menu-commands-item-lore": [
+    "",
+    "Run chance: &f{chance}%",
+    "Run as: {run_as}",
+    "{health_trigger}",
+    "Command: {command}",
+    "",
+    "Click to edit."
+  ],
+  "menu-commands-run-as-console": "&dconsole",
+  "menu-commands-run-as-player": "&6player",
+  "menu-commands-health-trigger": "Health trigger: &c{value} HP",
+  "menu-commands-health-trigger-unset": "unset",
+  "menu-commands-info": [
+    "Commands that your Boss",
+    "executes on {type}.",
+    "",
+    "See this link for help and examples:",
+    "https://docs.mineacademy.org/boss/boss-commands"
+  ],
+
+  "menu-commands-individual-title": "Edit Command",
+  "menu-commands-individual-button-command": "Command",
+  "menu-commands-individual-button-command-lore": [
+    "",
+    "Current: {command}",
+    "",
+    "Click to edit."
+  ],
+  "menu-commands-individual-button-chance": "Run Chance",
+  "menu-commands-individual-button-chance-lore": [
+    "",
+    "Current: &f{current}%",
+    "",
+    "Click to edit."
+  ],
+  "menu-commands-individual-button-console": "Run As Console?",
+  "menu-commands-individual-button-console-lore": [
+    "",
+    "Status: {status}",
+    ""
+  ],
+  "menu-commands-individual-button-console-lore-skill-enabled": [
+    "If enabled, we execute the",
+    "command as the console. If",
+    "disabled, we run it as the",
+    "target player (only if there)",
+    "is one."
+  ],
+  "menu-commands-individual-button-console-lore-skill-disabled": [
+    "Click to toggle. If disabled,",
+    "we run the command as the killer",
+    "player, if he killed the Boss.",
+    "If there is no killer, the",
+    "command will not run."
+  ],
+  "menu-commands-individual-button-ignore-dead": "Ignore If Died",
+  "menu-commands-individual-button-ignore-dead-lore": [
+    "",
+    "Status: {status}",
+    "",
+    "Click to toggle. If enabled,",
+    "this command will not run if",
+    "the Boss dies from the damage."
+  ],
+  "menu-commands-individual-button-health-trigger": "Health Trigger",
+  "menu-commands-individual-button-health-trigger-lore": [
+    "",
+    "Current: &f{current}",
+    "Boss Max Health: &f{max_health}",
+    "",
+    "Click to edit the threshold health",
+    "that will trigger this command.",
+    "",
+    "Example: If you have multiple commands",
+    "i.e. one at 15HP and another at 10HP,",
+    "and Boss' health goes from 20HP to 8HP",
+    "only the second command will run."
+  ],
+  "menu-commands-individual-info": [
+    "Configure this command",
+    "and its chance to run",
+    "in this menu."
+  ],
+
+  "menu-death-title": "Death Settings",
+  "menu-death-button-drops": "&6Drops",
+  "menu-death-button-drops-lore": [
+    "",
+    "Configure what items",
+    "Boss drops on death"
+  ],
+  "menu-death-button-exp": "&aDropped Experience",
+  "menu-death-button-exp-lore": [
+    "",
+    "Current: &a{exp} XP",
+    "",
+    "Set a custom dropped",
+    "exp on Boss' death."
+  ],
+  "menu-death-button-reinforcements": "&cReinforcements",
+  "menu-death-button-reinforcements-lore": [
+    "",
+    "Configure other mobs or",
+    "Bosses that will appear",
+    "when this Boss dies."
+  ],
+  "menu-death-info": [
+    "Every Boss has a bad day.",
+    "Configure what happens when",
+    "your Boss dies in a fight!"
+  ],
+
+  "menu-death-drops-title": "Drops Menu",
+  "menu-death-drops-button-general": "&bGeneral Drops",
+  "menu-death-drops-button-general-lore": [
+    "",
+    "Configure items Boss",
+    "always drops on death."
+  ],
+  "menu-death-drops-button-player": "&ePlayer Drops",
+  "menu-death-drops-button-player-lore": [
+    "",
+    "Configure items players",
+    "that gave most damage to",
+    "Boss get individually."
+  ],
+  "menu-death-drops-button-vanilla": "Vanilla Drops",
+  "menu-death-drops-button-vanilla-lore": [
+    "",
+    "Status: {status}",
+    "",
+    "Click to toggle if Boss",
+    "drops his natural items."
+  ],
+  "menu-death-drops-info": [
+    "Configure what items this",
+    "Boss drops upon death."
+  ],
+
+  "menu-death-drops-general-title": "General Boss Drops",
+  "menu-death-drops-general-info": [
+    "Drag items into this container",
+    "and set their drop chance. Boss",
+    "will drop these items on death."
+  ],
+
+  "menu-death-drops-player-title": "Player Boss Drops",
+  "menu-death-drops-player-threshold": "Last Damage Time Threshold",
+  "menu-death-drops-player-threshold-lore": [
+    "",
+    "Current: &f{current}",
+    "",
+    "When rewarding players who",
+    "did the most damage to Boss,",
+    "in what time period we should",
+    "look for their last damage?",
+    "Example: in the last 2 minutes"
+  ],
+  "menu-death-drops-player-create": "&aCreate New",
+  "menu-death-drops-player-create-lore": [
+    "",
+    "Click to create",
+    "new drops for player",
+    "who did the #{order}",
+    "most damage to Boss."
+  ],
+  "menu-death-drops-player-item": "Player #{order}",
+  "menu-death-drops-player-item-lore": [
+    "",
+    "Click to edit drops",
+    "for this player."
+  ],
+  "menu-death-drops-player-info": [
+    "You can give players who did the",
+    "most damage different items, in",
+    "the other in which they did the",
+    "most damage."
+  ],
+
+  "menu-death-drops-player-individual-title": "#{order} {suffix} Damager Drops",
+  "menu-death-drops-player-individual-top": "Top",
+  "menu-death-drops-player-individual-button-commands": "Command",
+  "menu-death-drops-player-individual-button-commands-lore": [
+    "",
+    "{commands}",
+    "",
+    "&4&l< &7Left click to delete",
+    "&9&l> &7Right click to edit"
+  ],
+  "menu-death-drops-player-individual-commands-unset": " &ounset",
+  "menu-death-drops-player-individual-no-command": "&4No command to remove!",
+  "menu-death-drops-player-individual-command-removed": "&4Command has been removed!",
+  "menu-death-drops-player-individual-info": [
+    "Drag items into this container",
+    "and set their drop chance. Boss",
+    "will drop these items on death."
+  ],
+
+  "menu-death-reinforcements-title": "Drop Reinforcements Here",
+  "menu-death-reinforcements-boss-item": "Spawn Boss {boss}",
+  "menu-death-reinforcements-boss-lore": [
+    "",
+    "Spawn Boss reinforcement."
+  ],
+  "menu-death-reinforcements-vanilla-item": "Spawn {entity}",
+  "menu-death-reinforcements-vanilla-lore": [
+    "",
+    "Spawn vanilla reinforcement."
+  ],
+  "menu-death-reinforcements-only-eggs": "&4Only place Boss eggs here!",
+  "menu-death-reinforcements-info": [
+    "Place vanilla or Boss spawn eggs",
+    "to this menu to spawn them when",
+    "this Boss dies."
+  ],
+
+  "menu-settings-title": "{boss} Settings",
+  "menu-settings-button-alias": "Alias",
+  "menu-settings-button-alias-lore": [
+    "",
+    "Current: &f{alias}",
+    "",
+    "Edit the name above",
+    "Boss' head, and in",
+    "messages or commands.",
+    "",
+    "&c[!] &7This does not affect",
+    "the file name: &f{file}"
+  ],
+  "menu-settings-button-alias-hidden": "&dHidden",
+  "menu-settings-button-health": "&cHealth",
+  "menu-settings-button-health-lore": [
+    "",
+    "Current: &c{health} HP",
+    "",
+    "Click to edit Boss'",
+    "spawn health."
+  ],
+  "menu-settings-button-potions": "&dPotion Effects",
+  "menu-settings-button-potions-lore": [
+    "",
+    "Add custom potion",
+    "effects to the Boss."
+  ],
+  "menu-settings-button-equipment": "&6Equipment",
+  "menu-settings-button-equipment-lore": [
+    "",
+    "Edit Boss' hand item",
+    "and armor items."
+  ],
+  "menu-settings-button-equipment-disabled": "Equipment",
+  "menu-settings-button-equipment-disabled-lore": [
+    "",
+    "&cThis Boss type does",
+    "&cnot support equipment."
+  ],
+  "menu-settings-button-lightning": "&3Lightning",
+  "menu-settings-button-lightning-lore": [
+    "",
+    "Select when Boss",
+    "strikes lightning."
+  ],
+  "menu-settings-button-pathfinders": "&8Pathfinders",
+  "menu-settings-button-pathfinders-lore": [
+    "",
+    "Edit how Boss",
+    "should behave and what",
+    "pathfinders it should use."
+  ],
+  "menu-settings-button-riding": "&eRiding",
+  "menu-settings-button-riding-lore": [
+    "",
+    "Select mobs this",
+    "Boss should ride."
+  ],
+  "menu-settings-button-riding-npc-warning": [
+    "",
+    "&cWarning: Citizens Boss can only",
+    "&chave one riding which must also",
+    "&cbe a Boss hooked with Citizens."
+  ],
+  "menu-settings-button-commands": "&dCommands",
+  "menu-settings-button-commands-lore": [
+    "",
+    "Select what commands should",
+    "be executed when this Boss",
+    "dies or is spawned."
+  ],
+  "menu-settings-button-attributes": "&7Attributes",
+  "menu-settings-button-attributes-lore": [
+    "",
+    "Edit attributes like speed",
+    "follow range, damage, ..."
+  ],
+  "menu-settings-button-custom": "&4Custom Settings",
+  "menu-settings-button-custom-lore": [
+    "",
+    "Edit custom settings only",
+    "applicable for this Boss."
+  ],
+  "menu-settings-button-modelengine": "&bModelEngine",
+  "menu-settings-button-modelengine-lore": [
+    "",
+    "Enable and edit",
+    "custom models.",
+    "",
+    "&cWarning: &7This feature is",
+    "&7under heavy development."
+  ],
+  "menu-settings-button-modelengine-disabled-lore": [
+    "",
+    "Enable and edit",
+    "custom models.",
+    "",
+    "&cError: &7ModelEngine plugin required!"
+  ],
+  "menu-settings-info": [
+    "Edit the main Boss properties",
+    "in this menu such as health etc."
+  ],
+
+  "menu-settings-equipment-title": "Boss Equipment",
+  "menu-settings-equipment-slot-tooltip": "&7Place &6{slot} item &7below.",
+  "menu-settings-equipment-random": "Random Equipment",
+  "menu-settings-equipment-random-lore": [
+    "",
+    "Status: {status}",
+    "",
+    "Let Minecraft give random",
+    "equipment to empty slots?",
+    "",
+    "Click to toggle."
+  ],
+  "menu-settings-equipment-random-enabled": "&2Enabled random equipment",
+  "menu-settings-equipment-random-disabled": "&4Disabled random equipment",
+  "menu-settings-equipment-enderman-error": "&4Enderman cannot carry items",
+  "menu-settings-equipment-chestplate-error": "&4Item must be chestplate!",
+  "menu-settings-equipment-leggings-error": "&4Item must be leggings!",
+  "menu-settings-equipment-boots-error": "&4Item must be boots!",
+  "menu-settings-equipment-horse-armor-error": "&4Item must be horse armor!",
+  "menu-settings-equipment-info": [
+    "Drag and drop items from your",
+    "inventory into the available",
+    "slots in this container for",
+    "Boss to drop them on death."
+  ],
+
+  "menu-settings-potions-title": "Boss Potions",
+  "menu-settings-potions-info": [
+    "Select what potions should",
+    "be applied to Boss at spawning.",
+    "Boss will always have those",
+    "effects."
+  ],
+
+  "menu-settings-riding-title": "Entities This Boss Rides",
+  "menu-settings-riding-button-boss": "Bosses To Ride",
+  "menu-settings-riding-button-boss-lore": [
+    "",
+    "Select other Bosses",
+    "this Boss will ride.",
+    "",
+    "&cNotice:",
+    "Due to Bukkit limits,",
+    "either use this or the",
+    "other option, not both."
+  ],
+  "menu-settings-riding-button-vanilla": "Mobs To Ride",
+  "menu-settings-riding-button-vanilla-lore": [
+    "",
+    "Select vanilla mobs",
+    "this Boss will ride.",
+    "",
+    "&cNotice:",
+    "Due to Bukkit limits,",
+    "either use this or the",
+    "other option, not both."
+  ],
+  "menu-settings-riding-button-vanilla-disabled-lore": [
+    "",
+    "&cThis feature is disabled",
+    "&cbecause Citizens mobs",
+    "&cdo not support it."
+  ],
+  "menu-settings-riding-button-death": "Kill Riding On Death",
+  "menu-settings-riding-button-death-lore": [
+    "",
+    "Status: {status}",
+    "",
+    "{description}",
+    "",
+    "Click to toggle."
+  ],
+  "menu-settings-riding-death-enabled-desc": [
+    "We remove riding entities",
+    "when the Boss dies."
+  ],
+  "menu-settings-riding-death-disabled-desc": [
+    "Riding entities will continue",
+    "to live after Boss' death."
+  ],
+  "menu-settings-riding-death-enabled": "&4Riding no longer dies with Boss.",
+  "menu-settings-riding-death-disabled": "&2Riding now dies with Boss.",
+  "menu-settings-riding-info": [
+    "Configure which entities this",
+    "Boss rides.",
+    "",
+    "&cWarning: &7You can only select",
+    "either vanilla or Boss entities",
+    "selecting both causes a bug and",
+    "they will dismount on spawning."
+  ],
+
+  "menu-settings-riding-vanilla-title": "Drop Mob Eggs Here",
+  "menu-settings-riding-vanilla-amount-error": "&4Amount must be 1!",
+  "menu-settings-riding-vanilla-boss-error": "&4Item must be a vanilla egg!",
+  "menu-settings-riding-vanilla-egg-error": "&4Item must be a monster egg!",
+  "menu-settings-riding-vanilla-info": [
+    "Place monster eggs from your inventory",
+    "to this container in the order in which",
+    "your Boss will ride them.",
+    "",
+    "Note: Old MC versions only support riding",
+    "one Boss - we pick the first one in",
+    "the upper left corner."
+  ],
+
+  "menu-settings-riding-boss-title": "Drop Boss Eggs Here",
+  "menu-settings-riding-boss-error": "&4Menu only accepts Boss eggs!",
+  "menu-settings-riding-boss-info": [
+    "Place Boss eggs from your inventory",
+    "to this container in the order in",
+    "which your Boss will ride them.",
+    "",
+    "Note: Old MC versions only support riding",
+    "one Boss - we pick the first one in",
+    "the upper left corner."
+  ],
+
+  "menu-settings-commands-title": "Commands",
+  "menu-settings-commands-button-spawn": "&3Commands On Spawn",
+  "menu-settings-commands-button-spawn-lore": [
+    "",
+    "Commands that are run",
+    "when the Boss spawns."
+  ],
+  "menu-settings-commands-button-death": "&6Commands On Death",
+  "menu-settings-commands-button-death-lore": [
+    "",
+    "Commands that are run",
+    "when the Boss dies."
+  ],
+  "menu-settings-commands-button-health": "&cCommands On Life Decrease",
+  "menu-settings-commands-button-health-lore": [
+    "",
+    "Commands run when Boss'",
+    "health reaches below",
+    "a given threshold."
+  ],
+  "menu-settings-commands-button-one-mode": "&2One Command Mode",
+  "menu-settings-commands-button-one-mode-lore": [
+    "",
+    "Status: {status}",
+    "",
+    "If enabled, we stop running",
+    "more commands after the first",
+    "successful one. Useful to have",
+    "two different commands, one for",
+    "killer and one when there is none."
+  ],
+  "menu-settings-commands-info": [
+    "Configure what commands",
+    "should run upon various",
+    "happenings to your Boss."
+  ],
+
+  "menu-settings-pathfinders-title": "Pathfinders",
+  "menu-settings-pathfinders-button-citizens": "Citizens",
+  "menu-settings-pathfinders-button-citizens-lore": [
+    "",
+    "Edit behavior, sounds",
+    "and other advanced",
+    "settings via Citizens.",
+    "",
+    "{footer}"
+  ],
+  "menu-settings-pathfinders-citizens-available": "&cWarning: &7This will only apply\n&7to newly spawned Bosses.",
+  "menu-settings-pathfinders-citizens-unavailable": "&cError: &7These settings\nrequire Citizens plugin.",
+  "menu-settings-pathfinders-citizens-install": "&4Install Citizens plugin!",
+  "menu-settings-pathfinders-button-native": "Native",
+  "menu-settings-pathfinders-button-native-lore": [
+    "",
+    "Edit behavior using",
+    "Paper native goals.",
+    "",
+    "{footer}"
+  ],
+  "menu-settings-pathfinders-native-available": "&cWarning: &7This feature is\n&7under heavy development.",
+  "menu-settings-pathfinders-native-unavailable": "&cError: &7These settings\n&7require Paper 1.15 or newer.",
+  "menu-settings-pathfinders-native-install": "&4Use paper 1.15.2 or newer!",
+  "menu-settings-pathfinders-info": [
+    "Configure how your Boss",
+    "should behave and what",
+    "pathfinders it should use."
+  ],
+
+  "menu-settings-pathfinders-native-title": "Native Goals",
+  "menu-settings-pathfinders-native-attack": "Attack Goal",
+  "menu-settings-pathfinders-native-attack-lore": [
+    "",
+    "Status: {status}",
+    "",
+    "When enabled, this Boss will use",
+    "the native Paper attack goal."
+  ],
+  "menu-settings-pathfinders-native-enabled": "§aEnabled native attack goal",
+  "menu-settings-pathfinders-native-disabled": "§cDisabled native attack goal",
+  "menu-settings-pathfinders-native-info": [
+    "Configure native goals",
+    "for your Boss.",
+    "",
+    "&cWarning: &7This feature is",
+    "under heavy development."
+  ],
+
+  "menu-settings-citizens-title": "Citizens Integration",
+  "menu-settings-citizens-button-enabled": "Use Citizens?",
+  "menu-settings-citizens-button-enabled-lore": [
+    "",
+    "Status: {status}",
+    "",
+    "{description}"
+  ],
+  "menu-settings-citizens-enabled-normal": "Enable Citizens integration?\n&cWarning: &7Options here\nwill only apply to new Bosses.",
+  "menu-settings-citizens-enabled-human": "&oCan't disable for\n&ohuman NPCs.",
+  "menu-settings-citizens-enabled-error": "&4Can't disable for human NPCs!",
+  "menu-settings-citizens-enabled-on": "&2Enabled Citizens hook :)",
+  "menu-settings-citizens-enabled-off": "&4Disabled Citizens hook :(",
+  "menu-settings-citizens-button-speed": "Speed",
+  "menu-settings-citizens-button-speed-lore": [
+    "",
+    "Current: {speed}",
+    "",
+    "How fast should this NPC move?",
+    "Defaults to {default}."
+  ],
+  "menu-settings-citizens-button-skin": "Skin",
+  "menu-settings-citizens-button-skin-lore": [
+    "",
+    "Current: &f{skin}",
+    "",
+    "Edit the skin of the Boss.",
+    "Your skin can be independent",
+    "from your Boss alias or name.",
+    "",
+    "If not set, we use skin from",
+    "your Boss' alias."
+  ],
+  "menu-settings-citizens-button-sounds": "&6Sounds",
+  "menu-settings-citizens-button-sounds-lore": [
+    "",
+    "Give the Boss custom",
+    "death, idle or damage",
+    "sounds!"
+  ],
+  "menu-settings-citizens-button-goals": "Pathfinders & Goals",
+  "menu-settings-citizens-button-goals-lore": [
+    "",
+    "Assign custom behavior",
+    "to your Boss here."
+  ],
+  "menu-settings-citizens-info": [
+    "Make our plugin use Citizens",
+    "for spawning Bosses. &6This",
+    "&6will only apply for newly",
+    "&6spawned Bosses.",
+    "",
+    "&6TIP: &7To change Boss skin, use",
+    "&6/npc skin &7command from Citizens.",
+    "Visit their wiki page for help:",
+    "wiki.citizensnpcs.co/Commands"
+  ],
+
+  "menu-settings-citizens-sounds-title": "Boss Sounds",
+  "menu-settings-citizens-sounds-button-death": "Death Sound",
+  "menu-settings-citizens-sounds-button-death-lore": [
+    "",
+    "Current: &7{sound}",
+    "",
+    "Click to change",
+    "Boss death sound."
+  ],
+  "menu-settings-citizens-sounds-button-hurt": "Hurt Sound",
+  "menu-settings-citizens-sounds-button-hurt-lore": [
+    "",
+    "Current: &7{sound}",
+    "",
+    "Click to change",
+    "sound when damaged."
+  ],
+  "menu-settings-citizens-sounds-button-ambient": "Ambient Sound",
+  "menu-settings-citizens-sounds-button-ambient-lore": [
+    "",
+    "Current: &7{sound}",
+    "",
+    "Click to change",
+    "sound when idle."
+  ],
+  "menu-settings-citizens-sounds-button-wiki": "Sound Names Help",
+  "menu-settings-citizens-sounds-button-wiki-lore": [
+    "",
+    "Sound names are different",
+    "internally. Click this",
+    "icon to get a list."
+  ],
+  "menu-settings-citizens-sounds-info": [
+    "Remap what sounds this Boss",
+    "emits, using NMS item names.",
+    "Click the Paper icon for help."
+  ],
+
+  "menu-settings-citizens-goals-title": "Pathfinder & AI",
+  "menu-settings-citizens-goals-button-target-enabled": "Target Goal",
+  "menu-settings-citizens-goals-button-target-enabled-lore": [
+    "Make this Boss target",
+    "and follow another",
+    "entities nearby?"
+  ],
+  "menu-settings-citizens-goals-button-target-aggressive": "Kill Target",
+  "menu-settings-citizens-goals-button-target-aggressive-lore": [
+    "Make this Boss attack",
+    "and kill its target?"
+  ],
+  "menu-settings-citizens-goals-button-target-radius": "Target Radius",
+  "menu-settings-citizens-goals-button-target-radius-lore": [
+    "",
+    "Current: {radius} blocks",
+    "",
+    "How far should Boss find",
+    "and follow entities? High",
+    "values impact performance."
+  ],
+  "menu-settings-citizens-goals-button-target-entities": "Targets",
+  "menu-settings-citizens-goals-button-target-entities-lore": [
+    "",
+    "Click to select what",
+    "mobs this Boss targets."
+  ],
+  "menu-settings-citizens-goals-button-wander-enabled": "Wander Goal",
+  "menu-settings-citizens-goals-button-wander-enabled-lore": [
+    "Make this Boss wander",
+    "around in an area?"
+  ],
+  "menu-settings-citizens-goals-button-wander-radius": "Wander Radius",
+  "menu-settings-citizens-goals-button-wander-radius-lore": [
+    "",
+    "Current: {radius} blocks",
+    "",
+    "How far should Boss walk",
+    "around his spawn point? High",
+    "values impact performance."
+  ],
+  "menu-settings-citizens-goals-info": [
+    "Configure custom pathfinder",
+    "and navigation for this Boss."
+  ],
+
+  "menu-settings-citizens-goals-targets-title": "Select Target Entities",
+  "menu-settings-citizens-goals-targets-item": "Target {entity}",
+  "menu-settings-citizens-goals-targets-item-lore": [
+    "",
+    "Status: {status}",
+    "",
+    "Click to toggle Boss",
+    "following this entity."
+  ],
+  "menu-settings-citizens-goals-targets-targetting": "&aTargetting",
+  "menu-settings-citizens-goals-targets-ignoring": "&cIgnoring",
+  "menu-settings-citizens-goals-targets-enabled": "&2Now targets {entity}!",
+  "menu-settings-citizens-goals-targets-disabled": "&4Target disabled!",
+  "menu-settings-citizens-goals-targets-info": [
+    "Pick what entities this Boss",
+    "will follow, or even attack if",
+    "configured as aggressive."
+  ],
+
+  "menu-settings-lightning-title": "Strike Lightning",
+  "menu-settings-lightning-button-spawn": "Lightning On Spawn",
+  "menu-settings-lightning-button-spawn-lore": [
+    "",
+    "Status: {status}",
+    "",
+    "Click to toggle if Boss",
+    "strikes a lightning on spawn."
+  ],
+  "menu-settings-lightning-button-death": "Lightning On Death",
+  "menu-settings-lightning-button-death-lore": [
+    "",
+    "Status: {status}",
+    "",
+    "Click to toggle if Boss",
+    "strikes a lightning on death."
+  ],
+  "menu-settings-lightning-spawn-enabled": "&2Enabled lightning on spawn",
+  "menu-settings-lightning-spawn-disabled": "&4Disabled lightning on spawn",
+  "menu-settings-lightning-death-enabled": "&2Enabled lightning on death",
+  "menu-settings-lightning-death-disabled": "&4Disabled lightning on death",
+  "menu-settings-lightning-info": [
+    "Select at what events we",
+    "should strike lightning at",
+    "Boss location. This lightning",
+    "doesn't cause fire or damage."
+  ],
+
+  "menu-settings-attributes-title": "Attributes",
+  "menu-settings-attributes-item-lore": [
+    "",
+    "Current: {value}",
+    ""
+  ],
+  "menu-settings-attributes-info": [
+    "Select special attributes",
+    "that will apply to the Boss."
+  ],
+  "menu-settings-attributes-npc-warning": [
+    " ",
+    "&cPlayer NPCs from Citizens do NOT",
+    "&chave all attributes available."
+  ],
+  "menu-settings-attributes-old-mc-warning": [
+    " ",
+    "&cWarning: &7Many attributes are not",
+    "&7supported on MC 1.8 and below."
+  ],
+
+  "menu-settings-custom-title": "Custom Settings",
+  "menu-settings-custom-info": [
+    "Select custom settings only",
+    "applicable for this Boss.",
+    "You can create new settings",
+    "using our developer API, see",
+    "&6github.com/kangarko/boss/Wiki",
+    "for help."
+  ],
+
+  "menu-settings-modelengine-title": "ModelEngine",
+  "menu-settings-modelengine-button-models": "&bCustom Models",
+  "menu-settings-modelengine-button-models-lore": [
+    "",
+    "Enable and edit",
+    "custom models.",
+    "",
+    "&cWarning: &7This feature is",
+    "&7under heavy development."
+  ],
+  "menu-settings-modelengine-button-animations": "&bCustom Animations",
+  "menu-settings-modelengine-button-animations-lore": [
+    "",
+    "Select custom",
+    "animations to play",
+    "on your Boss.",
+    "",
+    "&cWarning: &7This feature is",
+    "&7under heavy development."
+  ],
+  "menu-settings-modelengine-info": [
+    "Configure ModelEngine",
+    "custom models and",
+    "animations for this Boss.",
+    "",
+    "&cWarning: &7This feature is",
+    "&7under heavy development."
+  ],
+
+  "menu-settings-modelengine-models-title": "Custom Models",
+  "menu-settings-modelengine-models-button-enable": "Use Custom Model",
+  "menu-settings-modelengine-models-button-enable-lore": [
+    "",
+    "Status: {status}",
+    "",
+    "When enabled, we will use ModelEngine",
+    "to render a custom model in your Boss.",
+    "",
+    "Click to toggle"
+  ],
+  "menu-settings-modelengine-models-button-select": "Select Custom Models",
+  "menu-settings-modelengine-models-button-select-lore": [
+    "",
+    "If you select more than 1 model,",
+    "the plugin will choose a random",
+    "one every time a Boss spawns or",
+    "updates.",
+    "",
+    "Click to change the",
+    "custom model to use."
+  ],
+  "menu-settings-modelengine-models-enabled": "&2Enabled Custom Models",
+  "menu-settings-modelengine-models-disabled": "&4Disabled Custom Models",
+  "menu-settings-modelengine-models-info": [
+    "Configure custom model for this Boss",
+    "with ModelEngine.",
+    "",
+    "&cWarning: &7This feature is",
+    "&7under heavy development."
+  ],
+
+  "menu-settings-modelengine-models-select-title": "Select Models ({selected}/{total})",
+  "menu-settings-modelengine-models-select-order": "Order",
+  "menu-settings-modelengine-models-select-order-lore": [
+    "",
+    "Current: &f{order}",
+    "",
+    "Click to switch"
+  ],
+  "menu-settings-modelengine-models-select-filter": "Filter",
+  "menu-settings-modelengine-models-select-filter-lore": [
+    "Current filter: &f{filter}",
+    "",
+    "&aLeft click: &fset",
+    "&cRight click: &fremove"
+  ],
+  "menu-settings-modelengine-models-select-check-all": "> {action} All",
+  "menu-settings-modelengine-models-select-no-results": "&cNo results for this filter :(",
+  "menu-settings-modelengine-models-select-item": "&7Model: &f{model}",
+  "menu-settings-modelengine-models-select-item-lore-selected": "&7Chance: &f{chance}%",
+  "menu-settings-modelengine-models-select-item-lore-unselected": "&7&oNot Selected",
+  "menu-settings-modelengine-models-select-click-remove": "Click to remove",
+  "menu-settings-modelengine-models-select-click-select": "Click to select",
+  "menu-settings-modelengine-models-select-info": [
+    "If you select more than 1 model,",
+    "the plugin will choose a random",
+    "one every time a Boss spawns or",
+    "updates."
+  ],
+
+  "menu-settings-modelengine-animations-title": "Custom Animations",
+  "menu-settings-modelengine-animations-button-attack": "&bCustom Attack Animations",
+  "menu-settings-modelengine-animations-button-attack-lore": [
+    "",
+    "Enable and edit",
+    "custom attack animations."
+  ],
+  "menu-settings-modelengine-animations-info": [
+    "Configure custom animations for this Boss",
+    "with ModelEngine.",
+    "",
+    "&cWarning: &7This feature is",
+    "&7under heavy development."
+  ],
+
+  "menu-settings-modelengine-animations-attack-title": "Custom Attack Animations",
+  "menu-settings-modelengine-animations-attack-button-enable": "Use Custom Attack Animation",
+  "menu-settings-modelengine-animations-attack-button-enable-lore": [
+    "",
+    "Status: {status}",
+    "",
+    "When enabled, we will use ModelEngine",
+    "to render a custom attack animation in your Boss.",
+    "",
+    "Click to toggle"
+  ],
+  "menu-settings-modelengine-animations-attack-button-select": "Select Custom Attack Animations",
+  "menu-settings-modelengine-animations-attack-button-select-lore": [
+    "",
+    "If you select more than 1 animation,",
+    "the plugin will choose a random",
+    "one every time the Boss attacks.",
+    "",
+    "Click to change the",
+    "custom attack animation to use."
+  ],
+  "menu-settings-modelengine-animations-attack-enabled": "&2Enabled Custom Attack Animations",
+  "menu-settings-modelengine-animations-attack-disabled": "&4Disabled Custom Attack Animations",
+  "menu-settings-modelengine-animations-attack-info": [
+    "Configure custom attack animations",
+    "for this Boss with ModelEngine.",
+    "",
+    "&cWarning: &7This feature is",
+    "&7under heavy development."
+  ],
+
+  "menu-settings-modelengine-animations-attack-select-title": "Select Attack Animations",
+  "menu-settings-modelengine-animations-attack-select-add": "&aAdd Attack Animation",
+  "menu-settings-modelengine-animations-attack-select-add-lore": [
+    "",
+    "Click to add a new",
+    "custom attack animation."
+  ],
+  "menu-settings-modelengine-animations-attack-select-clear": "&cClear All Attack Animations",
+  "menu-settings-modelengine-animations-attack-select-clear-lore": [
+    "",
+    "Click to remove all",
+    "custom attack animations."
+  ],
+  "menu-settings-modelengine-animations-attack-select-cleared": "&4Cleared all attack animations!",
+  "menu-settings-modelengine-animations-attack-select-item": "&7Animation: &f{animation}",
+  "menu-settings-modelengine-animations-attack-select-item-lore": [
+    "&7Chance: &f{chance}%",
+    "",
+    "Click to remove"
+  ],
+  "menu-settings-modelengine-animations-attack-select-removed": "&4Removed attack animation!",
+  "menu-settings-modelengine-animations-attack-select-info": [
+    "If you select more than 1 animation,",
+    "the plugin will choose a random",
+    "one every time the Boss attacks."
+  ],
+
+  "menu-skills-title": "Create Or Edit Skills",
+  "menu-skills-button-create": "&aCreate New",
+  "menu-skills-button-create-lore": [
+    "",
+    "Click to create",
+    "a new skill."
+  ],
+  "menu-skills-info": [
+    "Create or edit what skills",
+    "will be applied to this Boss",
+    "randomly when around players."
+  ],
+
+  "menu-skills-create-title": "Select Skill To Create",
+  "menu-skills-create-info": [
+    "Select what skill you want",
+    "to add to your Boss. You can",
+    "ask a developer to create",
+    "new skills via our API, see",
+    "&6github.com/kangarko/boss/Wiki",
+    "for tutorial and examples."
+  ],
+  "menu-skills-create-already-has": "&4Boss Already Has This Skill!",
+  "menu-skills-create-success": "&2Skill Created!",
+
+  "menu-skills-individual-title": "Skill {skill}",
+  "menu-skills-individual-button-settings": "Skill Settings",
+  "menu-skills-individual-button-settings-lore": [
+    "",
+    "Edit settings specific",
+    "for this skill."
+  ],
+  "menu-skills-individual-button-settings-no-menu": "&4Skill Has No Custom Menu!",
+  "menu-skills-individual-button-delay": "Delay",
+  "menu-skills-individual-button-delay-lore": [
+    "",
+    "Current: &f{delay}",
+    "",
+    "Click to edit how often",
+    "to run this skill when",
+    "is Boss around players."
+  ],
+  "menu-skills-individual-button-messages": "Messages",
+  "menu-skills-individual-button-messages-lore": [
+    "",
+    "Current: &f{messages}",
+    "",
+    "Edit the message for the",
+    "player targeted by Boss",
+    "when running this skill."
+  ],
+  "menu-skills-individual-button-commands": "Commands",
+  "menu-skills-individual-button-commands-lore": [
+    "",
+    "Current: {commands}"
+  ],
+  "menu-skills-individual-button-stop": "Stop More Skills?",
+  "menu-skills-individual-button-stop-lore": [
+    "",
+    "Status: {status}",
+    "",
+    "If enabled, we stop running",
+    "more skills after this was",
+    "successfully executed.",
+    "",
+    "Note: We pick the order of",
+    "skills at random each time."
+  ],
+  "menu-skills-individual-info": [
+    "Configure different options",
+    "for this skill."
+  ],
+
+  "menu-spawning-title": "Spawning",
+  "menu-spawning-button-rules": "&cSpawn Rules",
+  "menu-spawning-button-rules-lore": [
+    "",
+    "Click to manage spawn",
+    "rules for this Boss."
+  ],
+  "menu-spawning-button-world-limit": "World Limits",
+  "menu-spawning-button-world-limit-lore": [
+    "",
+    "Click to limit how",
+    "many {boss} Bosses",
+    "can appear in worlds."
+  ],
+  "menu-spawning-button-radius": "Radius",
+  "menu-spawning-button-radius-lore": [
+    "",
+    "Current: Max &3{limit} &7other",
+    "&7Bosses &4{radius} &7blocks near",
+    "&7the spawned Boss.",
+    "",
+    "&3&l< &7Left click to edit other.",
+    "Boss limit.",
+    "",
+    "&4&l> &7Right click to edit block",
+    "radius to scan for Bosses."
+  ],
+  "menu-spawning-button-reasons": "Where Limits Are Applied",
+  "menu-spawning-button-reasons-lore": [
+    "",
+    "You can turn on/off applying",
+    "these limits for certain",
+    "ways the Boss is spawned,",
+    "such as through Boss egg."
+  ],
+  "menu-spawning-button-region-keeping": "Region Keeping",
+  "menu-spawning-button-region-keeping-lore": [
+    "",
+    "Enable forcing Boss to stay",
+    "within the Boss Region he",
+    "spawned in, if it exists."
+  ],
+  "menu-spawning-button-egg": "Spawn Egg Appearance",
+  "menu-spawning-button-egg-lore": [
+    "",
+    "Customize spawn egg material,",
+    "title or its lore."
+  ],
+  "menu-spawning-info": [
+    "Configure global limits for all",
+    "Bosses of this kind to prevent",
+    "flooding your server. Also see",
+    "the Spawning section in settings.yml."
+  ],
+
+  "menu-spawning-world-title": "World Spawning Limits",
+  "menu-spawning-world-item": "{world} World",
+  "menu-spawning-world-item-lore": [
+    "",
+    "Limit: &f{limit}",
+    "",
+    "Click to edit maximum",
+    "amount of Bosses that",
+    "exist on this world."
+  ],
+  "menu-spawning-world-unlimited": "Unlimited",
+  "menu-spawning-world-info": [
+    "Configure how many Bosses",
+    "can appear in worlds. We only",
+    "count alive Bosses in loaded",
+    "chunks for this limit."
+  ],
+
+  "menu-spawning-reasons-title": "Select Where To Apply Limits",
+  "menu-spawning-reasons-item-lore": [
+    "",
+    "Status: {status}",
+    "",
+    "Toggle if spawn limits",
+    "should apply when Boss",
+    "spawns by this cause."
+  ],
+  "menu-spawning-reasons-limited": "&aLimited",
+  "menu-spawning-reasons-no-limits": "&cNo limits",
+  "menu-spawning-reasons-disabled": "&4Limits no longer applied here",
+  "menu-spawning-reasons-enabled": "&6{reason} is now limited!",
+  "menu-spawning-reasons-info": [
+    "Select what spawn causes should",
+    "be filtered by limits."
+  ],
+
+  "menu-spawning-region-keeping-title": "Region Keeping",
+  "menu-spawning-region-keeping-button-enabled": "Region Keeping",
+  "menu-spawning-region-keeping-button-enabled-lore": [
+    "",
+    "Status: {status}",
+    "",
+    "If a Boss spawns inside a Boss",
+    "Region, restrict his movement",
+    "to that regions?"
+  ],
+  "menu-spawning-region-keeping-enabled": "&2Enabled region keeping.",
+  "menu-spawning-region-keeping-disabled": "&4Disabled region keeping.",
+  "menu-spawning-region-keeping-button-location": "Return Location",
+  "menu-spawning-region-keeping-button-location-lore": [
+    "",
+    "Current: {location}",
+    "",
+    "Select location to return Boss to when",
+    "he escapes his spawn region. If none",
+    "is selected, we return Boss to his",
+    "spawn origin location.",
+    "",
+    "When Citizens are installed, Boss will",
+    "walk to the location. Otherwise he will",
+    "be teleported."
+  ],
+  "menu-spawning-region-keeping-location-default": "&7Spawn location.",
+  "menu-spawning-region-keeping-info": [
+    "We automatically find the Boss Region",
+    "where your Boss spawned and can force",
+    "to Boss to stay within its box.",
+    "",
+    "NB: This only works properly if there's",
+    "only 1 Boss Region where Boss spawned,",
+    "if multiple regions intersect a location,",
+    "we return the first we find."
+  ],
+
+  "menu-spawning-region-keeping-locations-title": "Select Location To Return",
+  "menu-spawning-region-keeping-locations-item-lore": [
+    "",
+    "{status}",
+    "",
+    "Click to edit maximum",
+    "amount of Bosses that",
+    "exist on this world."
+  ],
+  "menu-spawning-region-keeping-locations-active": "&aActive. &7Click to unselect.",
+  "menu-spawning-region-keeping-locations-inactive": "&7Inactive. Click to select.",
+  "menu-spawning-region-keeping-locations-selected": "&2Location selected!",
+  "menu-spawning-region-keeping-locations-unselected": "&4Location unselected!",
+  "menu-spawning-region-keeping-locations-info": [
+    "Select the location where we return",
+    "your Boss (either teleporting or, if",
+    "Citizens is installed, walking), when",
+    "he escapes his spawn region."
+  ],
+
+  "menu-spawning-egg-title": "Spawn Egg Appearance",
+  "menu-spawning-egg-button-material": "Egg Material",
+  "menu-spawning-egg-button-material-lore": [
+    "",
+    "Current: &f{material}",
+    "",
+    "Edit the material of",
+    "the Boss spawn egg."
+  ],
+  "menu-spawning-egg-button-title": "Egg Title",
+  "menu-spawning-egg-button-title-lore": [
+    "",
+    "Current: &f{title}",
+    "",
+    "Edit the title of",
+    "the Boss spawn egg."
+  ],
+  "menu-spawning-egg-button-lore": "Egg Lore",
+  "menu-spawning-egg-button-lore-lore": [
+    "",
+    "Current: &f",
+    "{lore}",
+    "",
+    "Edit the lore of",
+    "the Boss spawn egg."
+  ],
+  "menu-spawning-egg-added": "Egg added to inventory!",
+  "menu-spawning-egg-info": [
+    "Customize the appearance of",
+    "the egg with which you can",
+    "spawn {boss} easily."
+  ],
+
+  "menu-skill-potions-title": "Add Skill Potions",
+  "menu-skill-potions-item": "{potion} Effect",
+  "menu-skill-potions-item-lore": [
+    "",
+    "Level: {level}",
+    "Duration: {duration}",
+    "",
+    "&4&l< &7Left click to remove"
+  ],
+  "menu-skill-potions-removed": "&4Potion has been removed!",
+  "menu-skill-potions-info": [
+    "This skill can add multiple",
+    "potions to the player that",
+    "the Boss targets. Edit them",
+    "here."
+  ],
+
+  "menu-skill-potions-new-title": "Select Potion Type",
+  "menu-skill-potions-new-item": "{potion} Effect",
+  "menu-skill-potions-new-item-lore": [
+    "",
+    "Click to add the",
+    "effect to skill."
+  ],
+  "menu-skill-potions-new-info": [
+    "Click to select which",
+    "potion effect to give",
+    "each targeted player."
+  ],
+
+  "menu-spawn-rule-locations-title": "Select Spawn Locations",
+  "menu-spawn-rule-locations-item": "{location} Location",
+  "menu-spawn-rule-locations-item-lore": [
+    "",
+    "Status: {status}",
+    "",
+    "Click to toggle if",
+    "the Boss will spawn",
+    "in this location."
+  ],
+  "menu-spawn-rule-locations-spawns": "&aBoss spawns here",
+  "menu-spawn-rule-locations-no-spawns": "&cBoss doesn't spawn here",
+  "menu-spawn-rule-locations-enabled": "&2Boss now spawns in {location}",
+  "menu-spawn-rule-locations-disabled": "&4Boss no longer spawns in {location}",
+  "menu-spawn-rule-locations-info": [
+    "Select blocks where this rule",
+    "will spawn each Boss. You can",
+    "create new locations using tool",
+    "via '&6/boss tools&7'.",
+    "",
+    "&6Tip: &7To save time, you can stop",
+    "the server and write locations",
+    "manually into your spawnrule yml",
+    "file in the spawnrules/ folder."
+  ],
+  "menu-spawn-rule-locations-button": "Locations",
+  "menu-spawn-rule-locations-button-lore": [
+    "",
+    "Selected: &f{selected}&8/&f{total}",
+    "",
+    "Click to choose locations",
+    "where to spawn Bosses",
+    "you selected in this rule.",
+    "",
+    "{respawn_notice}",
+    "",
+    "You can create locations",
+    "using '/{label} tools' command."
+  ],
+  "menu-spawn-rule-locations-button-respawn": "&cWe choose 1 location randomly",
+
+  "part-none": "None",
+  "part-default": "default"
 }
