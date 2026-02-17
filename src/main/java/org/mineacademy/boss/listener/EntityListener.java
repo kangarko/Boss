@@ -54,6 +54,7 @@ import org.mineacademy.boss.hook.HeroesHook;
 import org.mineacademy.boss.hook.ModelEngineHook;
 import org.mineacademy.boss.model.Boss;
 import org.mineacademy.boss.model.BossAttribute;
+import org.mineacademy.boss.model.BossBarManager;
 import org.mineacademy.boss.model.BossCheatDisable;
 import org.mineacademy.boss.model.BossCommandType;
 import org.mineacademy.boss.model.BossReinforcement;
@@ -354,6 +355,9 @@ public final class EntityListener extends BossListener {
 
 			Debugger.debug("drops", "Boss " + boss.getName() + " at " + SerializeUtil.serializeLocation(location) + " has died. Collecting drops.");
 
+			// Hide BossBar for all viewers
+			BossBarManager.getInstance().hideBar(entity);
+
 			// Handle experience
 			if (killer != null && HeroesHook.isEnabled()) {
 				event.setDroppedExp(0);
@@ -499,6 +503,17 @@ public final class EntityListener extends BossListener {
 		Entity victim = event.getEntity();
 		Entity damager = event.getDamager();
 
+		// Check for projectile immunity before resolving projectile shooters
+		if (damager instanceof Projectile) {
+			final SpawnedBoss spawnedBoss = Boss.findBoss(victim);
+
+			if (spawnedBoss != null && spawnedBoss.getBoss().getCustomSetting(CustomSetting.PROJECTILE_IMMUNE)) {
+				event.setCancelled(true);
+
+				return;
+			}
+		}
+
 		if (victim instanceof Projectile && ((Projectile) victim).getShooter() instanceof LivingEntity)
 			victim = (LivingEntity) ((Projectile) victim).getShooter();
 
@@ -573,6 +588,10 @@ public final class EntityListener extends BossListener {
 					}
 				});
 
+				// Update BossBar for this damage event
+				BossBarManager.getInstance().updateBar(boss, entity, damage);
+				BossBarManager.getInstance().updateViewers(entity, damagerPlayer);
+
 				Debugger.debug("damage", "[Boss " + boss.getName() + "] Final damage: " + MathUtil.formatTwoDigits(damage)
 						+ ". Health: " + MathUtil.formatTwoDigits(entity.getHealth()) + "/" + MathUtil.formatTwoDigits(entity.getMaxHealth()) + ". Remaining: " + MathUtil.formatTwoDigits(remainingHealth));
 
@@ -588,8 +607,8 @@ public final class EntityListener extends BossListener {
 			});
 		}
 
-		if (victim.getType().toString().equals("ARMOR_STAND"))
-			// Prevent destroying armor stand bosses if they are invulnerable
+		if (victim.getType().toString().equals("ARMOR_STAND")  || victim.getType().toString().equals("MANNEQUIN"))
+			// Prevent destroying armor stand / mannequin bosses if they are invulnerable
 			this.runIfBoss(victim, spawnedBoss -> {
 				if (spawnedBoss.getBoss().getCustomSetting(CustomSetting.INVULNERABLE))
 					event.setCancelled(true);

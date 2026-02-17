@@ -72,6 +72,7 @@ public abstract class CustomSetting<T> {
 	public static final CustomSetting<Boolean> IRON_GOLEM_AGGRESSIVE = new IronGolemAggressiveSetting();
 	public static final CustomSetting<Boolean> NO_AI = new NoAISetting();
 	public static final CustomSetting<Boolean> PICKUP_ITEMS = new PickupItemsSetting();
+	public static final CustomSetting<Boolean> PROJECTILE_IMMUNE = new ProjectileImmuneSetting();
 	public static final CustomSetting<Boolean> SILENT = new SilentSetting();
 	public static final CustomSetting<Boolean> SLIME_BABIES_ON_DEATH = new SlimeBabiesOnDeathSetting();
 	public static final CustomSetting<Boolean> SNOWMAN_PUMPKIN = new SnowmanPumpkinSetting();
@@ -87,6 +88,11 @@ public abstract class CustomSetting<T> {
 	public static final CustomSetting<String> VILLAGER_TYPE = new VillagerTypeSetting();
 	public static final CustomSetting<Boolean> GLOWING = new GlowingSetting();
 	public static final CustomSetting<Boolean> CUSTOM_NAME_VISIBLE = new CustomNameVisible();
+	public static final CustomSetting<Boolean> BOSS_BAR = new BossBarEnabledSetting();
+	public static final CustomSetting<String> BOSS_BAR_COLOR = new BossBarColorSetting();
+	public static final CustomSetting<String> BOSS_BAR_STYLE = new BossBarStyleSetting();
+	public static final CustomSetting<Integer> BOSS_BAR_RADIUS = new BossBarRadiusSetting();
+	public static final CustomSetting<String> BOSS_BAR_FORMAT = new BossBarFormatSetting();
 
 	/* ------------------------------------------------------------------------------- */
 	/* Main class methods */
@@ -457,6 +463,29 @@ class PickupItemsSetting extends CustomBooleanSetting {
 				"",
 				"Set if the Boss can",
 				"pickup ground items.");
+	}
+}
+
+class ProjectileImmuneSetting extends CustomBooleanSetting {
+
+	public ProjectileImmuneSetting() {
+		super("Projectile_Immune");
+	}
+
+	@Override
+	public ItemCreator getIcon() {
+		return ItemCreator.from(
+				CompMaterial.ARROW,
+				"Projectile Immunity",
+				"",
+				"Status: " + (this.getValue() ? "&aimmune" : "&7vulnerable"),
+				"",
+				"When enabled, the Boss is",
+				"immune to projectile damage",
+				"such as arrows or tridents.",
+				"",
+				"&7Forces players to engage",
+				"&7the Boss in melee combat.");
 	}
 }
 
@@ -1258,5 +1287,233 @@ class SnowmanPumpkinSetting extends CustomBooleanSetting {
 				"",
 				"&cThis setting might not work",
 				"&con Minecraft 1.8.8.");
+	}
+}
+
+class BossBarEnabledSetting extends CustomBooleanSetting {
+
+	public BossBarEnabledSetting() {
+		super("Boss_Bar");
+	}
+
+	@Override
+	public boolean canApplyTo(EntityType entity) {
+		return MinecraftVersion.atLeast(V.v1_9);
+	}
+
+	@Override
+	public ItemCreator getIcon() {
+		return ItemCreator.from(
+				CompMaterial.DRAGON_BREATH,
+				"Boss Bar",
+				"",
+				"Status: " + (this.getValue() ? "&aenabled" : "&7disabled"),
+				"",
+				"Display a health bar at the",
+				"top of the screen for nearby",
+				"players during boss fights.",
+				"",
+				"&7Similar to the Ender Dragon",
+				"&7or Wither boss bars.");
+	}
+}
+
+class BossBarColorSetting extends CustomStringSetting<BossBarColorSetting.CompBarColor> {
+
+	public BossBarColorSetting() {
+		super("Boss_Bar_Color");
+	}
+
+	@Override
+	public boolean canApplyTo(EntityType entity) {
+		return MinecraftVersion.atLeast(V.v1_9);
+	}
+
+	@Override
+	protected String getChangeQuestion() {
+		return "Enter boss bar color. Current: '{current}'. Available: {available}. Type 'default' to use red.";
+	}
+
+	@Override
+	protected List<CompBarColor> getValidTypes() {
+		return Arrays.asList(CompBarColor.values());
+	}
+
+	@Override
+	public String getDefault() {
+		return "RED";
+	}
+
+	@Override
+	public ItemCreator getIcon() {
+		return ItemCreator.from(
+				CompMaterial.RED_DYE,
+				"Boss Bar Color",
+				"",
+				"Current: &f" + Common.getOrDefault(this.getValue(), "RED"),
+				"",
+				"Click to change the boss",
+				"bar color displayed to",
+				"nearby players.");
+	}
+
+	enum CompBarColor {
+		PINK,
+		BLUE,
+		RED,
+		GREEN,
+		YELLOW,
+		PURPLE,
+		WHITE
+	}
+}
+
+class BossBarStyleSetting extends CustomStringSetting<BossBarStyleSetting.CompBarStyle> {
+
+	public BossBarStyleSetting() {
+		super("Boss_Bar_Style");
+	}
+
+	@Override
+	public boolean canApplyTo(EntityType entity) {
+		return MinecraftVersion.atLeast(V.v1_9);
+	}
+
+	@Override
+	protected String getChangeQuestion() {
+		return "Enter boss bar style. Current: '{current}'. Available: {available}. Type 'default' to use solid progress bar.";
+	}
+
+	@Override
+	protected List<CompBarStyle> getValidTypes() {
+		return Arrays.asList(CompBarStyle.values());
+	}
+
+	@Override
+	public String getDefault() {
+		return "PROGRESS";
+	}
+
+	@Override
+	public ItemCreator getIcon() {
+		return ItemCreator.from(
+				CompMaterial.RAIL,
+				"Boss Bar Style",
+				"",
+				"Current: &f" + Common.getOrDefault(this.getValue(), "PROGRESS"),
+				"",
+				"Click to change the boss",
+				"bar style. PROGRESS is a",
+				"solid bar, while NOTCHED",
+				"options show segments.");
+	}
+
+	enum CompBarStyle {
+		PROGRESS,
+		NOTCHED_6,
+		NOTCHED_10,
+		NOTCHED_12,
+		NOTCHED_20
+	}
+}
+
+class BossBarRadiusSetting extends CustomIntegerSetting {
+
+	public BossBarRadiusSetting() {
+		super("Boss_Bar_Radius");
+	}
+
+	@Override
+	public boolean canApplyTo(EntityType entity) {
+		return MinecraftVersion.atLeast(V.v1_9);
+	}
+
+	@Override
+	public int getMinimum() {
+		return 10;
+	}
+
+	@Override
+	public int getMaximum() {
+		return 200;
+	}
+
+	@Override
+	public Integer getDefault() {
+		return 50;
+	}
+
+	@Override
+	public ItemCreator getIcon() {
+		return ItemCreator.from(
+				CompMaterial.ENDER_EYE,
+				"Boss Bar Radius",
+				"",
+				"Current: &f" + this.getValue() + " blocks",
+				"",
+				"Maximum distance from the",
+				"Boss where players can see",
+				"the health bar. Players who",
+				"move further will no longer",
+				"see the bar.");
+	}
+}
+
+class BossBarFormatSetting extends CustomSetting<String> {
+
+	public BossBarFormatSetting() {
+		super("Boss_Bar_Format");
+	}
+
+	@Override
+	public boolean canApplyTo(EntityType entity) {
+		return MinecraftVersion.atLeast(V.v1_9);
+	}
+
+	@Override
+	public void onSpawn(Boss boss, LivingEntity entity) {
+	}
+
+	@Override
+	public void onMenuClick(Boss boss, Menu menu, Player player, ClickType clickType) {
+		new org.mineacademy.fo.conversation.SimpleStringPrompt(
+				"Enter the boss bar title format. Variables: {boss_alias}, {boss_name}, {health}, {max_health}, {health_percent}. Current: '"
+						+ Common.getOrDefault(this.getValue(), this.getDefault()) + "'. Type 'default' to reset.") {
+
+			@Override
+			protected void onValidatedInput(org.bukkit.conversations.ConversationContext context, String input) {
+				if ("default".equalsIgnoreCase(input))
+					BossBarFormatSetting.this.save(boss, null);
+				else
+					BossBarFormatSetting.this.save(boss, input);
+			}
+
+			@Override
+			protected String getMenuAnimatedTitle() {
+				return "&9Boss Bar Format Updated!";
+			}
+
+		}.show(player);
+	}
+
+	@Override
+	public String getDefault() {
+		return "{boss_alias} &8- &c{health}&7/&c{max_health}";
+	}
+
+	@Override
+	public ItemCreator getIcon() {
+		return ItemCreator.from(
+				CompMaterial.PAPER,
+				"Boss Bar Format",
+				"",
+				"Current: &f" + Common.getOrDefault(this.getValue(), this.getDefault()),
+				"",
+				"Click to customize the text",
+				"shown in the boss bar.",
+				"",
+				"&7Variables: {boss_alias},",
+				"&7{boss_name}, {health},",
+				"&7{max_health}, {health_percent}");
 	}
 }

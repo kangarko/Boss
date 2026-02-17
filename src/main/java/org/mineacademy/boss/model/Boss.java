@@ -944,6 +944,9 @@ public final class Boss extends YamlConfig implements ConfigStringSerializable {
 		if (this.lightningOnSpawn)
 			entity.getWorld().strikeLightningEffect(entity.getLocation());
 
+		// Show BossBar if enabled
+		BossBarManager.getInstance().showBar(this, entity);
+
 		// Find targets immediately
 		if (HookManager.isCitizensLoaded())
 			CitizensHook.retarget(spawned);
@@ -1584,7 +1587,7 @@ public final class Boss extends YamlConfig implements ConfigStringSerializable {
 	 */
 	public boolean canHaveEquipment() {
 		return Monster.class.isAssignableFrom(this.type.getEntityClass()) || this.type == CompEntityType.PLAYER
-				|| this.type == CompEntityType.HORSE || this.type.toString().equals("ARMOR_STAND");
+				|| this.type == CompEntityType.HORSE || this.type.toString().equals("ARMOR_STAND") || this.type.toString().equalsIgnoreCase("MANNEQUIN");
 	}
 
 	/**
