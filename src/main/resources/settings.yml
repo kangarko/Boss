@@ -143,11 +143,16 @@ Health:
 
 # -------------------------------------------------------------------------------------------
 # Settings related to a Boss' tragic death.
+#
+# [TIP] Each Boss has a Player_Commands list under Drops. This is a RANKED reward system:
+#       The 1st command goes to the top damager, the 2nd to the second-highest damager, etc.
+#       Use | to run multiple commands for the same rank (e.g. "give {player} diamond|msg {player} GG").
+#       For commands that run for ALL killers, use Death Commands in /boss menu > Settings > Commands.
 # -------------------------------------------------------------------------------------------
 Death: 
   
-  # If true, we run commands for players who dealt the most damage to boss as the server
-  # console. False means we run the command from the console to the player.
+  # If true, Player_Commands for ranked damagers are run as the server console.
+  # False means the command is run as the player themselves.
   Run_PvP_Commands_As_Console: true
 
 # -------------------------------------------------------------------------------------------
