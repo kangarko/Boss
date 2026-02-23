@@ -91,7 +91,7 @@
 			<artifactId>Citizens</artifactId>
 			<version>1</version>
 			<scope>system</scope>
-			<systemPath>${basedir}/library/Citizens-2.0.33-b3367.jar</systemPath>
+			<systemPath>${basedir}/library/Citizens-2.0.41-b4128.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>org.mineacademy.plugin</groupId>
