@@ -21,6 +21,7 @@ import org.mineacademy.boss.hook.GriefPreventionHook;
 import org.mineacademy.boss.menu.SelectBossMenu;
 import org.mineacademy.boss.menu.boss.BossMenu;
 import org.mineacademy.boss.model.Boss;
+import org.mineacademy.boss.model.BossBarTracker;
 import org.mineacademy.boss.model.BossSpawnReason;
 import org.mineacademy.boss.model.BossSpawnResult;
 import org.mineacademy.boss.model.Permissions;
@@ -53,6 +54,7 @@ public final class PlayerListener extends BossListener {
 	@EventHandler
 	public void onPlayerQuit(PlayerQuitEvent event) {
 		PlayerCache.removeCache(event.getPlayer());
+		BossBarTracker.removeViewer(event.getPlayer());
 	}
 
 	/**

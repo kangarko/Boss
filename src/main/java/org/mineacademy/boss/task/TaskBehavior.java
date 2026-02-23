@@ -10,6 +10,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.mineacademy.boss.hook.CitizensHook;
 import org.mineacademy.boss.model.Boss;
+import org.mineacademy.boss.model.BossBarTracker;
 import org.mineacademy.boss.model.BossLocation;
 import org.mineacademy.boss.model.SpawnedBoss;
 import org.mineacademy.boss.settings.Settings;
@@ -98,6 +99,9 @@ public final class TaskBehavior extends SimpleRunnable {
 			// Apply skills
 			this.skill(spawned);
 
+			// Update boss bar viewers
+			BossBarTracker.tickViewers(spawned);
+
 			// Teleport back if escaped regions
 			this.keepInRegions(spawned);
 
@@ -105,6 +109,8 @@ public final class TaskBehavior extends SimpleRunnable {
 			if (canRetarget)
 				CitizensHook.retarget(spawned);
 		}
+
+		BossBarTracker.cleanupStale();
 	}
 
 	/*

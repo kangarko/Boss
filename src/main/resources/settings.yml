@@ -123,6 +123,25 @@ Fighting:
       # Color to indicate your hit has killed the Boss.
       Dead: BLACK
 
+  # Configure the boss bar shown above the screen to nearby players.
+  # To enable, toggle Boss_Bar in the individual Boss settings menu.
+  Boss_Bar:
+
+    # The color of the boss bar.
+    # Options: PINK, BLUE, RED, GREEN, YELLOW, PURPLE, WHITE
+    Color: RED
+
+    # The style of the boss bar.
+    # Options: PROGRESS, NOTCHED_6, NOTCHED_10, NOTCHED_12, NOTCHED_20
+    Style: PROGRESS
+
+    # The format of the boss bar title.
+    # Variables: {boss_alias}, {boss_name}, {health}, {max_health}, {health_percent}
+    Format: "{boss_alias} &8- &c{health}&7/&c{max_health}"
+
+    # The radius (in blocks) within which players can see the boss bar.
+    Radius: 50
+
   # Settings for the targeting pathfinder. Requires Citizens plugin.
   Citizens_Retarget:
     
