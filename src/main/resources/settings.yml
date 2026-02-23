@@ -194,7 +194,7 @@ Skills:
 
 # -------------------------------------------------------------------------------------------
 # Completely prevent any and all vanilla mobs to spawn. Useful for minigame worlds
-# or servers where you only want Bosses to appaer.
+# or servers where you only want Bosses to appear.
 #
 # *WARNING* This completely prevents any mobs from spawning naturally,
 #           including mobs from mob spawners etc. It's basically like a mob blocker plugin.
@@ -240,7 +240,7 @@ Register_Regions: true
 # -------------------------------------------------------------------------------------------------
 # Enable this before you want to create regions with "/b region". Then disable this for maximum
 # performance. Leaving this on will make plugin check every online player's click and compare
-# it to determine if he clicked with our tool, which has a performance penaulty.
+# it to determine if he clicked with our tool, which has a performance penalty.
 # Your regions will continue to function with this option disabled.
 #
 # RESTART THE SERVER WHEN TOGGLING THIS.

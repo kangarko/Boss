@@ -608,7 +608,7 @@ public final class Boss extends YamlConfig implements ConfigStringSerializable {
 		for (final BossCommand command : this.commands)
 			Valid.checkBoolean(command.getType() != BossCommandType.SKILL,
 					"Cannot put skill commands in 'Commands' key for Boss " + this.getFileName()
-							+ " because they are stored for each skill separatedly. Remove them and configure in-game using GUI.");
+							+ " because they are stored for each skill separately. Remove them and configure in-game using GUI.");
 
 		this.commandsStoppedAfterFirst = this.getBoolean("Commands_Stop_After_First", false);
 		this.attributes = this.getMap("Attributes", BossAttribute.class, Double.class);
