@@ -9,6 +9,7 @@ import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.mineacademy.boss.PlayerCache;
 import org.mineacademy.boss.settings.Settings;
@@ -49,8 +50,46 @@ public final class BossPlaceholders extends SimpleExpansion {
 		final Player player = audience != null && audience.isPlayer() ? audience.getPlayer() : null;
 		final String bossName = args[0];
 
+		// %boss_spawned%
+		if ("spawned".equals(params)) {
+			if (!Bukkit.isPrimaryThread())
+				return "";
+
+			return String.valueOf(Boss.findBossesAlive().size());
+		}
+
+		// %boss_spawned_<world>%
+		if (params.startsWith("spawned_")) {
+			final String worldName = params.substring("spawned_".length());
+			final World world = Bukkit.getWorld(worldName);
+
+			if (world != null) {
+				if (!Bukkit.isPrimaryThread())
+					return "";
+
+				return String.valueOf(Boss.findBossesAlive().stream()
+						.filter(spawned -> spawned.getEntity().getWorld().equals(world))
+						.count());
+			}
+		}
+
 		if (args.length == 2) {
 			final String secondArg = args[1];
+
+			// %boss_<name>_spawned%
+			if ("spawned".equals(secondArg)) {
+				final Boss boss = Boss.findBoss(bossName);
+
+				if (boss == null)
+					return "Invalid boss " + bossName;
+
+				if (!Bukkit.isPrimaryThread())
+					return "";
+
+				return String.valueOf(Boss.findBossesAlive().stream()
+						.filter(spawned -> spawned.getBoss().getName().equals(boss.getName()))
+						.count());
+			}
 
 			if ("alias".equals(secondArg)) {
 				final Boss boss = Boss.findBoss(bossName);
@@ -121,6 +160,26 @@ public final class BossPlaceholders extends SimpleExpansion {
 		} else if (args.length == 3) {
 			final String secondArg = args[1];
 			final String thirdArg = args[2];
+
+			// %boss_<name>_spawned_<world>%
+			if ("spawned".equals(secondArg)) {
+				final Boss boss = Boss.findBoss(bossName);
+
+				if (boss == null)
+					return "Invalid boss " + bossName;
+
+				final World world = Bukkit.getWorld(thirdArg);
+
+				if (world == null)
+					return "Invalid world " + thirdArg;
+
+				if (!Bukkit.isPrimaryThread())
+					return "";
+
+				return String.valueOf(Boss.findBossesAlive().stream()
+						.filter(spawned -> spawned.getBoss().getName().equals(boss.getName()) && spawned.getEntity().getWorld().equals(world))
+						.count());
+			}
 
 			if (thirdArg.equals("kills") || thirdArg.equals("damage")) {
 				UUID targetUid;
