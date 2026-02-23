@@ -13,12 +13,10 @@
   "command-egg-success": "<gray>{player} <green>received <gray>{boss} egg.",
   "command-find-description": "Find Bosses in loaded chunks.",
   "command-invalid-boss": "Boss named '{boss}' doesn't exist. Available: {available}",
-  "command-invalid-boss-dead": "The Boss is no longer alive.",
   "command-invalid-boss-type": "Invalid Boss type '{boss}'. Available: {available}",
   "command-invalid-boss-uid": "Invalid Boss from entity UUID: {uuid}",
   "command-invalid-boss-uninstalled": "Boss '{boss}' is not installed on this server.",
   "command-invalid-bosses": "There are no Bosses alive that match your search.",
-  "command-list-description": "List loaded bosses.",
   "command-list-hover": [
 	"Click to open this Boss menu."
   ],
@@ -26,7 +24,6 @@
   "command-menu-description": "Show the main menu or menu for boss.",
   "command-menu-success": "Opened Boss menu for {player}.",
   "command-new-description": "Create a new boss.",
-  "command-reloading": "reloading",
   "command-remove-description": "Delete a Boss from disk. Alive Bosses will be kept, use the butcher or scan command to remove them first.",
   "command-remove-success": "Removed '<red>{boss}<gray>' from disk. Alive Bosses were kept.",
   "command-scan-description": "Remove Bosses from unloaded chunks.",
