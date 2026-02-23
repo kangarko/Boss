@@ -7,7 +7,6 @@ import org.bukkit.inventory.ItemStack;
 import org.mineacademy.boss.model.Boss;
 import org.mineacademy.fo.MathUtil;
 import org.mineacademy.fo.menu.Menu;
-import org.mineacademy.fo.settings.Lang;
 
 /**
  * A simple custom setting taking a boolean value,
@@ -40,7 +39,7 @@ public abstract class CustomIntegerSetting extends CustomSetting<Integer> {
 		final int newValue = MathUtil.range(oldValue + (clickType == ClickType.LEFT ? -1 : 1), this.getMinimum(), this.getMaximum());
 
 		this.save(boss, newValue);
-		menu.restartMenu(Lang.legacy("menu-set-to", "key", this.getKey(), "value", newValue));
+		menu.restartMenu("&2" + this.getKey() + " &7set to: &2" + newValue);
 	}
 
 	/**
@@ -70,6 +69,6 @@ public abstract class CustomIntegerSetting extends CustomSetting<Integer> {
 	 */
 	@Override
 	public ItemStack toMenuItem() {
-		return this.getIcon().lore(Lang.legacy("menu-button-integer", "value", this.getValue())).make();
+		return this.getIcon().lore("Current: &f" + this.getValue()).make();
 	}
 }

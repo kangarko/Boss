@@ -59,7 +59,6 @@ import org.mineacademy.fo.remain.CompMonsterEgg;
 import org.mineacademy.fo.remain.CompPotionEffectType;
 import org.mineacademy.fo.remain.CompSound;
 import org.mineacademy.fo.remain.Remain;
-import org.mineacademy.fo.settings.Lang;
 
 import com.ticxo.modelengine.api.ModelEngineAPI;
 
@@ -111,7 +110,7 @@ final class SettingsMenu extends Menu {
 
 		this.boss = boss;
 		this.setSize(9 * 6);
-		this.setTitle(Lang.legacy("menu-settings-title", "boss", boss.getName()));
+		this.setTitle(boss.getName() + " Settings");
 
 		Valid.checkNotNull(boss.getCitizensSettings(), "Unable to load Boss settings. Check for earlier errors. If you used PlugMan or reloaded, try without it. Otherwise, report to the developer.");
 		final boolean isNpc = boss.getCitizensSettings().isEnabled();
@@ -184,26 +183,37 @@ final class SettingsMenu extends Menu {
 
 		this.potionsButton = new ButtonMenu(new PotionsMenu(),
 				CompMaterial.POTION,
-				Lang.legacy("menu-settings-button-potions"),
-				Lang.legacy("menu-settings-button-potions-lore").split("\n"));
+				"&dPotion Effects",
+				"",
+				"Add custom potion",
+				"effects to the Boss.");
 
 		this.equipmentButton = boss.canHaveEquipment() ? new ButtonMenu(new EquipmentMenu(),
 				CompMaterial.LEATHER_CHESTPLATE,
-				Lang.legacy("menu-settings-button-equipment"),
-				Lang.legacy("menu-settings-button-equipment-lore").split("\n"))
+				"&6Equipment",
+				"",
+				"Edit Boss' hand item",
+				"and armor items.")
 				: Button.makeDummy(CompMaterial.LEATHER_CHESTPLATE,
-						Lang.legacy("menu-settings-button-equipment-disabled"),
-						Lang.legacy("menu-settings-button-equipment-disabled-lore").split("\n"));
+						"Equipment",
+						"",
+						"&cThis Boss type does",
+						"&cnot support equipment.");
 
 		this.lightningButton = new ButtonMenu(new LightningMenu(),
 				CompMaterial.ENDER_PEARL,
-				Lang.legacy("menu-settings-button-lightning"),
-				Lang.legacy("menu-settings-button-lightning-lore").split("\n"));
+				"&3Lightning",
+				"",
+				"Select when Boss",
+				"strikes lightning.");
 
 		this.pathfindersButton = new ButtonMenu(new PathfindersMenu(),
 				CompMaterial.ITEM_FRAME,
-				Lang.legacy("menu-settings-button-pathfinders"),
-				Lang.legacy("menu-settings-button-pathfinders-lore").split("\n"));
+				"&8Pathfinders",
+				"",
+				"Edit how Boss should",
+				"behave and what pathfinders",
+				"it should use.");
 
 		this.ridingButton = new ButtonMenu(new RidingMenu(),
 				CompMaterial.CARROT_ON_A_STICK,
@@ -218,32 +228,51 @@ final class SettingsMenu extends Menu {
 
 		this.commandsButton = new ButtonMenu(new CommandsOverviewMenu(),
 				CompMaterial.COMMAND_BLOCK,
-				Lang.legacy("menu-settings-button-commands"),
-				Lang.legacy("menu-settings-button-commands-lore").split("\n"));
+				"&dCommands",
+				"",
+				"Select what commands should",
+				"be executed when this Boss",
+				"dies or is spawned.");
 
 		this.attributesButton = new ButtonMenu(new AttributesMenu(),
 				CompMaterial.ANVIL,
-				Lang.legacy("menu-settings-button-attributes"),
-				Lang.legacy("menu-settings-button-attributes-lore").split("\n"));
+				"&7Attributes",
+				"",
+				"Edit attributes like speed",
+				"follow range, damage, ...");
 
 		this.customSettingsButton = new ButtonMenu(new CustomSettingsMenu(),
 				Remain.getMaterial("JIGSAW", CompMaterial.REDSTONE_BLOCK),
-				Lang.legacy("menu-settings-button-custom"),
-				Lang.legacy("menu-settings-button-custom-lore").split("\n"));
+				"&4Custom Settings",
+				"",
+				"Edit custom settings only",
+				"applicable for this Boss.");
 
 		this.modelEngineButton = ModelEngineHook.isAvailable() ? new ButtonMenu(new ModelEngineMenu(),
 				CompMaterial.ARMOR_STAND,
-				Lang.legacy("menu-settings-button-modelengine"),
-				Lang.legacy("menu-settings-button-modelengine-lore").split("\n"))
+				"&bModelEngine",
+				"",
+				"Enable and edit",
+				"custom models.",
+				"",
+				"&cWarning: &7This feature is",
+				"&7under heavy development.")
 				: Button.makeDummy(CompMaterial.ARMOR_STAND,
-						Lang.legacy("menu-settings-button-modelengine"),
-						Lang.legacy("menu-settings-button-modelengine-disabled-lore").split("\n"));
+						"&bModelEngine",
+						"",
+						"Enable and edit",
+						"custom models.",
+						"",
+						"&cError: &7ModelEngine plugin required!");
 
 	}
 
 	@Override
 	protected String[] getInfo() {
-		return Lang.legacy("menu-settings-info").split("\n");
+		return new String[] {
+				"Edit the main Boss properties",
+				"in this menu such as health etc."
+		};
 	}
 
 	@Override
@@ -346,7 +375,7 @@ final class SettingsMenu extends Menu {
 		EquipmentMenu() {
 			super(SettingsMenu.this);
 
-			this.setTitle(Lang.legacy("menu-settings-equipment-title"));
+			this.setTitle("Boss Equipment");
 
 			this.isHorse = boss.getType() == CompEntityType.HORSE;
 
@@ -511,7 +540,12 @@ final class SettingsMenu extends Menu {
 		 */
 		@Override
 		protected String[] getInfo() {
-			return Lang.legacy("menu-settings-equipment-info").split("\n");
+			return new String[] {
+					"Drag and drop items from your",
+					"inventory into the available",
+					"slots in this container for",
+					"Boss to drop them on death."
+			};
 		}
 
 		@Override
@@ -529,7 +563,7 @@ final class SettingsMenu extends Menu {
 		PotionsMenu() {
 			super(SettingsMenu.this, CompPotionEffectType.getPotions());
 
-			this.setTitle(Lang.legacy("menu-settings-potions-title"));
+			this.setTitle("Boss Potions");
 		}
 
 		@Override
@@ -559,7 +593,12 @@ final class SettingsMenu extends Menu {
 
 		@Override
 		protected String[] getInfo() {
-			return Lang.legacy("menu-settings-potions-info").split("\n");
+			return new String[] {
+					"Select what potions should",
+					"be applied to Boss at spawning.",
+					"Boss will always have those",
+					"effects."
+			};
 		}
 	}
 

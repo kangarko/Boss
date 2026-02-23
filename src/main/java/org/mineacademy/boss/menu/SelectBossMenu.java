@@ -17,7 +17,6 @@ import org.mineacademy.fo.menu.button.annotation.Position;
 import org.mineacademy.fo.menu.model.ItemCreator;
 import org.mineacademy.fo.remain.CompEntityType;
 import org.mineacademy.fo.remain.CompMaterial;
-import org.mineacademy.fo.settings.Lang;
 
 /**
  * The menu where players can select a Boss or create one.
@@ -33,17 +32,24 @@ public final class SelectBossMenu extends MenuPaged<Boss> {
 	protected SelectBossMenu(Menu parent) {
 		super(parent, Boss.getBosses());
 
-		this.setTitle(Lang.legacy("menu-boss-select-title"));
+		this.setTitle("Create Or Edit Bosses");
 
 		this.spawnedButton = new ButtonMenu(
 				() -> new SpawnedBossesMenu(SelectBossMenu.this),
 				ItemCreator.from(CompMaterial.ENDER_EYE,
-						Lang.legacy("menu-main-button-spawned-bosses"),
-						Lang.legacy("menu-main-button-spawned-bosses-lore", "count", Boss.findBossesAlive().size()).split("\n")));
+						"&dSpawned Bosses",
+						"",
+						"Currently alive: &f" + Boss.findBossesAlive().size(),
+						"",
+						"Click to view all",
+						"alive Bosses and",
+						"teleport or kill them."));
 
 		this.createButton = new ButtonMenu(new CreateMenu(this), CompMaterial.EMERALD,
-				Lang.legacy("menu-boss-select-button-create"),
-				Lang.legacy("menu-boss-select-button-create-lore").split("\n"));
+				"&aCreate New",
+				"",
+				"Click to create",
+				"a new Boss.");
 	}
 
 	@Override
@@ -56,13 +62,21 @@ public final class SelectBossMenu extends MenuPaged<Boss> {
 		return ItemCreator.fromItemStack(boss.getEgg())
 				.name(boss.getName())
 				.clearLore()
-				.lore(Lang.legacy("menu-boss-select-item-lore").split("\n"))
+				.lore("",
+						"Click to open this Boss",
+						"menu and customize it.")
 				.makeMenuTool();
 	}
 
 	@Override
 	protected String[] getInfo() {
-		return Lang.legacy("menu-boss-select-info").split("\n");
+		return new String[] {
+				"Select a Boss to open its",
+				"menu and customize it.",
+				"",
+				"Create a new Boss by",
+				"clicking on the emerald."
+		};
 	}
 
 	@Override
@@ -87,7 +101,7 @@ public final class SelectBossMenu extends MenuPaged<Boss> {
 		protected CreateMenu(Menu parent) {
 			super(parent, Boss.getValidEntities());
 
-			this.setTitle(Lang.legacy("menu-boss-create-title"));
+			this.setTitle("Select Boss Type");
 		}
 
 		@Override
@@ -96,17 +110,33 @@ public final class SelectBossMenu extends MenuPaged<Boss> {
 			if (type == CompEntityType.PLAYER)
 				return ItemCreator.from(
 						CompMaterial.PLAYER_HEAD,
-						Lang.legacy("menu-boss-create-npc-name"),
-						Lang.legacy("menu-boss-create-npc-lore").split("\n")).make();
+						"Player NPC",
+						"",
+						"Click to create a new",
+						"NPC using Citizens.").make();
 
 			return ItemCreator.fromMonsterEgg(type,
 					ChatUtil.capitalizeFully(type),
-					Lang.legacy("menu-boss-create-entity-lore").split("\n")).make();
+					"",
+					"Click to create a new",
+					"Boss from this mob.").make();
 		}
 
 		@Override
 		protected String[] getInfo() {
-			return Lang.legacy("menu-boss-create-info").split("\n");
+			return new String[] {
+					"To create a new Boss, simply",
+					"select what kind of mob the",
+					"Boss will be created from.",
+					"",
+					"Minecraft server does not allow",
+					"creation of completely new mob",
+					"types without forcing all players",
+					"to download a mod, that is why we",
+					"create new Bosses from mobs that",
+					"your client can render and customize",
+					"them later in your Boss settings."
+			};
 		}
 
 		@Override

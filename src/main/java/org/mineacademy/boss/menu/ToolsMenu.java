@@ -10,7 +10,6 @@ import org.mineacademy.boss.tool.LocationTool;
 import org.mineacademy.fo.menu.Menu;
 import org.mineacademy.fo.menu.MenuTools;
 import org.mineacademy.fo.menu.tool.RegionTool;
-import org.mineacademy.fo.settings.Lang;
 import org.mineacademy.fo.settings.SimpleSettings;
 
 /**
@@ -24,7 +23,11 @@ public final class ToolsMenu extends MenuTools {
 
 	@Override
 	protected String[] getInfo() {
-		return Lang.legacy("menu-tools-info").split("\n");
+		return new String[] {
+				"This menu provides tools to help you",
+				"create various parts of Boss. These tools",
+				"are only intended for administrators."
+		};
 	}
 
 	/**

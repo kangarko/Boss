@@ -43,11 +43,13 @@ final class SkillsMenu extends MenuPaged<BossSkill> {
 
 		this.boss = boss;
 
-		this.setTitle(Lang.legacy("menu-skills-title"));
+		this.setTitle("Create Or Edit Skills");
 
 		this.createButton = new ButtonMenu(new CreateSkillMenu(), CompMaterial.EMERALD,
-				Lang.legacy("menu-skills-button-create"),
-				Lang.legacy("menu-skills-button-create-lore").split("\n"));
+				"&aCreate New",
+				"",
+				"Click to create",
+				"a new skill.");
 	}
 
 	@Override
@@ -62,7 +64,11 @@ final class SkillsMenu extends MenuPaged<BossSkill> {
 
 	@Override
 	protected String[] getInfo() {
-		return Lang.legacy("menu-skills-info").split("\n");
+		return new String[] {
+				"Create or edit what skills",
+				"will be applied to this Boss",
+				"randomly when around players."
+		};
 	}
 
 	@Override
@@ -79,7 +85,7 @@ final class SkillsMenu extends MenuPaged<BossSkill> {
 		protected CreateSkillMenu() {
 			super(SkillsMenu.this, SkillsMenu.this.boss.getUnequippedSkills());
 
-			this.setTitle(Lang.legacy("menu-skills-create-title"));
+			this.setTitle("Select Skill To Create");
 		}
 
 		@Override
@@ -89,13 +95,20 @@ final class SkillsMenu extends MenuPaged<BossSkill> {
 
 		@Override
 		protected String[] getInfo() {
-			return Lang.legacy("menu-skills-create-info").split("\n");
+			return new String[] {
+					"Select what skill you want",
+					"to add to your Boss. You can",
+					"ask a developer to create",
+					"new skills via our API, see",
+					"&6github.com/kangarko/boss/Wiki",
+					"for tutorial and examples."
+			};
 		}
 
 		@Override
 		protected void onPageClick(Player player, BossSkill skill, ClickType click) {
 			if (SkillsMenu.this.boss.hasSkill(skill))
-				this.animateTitle(Lang.legacy("menu-skills-create-already-has"));
+				this.animateTitle("&4Boss Already Has This Skill!");
 
 			else {
 				SkillsMenu.this.boss.addSkill(skill);
@@ -103,7 +116,7 @@ final class SkillsMenu extends MenuPaged<BossSkill> {
 				final Menu menu = new IndividualSkillMenu(skill);
 
 				menu.displayTo(player);
-				Platform.runTask(1, () -> menu.animateTitle(Lang.legacy("menu-skills-create-success")));
+				Platform.runTask(1, () -> menu.animateTitle("&2Skill Created!"));
 			}
 		}
 	}
@@ -128,7 +141,7 @@ final class SkillsMenu extends MenuPaged<BossSkill> {
 
 			this.skill = skill;
 
-			this.setTitle(Lang.legacy("menu-skills-individual-title", "skill", skill.getName().replace("_", " ")));
+			this.setTitle("Skill " + skill.getName().replace("_", " "));
 			this.setSize(9 * 4);
 
 			final boolean isSkillCommands = this.skill instanceof SkillCommands;
@@ -142,42 +155,63 @@ final class SkillsMenu extends MenuPaged<BossSkill> {
 					if (skillMenu != null)
 						skillMenu.displayTo(player);
 					else
-						IndividualSkillMenu.this.animateTitle(Lang.legacy("menu-skills-individual-button-settings-no-menu"));
+						IndividualSkillMenu.this.animateTitle("&4Skill Has No Custom Menu!");
 				}
 
 				@Override
 				public ItemStack getItem() {
 					return ItemCreator.from(
 							CompMaterial.IRON_HORSE_ARMOR,
-							Lang.legacy("menu-skills-individual-button-settings"),
-							Lang.legacy("menu-skills-individual-button-settings-lore").split("\n")).make();
+							"Skill Settings",
+							"",
+							"Edit settings specific",
+							"for this skill.").make();
 				}
 			};
 
 			this.delayButton = new ButtonConversation(new DelayPrompt(),
 					CompMaterial.CLOCK,
-					Lang.legacy("menu-skills-individual-button-delay"),
-					Lang.legacy("menu-skills-individual-button-delay-lore", "delay", skill.getDelay().toLine()).split("\n"));
+					"Delay",
+					"",
+					"Current: &f" + skill.getDelay().toLine(),
+					"",
+					"Click to edit how often",
+					"to run this skill when",
+					"is Boss around players.");
 
 			final String messagesDisplay = skill.getMessages().isEmpty() ? Lang.plain("part-none") : skill.getMessages().stream().map(el -> SimpleComponent.fromMiniAmpersand(el).toLegacySection()).collect(Collectors.joining("\n - ", "\n - ", ""));
 
 			this.messagesButton = isSkillCommands ? Button.makeEmpty()
 					: new ButtonConversation(new MessagesPrompt(),
 							CompMaterial.PAPER,
-							Lang.legacy("menu-skills-individual-button-messages"),
-							Lang.legacy("menu-skills-individual-button-messages-lore", "messages", messagesDisplay).split("\n"));
+							"Messages",
+							"",
+							"Current: &f" + messagesDisplay,
+							"",
+							"Edit the message for the",
+							"player targeted by Boss",
+							"when running this skill.");
 
 			final String commandsDisplay = skill.getCommands().isEmpty() ? Lang.plain("part-none") : skill.getCommands().stream().map(BossCommand::getCommand).collect(Collectors.joining("\n - ", "\n - ", ""));
 
 			this.commandsButton = new ButtonMenu(CommandsMenu.fromSkill(this, skill),
 					ItemCreator.from(CompMaterial.COMMAND_BLOCK,
-							Lang.legacy("menu-skills-individual-button-commands"),
-							Lang.legacy("menu-skills-individual-button-commands-lore", "commands", commandsDisplay).split("\n")));
+							"Commands",
+							"",
+							"Current: " + commandsDisplay));
 
 			this.stopMoreSkillsButton = Button.makeBoolean(ItemCreator.from(
 					(skill.isStopMoreSkills() ? CompMaterial.RED_DYE : CompMaterial.GREEN_DYE),
-					Lang.legacy("menu-skills-individual-button-stop"),
-					Lang.legacy("menu-skills-individual-button-stop-lore").split("\n")),
+					"Stop More Skills?",
+					"",
+					"Status: " + (skill.isStopMoreSkills() ? "&aEnabled" : "&cDisabled"),
+					"",
+					"If enabled, we stop running",
+					"more skills after this was",
+					"successfully executed.",
+					"",
+					"Note: We pick the order of",
+					"skills at random each time."),
 					skill::isStopMoreSkills, skill::setStopMoreSkills);
 
 			this.removeButton = new ButtonRemove(IndividualSkillMenu.this, "skill", skill.getName(), () -> {
@@ -217,7 +251,10 @@ final class SkillsMenu extends MenuPaged<BossSkill> {
 
 		@Override
 		protected String[] getInfo() {
-			return Lang.legacy("menu-skills-individual-info").split("\n");
+			return new String[] {
+					"Configure different options",
+					"for this skill."
+			};
 		}
 
 		@Override

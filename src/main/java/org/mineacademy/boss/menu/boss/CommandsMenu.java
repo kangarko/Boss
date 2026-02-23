@@ -27,7 +27,6 @@ import org.mineacademy.fo.menu.model.ItemCreator;
 import org.mineacademy.fo.model.RangedValue;
 import org.mineacademy.fo.remain.CompMaterial;
 import org.mineacademy.fo.remain.Remain;
-import org.mineacademy.fo.settings.Lang;
 
 /**
  * Represents a menu where players can add/remove commands executed in various Boss
@@ -53,28 +52,31 @@ public final class CommandsMenu extends MenuPaged<BossCommand> {
 		this.setter = setter;
 		this.remover = remover;
 
-		this.setTitle(Lang.legacy("menu-commands-title", "type", ChatUtil.capitalize(type.getMenuLabel())));
+		this.setTitle(ChatUtil.capitalize(type.getMenuLabel()) + " Commands");
 
 		this.createButton = new ButtonConversation(new SimpleStringPrompt("Enter the command without /. For help, see <click:open_url:'https://docs.mineacademy.org/boss/boss-commands'>https://docs.mineacademy.org/boss/boss-commands</click>", setter::accept),
 				ItemCreator.from(
 						CompMaterial.EMERALD,
-						Lang.legacy("menu-commands-button-create"),
-						Lang.legacy("menu-commands-button-create-lore", "type", type.getMenuLabel()).split("\n")));
+						"&aCreate new",
+						"",
+						"Click to add a",
+						"" + type.getMenuLabel() + " command."));
 	}
 
 	@Override
 	protected ItemStack convertToItemStack(BossCommand item) {
 		final String healthTrigger = item.getType() == BossCommandType.HEALTH_TRIGGER
-				? Lang.legacy("menu-commands-health-trigger", "value", Common.getOrDefault(item.getHealthTrigger(), Lang.legacy("menu-commands-health-trigger-unset"))) + "\n"
+				? "Health trigger: &c" + Common.getOrDefault(item.getHealthTrigger(), "unset") + " HP\n"
 				: "";
 
 		return ItemCreator.from(CompMaterial.BOOK,
-				Lang.legacy("menu-commands-item-name"),
-				Lang.legacy("menu-commands-item-lore",
-						"chance", MathUtil.formatTwoDigits(item.getChance() * 100),
-						"run_as", item.isConsole() ? Lang.legacy("menu-commands-run-as-console") : Lang.legacy("menu-commands-run-as-player"),
-						"health_trigger", healthTrigger,
-						"command", item.getCommandFormatted()).split("\n"))
+				"Command",
+				"",
+				"Run chance: &f" + MathUtil.formatTwoDigits(item.getChance() * 100) + "%",
+				"Run as: " + (item.isConsole() ? "&dconsole" : "&6player"),
+				healthTrigger + "Command: " + item.getCommandFormatted(),
+				"",
+				"Click to edit.")
 				.glow(true)
 				.make();
 	}
@@ -118,7 +120,7 @@ public final class CommandsMenu extends MenuPaged<BossCommand> {
 
 			this.command = command;
 
-			this.setTitle(Lang.legacy("menu-commands-individual-title"));
+			this.setTitle("Edit Command");
 			this.setSize(9 * 4);
 
 			final boolean isSkill = command.getType() == BossCommandType.SKILL;
@@ -233,7 +235,11 @@ public final class CommandsMenu extends MenuPaged<BossCommand> {
 
 		@Override
 		protected String[] getInfo() {
-			return Lang.legacy("menu-commands-individual-info").split("\n");
+			return new String[] {
+					"Configure this command",
+					"and its chance to run",
+					"in this menu."
+			};
 		}
 
 		@Override
