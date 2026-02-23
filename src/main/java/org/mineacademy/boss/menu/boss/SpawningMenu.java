@@ -392,9 +392,9 @@ final class SpawningMenu extends Menu {
 						"",
 						(selected ? "&aActive. &7Click to unselect." : "&7Inactive. Click to select."),
 						"",
-						"Click to edit maximum",
-						"amount of Bosses that",
-						"exist on this world.")
+						"Click to select the location",
+						"to return Boss to when he",
+						"escapes his spawn region.")
 						.glow(selected).make();
 			}
 
