@@ -13,6 +13,7 @@ import org.mineacademy.fo.menu.button.Button;
 import org.mineacademy.fo.menu.button.ButtonMenu;
 import org.mineacademy.fo.menu.model.ItemCreator;
 import org.mineacademy.fo.remain.CompMaterial;
+import org.mineacademy.fo.settings.Lang;
 import org.mineacademy.fo.settings.SimpleSettings;
 
 /**
@@ -26,7 +27,7 @@ public final class SpawnRuleLocationsMenu extends MenuPaged<String> {
 	private SpawnRuleLocationsMenu(Menu parent, Set<String> oldLocations, Consumer<Set<String>> setter) {
 		super(parent, BossLocation.getLocationsNames(), true);
 
-		this.setTitle("Select Spawn Locations");
+		this.setTitle(Lang.legacy("menu-spawn-rule-locations-title"));
 
 		this.oldLocations = oldLocations;
 		this.setter = setter;
@@ -38,13 +39,8 @@ public final class SpawnRuleLocationsMenu extends MenuPaged<String> {
 
 		return ItemCreator.from(
 				CompMaterial.PAPER,
-				locationName + " Location",
-				"",
-				"Status: " + (has ? "&aBoss spawns here" : "&cBoss doesn't spawn here"),
-				"",
-				"Click to toggle if",
-				"the Boss will spawn",
-				"in this location.")
+				Lang.legacy("menu-spawn-rule-locations-item", "location", locationName),
+				Lang.legacy("menu-spawn-rule-locations-item-lore", "status", has ? Lang.legacy("menu-spawn-rule-locations-spawns") : Lang.legacy("menu-spawn-rule-locations-no-spawns")).split("\n"))
 				.glow(has)
 				.make();
 	}
@@ -60,7 +56,7 @@ public final class SpawnRuleLocationsMenu extends MenuPaged<String> {
 			this.oldLocations.add(locationName);
 
 		this.setter.accept(this.oldLocations);
-		this.restartMenu(has ? "&4Boss no longer spawns in " + locationName : "&2Boss now spawns in " + locationName);
+		this.restartMenu(has ? Lang.legacy("menu-spawn-rule-locations-disabled", "location", locationName) : Lang.legacy("menu-spawn-rule-locations-enabled", "location", locationName));
 	}
 
 	/**
@@ -68,33 +64,17 @@ public final class SpawnRuleLocationsMenu extends MenuPaged<String> {
 	 */
 	@Override
 	protected String[] getInfo() {
-		return new String[] {
-				"Select blocks where this rule",
-				"will spawn each Boss. You can",
-				"create new locations using tool",
-				"via '&6/boss tools&7'.",
-				"",
-				"&6Tip: &7To save time, you can stop",
-				"the server and write locations",
-				"manually into your spawnrule yml",
-				"file in the spawnrules/ folder."
-		};
+		return Lang.legacy("menu-spawn-rule-locations-info").split("\n");
 	}
 
 	public static Button createButton(Menu parent, Set<String> locations, Consumer<Set<String>> setter, boolean respawn) {
 		return new ButtonMenu(new SpawnRuleLocationsMenu(parent, locations, setter),
 				CompMaterial.MAP,
-				"Locations",
-				"",
-				"Selected: &f" + locations.size() + "&8/&f" + BossLocation.getLocations().size(),
-				"",
-				"Click to choose locations",
-				"where to spawn Bosses",
-				"you selected in this rule.",
-				"",
-				(respawn ? "&cWe choose 1 location randomly" : ""),
-				"",
-				"You can create locations",
-				"using '/" + SimpleSettings.MAIN_COMMAND_ALIASES.get(0) + " tools' command.");
+				Lang.legacy("menu-spawn-rule-locations-button"),
+				Lang.legacy("menu-spawn-rule-locations-button-lore",
+						"selected", locations.size(),
+						"total", BossLocation.getLocations().size(),
+						"respawn_notice", respawn ? Lang.legacy("menu-spawn-rule-locations-button-respawn") : "",
+						"label", SimpleSettings.MAIN_COMMAND_ALIASES.get(0)).split("\n"));
 	}
 }
