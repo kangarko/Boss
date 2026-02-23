@@ -121,11 +121,8 @@ abstract class SpawnRuleDateRange extends SpawnRule {
 						@Override
 						protected boolean isInputValid(ConversationContext context, String input) {
 
-							if ("-1".equals(input)) {
-								SpawnRuleDateRange.this.setWhichHours(null);
-
+							if ("-1".equals(input))
 								return true;
-							}
 
 							try {
 								final String[] split = input.split("\\-");
@@ -134,11 +131,8 @@ abstract class SpawnRuleDateRange extends SpawnRule {
 									final int from = Integer.parseInt(split[0].trim());
 									final int to = split.length == 2 ? Integer.parseInt(split[1].trim()) : from;
 
-									if (from >= 0 && to <= 24) {
-										SpawnRuleDateRange.this.setWhichHours(new Tuple<>(from, to));
-
+									if (from >= 0 && to <= 23)
 										return true;
-									}
 								}
 							} catch (final Throwable t) {
 							}
@@ -147,8 +141,21 @@ abstract class SpawnRuleDateRange extends SpawnRule {
 						}
 
 						@Override
+						protected void onValidatedInput(ConversationContext context, String input) {
+							if ("-1".equals(input))
+								SpawnRuleDateRange.this.setWhichHours(null);
+							else {
+								final String[] split = input.split("\\-");
+								final int from = Integer.parseInt(split[0].trim());
+								final int to = split.length == 2 ? Integer.parseInt(split[1].trim()) : from;
+
+								SpawnRuleDateRange.this.setWhichHours(new Tuple<>(from, to));
+							}
+						}
+
+						@Override
 						protected String getFailedValidationText(ConversationContext context, String invalidInput) {
-							return "Invalid hour range '" + invalidInput + "'! Enter -1 for any hour, or type the hour from 0-24.";
+							return "Invalid hour range '" + invalidInput + "'! Enter -1 for any hour, or type the hour from 0-23.";
 						}
 
 						@Override
@@ -175,11 +182,8 @@ abstract class SpawnRuleDateRange extends SpawnRule {
 						@Override
 						protected boolean isInputValid(ConversationContext context, String input) {
 
-							if ("-1".equals(input)) {
-								SpawnRuleDateRange.this.setWhichMinutes(null);
-
+							if ("-1".equals(input))
 								return true;
-							}
 
 							try {
 								final String[] split = input.split("\\-");
@@ -188,11 +192,8 @@ abstract class SpawnRuleDateRange extends SpawnRule {
 									final int from = Integer.parseInt(split[0].trim());
 									final int to = split.length == 2 ? Integer.parseInt(split[1].trim()) : from;
 
-									if (from >= 0 && to <= 60) {
-										SpawnRuleDateRange.this.setWhichMinutes(new Tuple<>(from, to));
-
+									if (from >= 0 && to <= 59)
 										return true;
-									}
 								}
 							} catch (final Throwable t) {
 							}
@@ -201,8 +202,21 @@ abstract class SpawnRuleDateRange extends SpawnRule {
 						}
 
 						@Override
+						protected void onValidatedInput(ConversationContext context, String input) {
+							if ("-1".equals(input))
+								SpawnRuleDateRange.this.setWhichMinutes(null);
+							else {
+								final String[] split = input.split("\\-");
+								final int from = Integer.parseInt(split[0].trim());
+								final int to = split.length == 2 ? Integer.parseInt(split[1].trim()) : from;
+
+								SpawnRuleDateRange.this.setWhichMinutes(new Tuple<>(from, to));
+							}
+						}
+
+						@Override
 						protected String getFailedValidationText(ConversationContext context, String invalidInput) {
-							return "Invalid minute range '" + invalidInput + "'! Enter -1 for any hour, or type the minutes from 0-60.";
+							return "Invalid minute range '" + invalidInput + "'! Enter -1 for any minute, or type the minutes from 0-59.";
 						}
 
 						@Override

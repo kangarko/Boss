@@ -155,7 +155,7 @@ abstract class SpawnRuleDateExact extends SpawnRule {
 
 						@Override
 						protected String getFailedValidationText(ConversationContext context, String invalidInput) {
-							return "Invalid minute '" + invalidInput + "'! Enter -1 for any minute, or type the hour from 0-59.";
+							return "Invalid minute '" + invalidInput + "'! Enter -1 for any minute, or type the minute from 0-59.";
 						}
 
 						@Override

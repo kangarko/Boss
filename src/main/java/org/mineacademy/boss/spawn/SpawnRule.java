@@ -10,6 +10,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 import javax.annotation.Nullable;
 
@@ -449,55 +450,11 @@ public abstract class SpawnRule extends YamlConfig {
 				"levels to spawn",
 				"Bosses within.")));
 
-		buttons.add(new Button() {
+		buttons.add(this.createWeatherButton(CompMaterial.BUCKET, "Requires Rain", "rain", "raining",
+				this::isRainingRequired, this::setRainingRequired));
 
-			@Override
-			public void onClickedInMenu(Player player, Menu menu, ClickType click) {
-				final boolean has = SpawnRule.this.rainingRequired;
-				SpawnRule.this.setRainingRequired(!has);
-
-				menu.restartMenu(has ? "&4Boss no longer requires rain" : "&2Boss will only spawn on rain");
-			}
-
-			@Override
-			public ItemStack getItem() {
-				return ItemCreator.from(
-						CompMaterial.BUCKET,
-						"&bRequires Rain",
-						"",
-						"Status: " + (SpawnRule.this.rainingRequired ? "&cRequired" : "&aNot required"),
-						"",
-						"Is this spawn rule only",
-						"active when it's raining?")
-						.glow(SpawnRule.this.rainingRequired)
-						.make();
-			}
-		});
-
-		buttons.add(new Button() {
-
-			@Override
-			public void onClickedInMenu(Player player, Menu menu, ClickType click) {
-				final boolean has = SpawnRule.this.thunderRequired;
-				SpawnRule.this.setThunderRequired(!has);
-
-				menu.restartMenu(has ? "&4Boss no longer requires thunder" : "&2Boss only spawns during thunder");
-			}
-
-			@Override
-			public ItemStack getItem() {
-				return ItemCreator.from(
-						CompMaterial.WATER_BUCKET,
-						"&bRequires Thunder",
-						"",
-						"Status: " + (SpawnRule.this.thunderRequired ? "&cRequired" : "&aNot required"),
-						"",
-						"Is this spawn rule only",
-						"active when it's thundering?")
-						.glow(SpawnRule.this.thunderRequired)
-						.make();
-			}
-		});
+		buttons.add(this.createWeatherButton(CompMaterial.WATER_BUCKET, "Requires Thunder", "thunder", "thundering",
+				this::isThunderRequired, this::setThunderRequired));
 
 		buttons.add(new ButtonConversation(new ChancePrompt(), ItemCreator.from(
 				CompMaterial.GOLD_INGOT,
@@ -510,6 +467,34 @@ public abstract class SpawnRule extends YamlConfig {
 				"each time it is checked.")));
 
 		return buttons;
+	}
+
+	private Button createWeatherButton(CompMaterial material, String title, String weatherName, String gerund,
+			Supplier<Boolean> getter, Consumer<Boolean> setter) {
+		return new Button() {
+
+			@Override
+			public void onClickedInMenu(Player player, Menu menu, ClickType click) {
+				final boolean has = getter.get();
+				setter.accept(!has);
+
+				menu.restartMenu(has ? "&4Boss no longer requires " + weatherName : "&2Boss will only spawn during " + weatherName);
+			}
+
+			@Override
+			public ItemStack getItem() {
+				return ItemCreator.from(
+						material,
+						"&b" + title,
+						"",
+						"Status: " + (getter.get() ? "&cRequired" : "&aNot required"),
+						"",
+						"Is this spawn rule only",
+						"active when it's " + gerund + "?")
+						.glow(getter.get())
+						.make();
+			}
+		};
 	}
 
 	/**
@@ -634,7 +619,6 @@ public abstract class SpawnRule extends YamlConfig {
 
 				return value.getMinLong() >= 0 && value.getMaxLong() <= 24000 && value.getMinLong() <= value.getMaxLong();
 			} catch (final Throwable t) {
-				t.printStackTrace();
 			}
 
 			return false;
