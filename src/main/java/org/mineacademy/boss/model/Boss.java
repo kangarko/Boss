@@ -1,5 +1,10 @@
 package org.mineacademy.boss.model;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -24,7 +29,6 @@ import org.bukkit.Chunk;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.EnderDragon;
 import org.bukkit.entity.EnderDragon.Phase;
 import org.bukkit.entity.Entity;
@@ -55,6 +59,7 @@ import org.mineacademy.fo.ChatUtil;
 import org.mineacademy.fo.Common;
 import org.mineacademy.fo.CommonCore;
 import org.mineacademy.fo.EntityUtil;
+import org.mineacademy.fo.FileUtil;
 import org.mineacademy.fo.MathUtil;
 import org.mineacademy.fo.MinecraftVersion;
 import org.mineacademy.fo.MinecraftVersion.V;
@@ -439,7 +444,127 @@ public final class Boss extends YamlConfig implements ConfigStringSerializable {
 				" for data loss, hair loss, your ego or thermonuclear war from mistakes in your edit.",
 				" -------------------------------------------------------------------------------------------------");
 
-		this.loadAndExtract(NO_DEFAULT, "bosses/" + name + ".yml");
+		try {
+			this.loadAndExtract(NO_DEFAULT, "bosses/" + name + ".yml");
+
+		} catch (final Throwable t) {
+			if (t.getMessage() != null && t.getMessage().contains("Non scalar key")) {
+				CommonCore.warning("Boss '" + name + "' has old-format Player drops. Migrating to new format (backup saved as .old file).");
+
+				this.migratePlayerDropsInFile(name);
+				this.loadAndExtract(NO_DEFAULT, "bosses/" + name + ".yml");
+			} else
+				throw t;
+		}
+	}
+
+	/*
+	 * Migrate old complex-key Player drops format (? ==: ItemStack / : chance)
+	 * to new Tuple format (Key: ItemStack / Value: chance) in the raw YAML file,
+	 * since snakeyaml-engine v2 cannot parse non-scalar map keys.
+	 */
+	private void migratePlayerDropsInFile(final String name) {
+		final File file = FileUtil.getFile("bosses/" + name + ".yml");
+
+		try {
+			Files.copy(file.toPath(), new File(file.getPath() + ".old").toPath(), StandardCopyOption.REPLACE_EXISTING);
+
+			final List<String> lines = Files.readAllLines(file.toPath(), StandardCharsets.UTF_8);
+			final List<String> result = new ArrayList<>();
+			boolean inPlayer = false;
+			boolean inKey = false;
+			int playerIndent = -1;
+			int qIndent = -1;
+
+			for (final String line : lines) {
+				final String trimmed = line.trim();
+				final int indent = line.length() - line.replaceAll("^\\s+", "").length();
+
+				if (trimmed.startsWith("Player:") && !trimmed.startsWith("Player_")) {
+					inPlayer = true;
+					inKey = false;
+					playerIndent = indent;
+					result.add(line);
+
+					continue;
+				}
+
+				if (!inPlayer) {
+					result.add(line);
+
+					continue;
+				}
+
+				if (!trimmed.isEmpty() && indent <= playerIndent && trimmed.matches("^[A-Za-z_].*:.*")) {
+					inPlayer = false;
+					inKey = false;
+					result.add(line);
+
+					continue;
+				}
+
+				if (trimmed.startsWith("- ?")) {
+					inKey = true;
+					qIndent = indent + 2;
+
+					final int qPos = trimmed.indexOf('?');
+					final String afterQ = trimmed.length() > qPos + 1 ? trimmed.substring(qPos + 1).trim() : "";
+
+					result.add(repeatSpaces(indent) + "- - Key:");
+
+					if (!afterQ.isEmpty())
+						result.add(repeatSpaces(qIndent + 4) + afterQ);
+
+					continue;
+				}
+
+				if (trimmed.startsWith("?")) {
+					inKey = true;
+					qIndent = indent;
+
+					final String afterQ = trimmed.substring(1).trim();
+
+					result.add(repeatSpaces(qIndent) + "- Key:");
+
+					if (!afterQ.isEmpty())
+						result.add(repeatSpaces(qIndent + 4) + afterQ);
+
+					continue;
+				}
+
+				if (inKey && trimmed.startsWith(":") && indent == qIndent) {
+					inKey = false;
+
+					final String value = trimmed.substring(1).trim();
+
+					result.add(repeatSpaces(qIndent + 2) + "Value: " + value);
+
+					continue;
+				}
+
+				if (inKey && indent > qIndent) {
+					result.add("  " + line);
+
+					continue;
+				}
+
+				result.add(line);
+			}
+
+			Files.write(file.toPath(), result, StandardCharsets.UTF_8);
+
+		} catch (final IOException ex) {
+			throw new FoException(ex, "Failed to migrate old Player drops format in " + file, false);
+		}
+	}
+
+	private static String repeatSpaces(final int count) {
+		final StringBuilder sb = new StringBuilder(count);
+
+		for (int i = 0; i < count; i++)
+			sb.append(' ');
+
+		return sb.toString();
 	}
 
 	/*
@@ -553,33 +678,47 @@ public final class Boss extends YamlConfig implements ConfigStringSerializable {
 		final Object obj = this.getObject("Drops.Player");
 
 		if (obj != null) {
-			if (obj instanceof ConfigurationSection)
-				throw new FoException(
-						"Drops.Player must be a list of maps, not a map of maps. Contact us to report this issue. Got: "
-								+ ((ConfigurationSection) obj).getValues(false));
-
 			if (!(obj instanceof List))
-				throw new FoException("Drops.Player must be a list of maps, not a " + obj.getClass().getSimpleName()
+				throw new FoException("Drops.Player must be a list, not a " + obj.getClass().getSimpleName()
 						+ ". Contact us to report this issue. Got: " + obj);
 
-			for (final Object raw : (List<?>) obj) {
-				final Map<?, ?> map = (Map<?, ?>) raw;
+			for (final Object rawOrder : (List<?>) obj) {
+				if (!(rawOrder instanceof List))
+					throw new FoException("Each entry in Drops.Player must be a list of Tuples, not a " + rawOrder.getClass().getSimpleName()
+							+ ". Got: " + rawOrder);
+
 				final Map<ItemStack, Double> converted = new LinkedHashMap<>();
 
-				for (final Map.Entry<?, ?> entry : map.entrySet())
-					if (entry.getKey() != null && entry.getValue() != null) {
-						final ItemStack item = SerializeUtil.deserialize(SerializeUtil.Language.YAML, ItemStack.class,
-								entry.getKey());
-						final double dropChance = Double.parseDouble(entry.getValue().toString());
+				for (final Object rawTuple : (List<?>) rawOrder) {
+					if (rawTuple == null)
+						continue;
 
-						converted.put(item, dropChance);
-					}
+					final Tuple<ItemStack, Double> tuple = Tuple.deserialize(SerializedMap.fromObject(rawTuple), ItemStack.class, Double.class);
+
+					if (tuple.getKey() != null && tuple.getValue() != null)
+						converted.put(tuple.getKey(), tuple.getValue());
+				}
 
 				drops.add(converted);
 			}
 		}
 
 		return drops;
+	}
+
+	private List<List<Tuple<ItemStack, Double>>> convertPlayerDropsToTuples() {
+		final List<List<Tuple<ItemStack, Double>>> result = new ArrayList<>();
+
+		for (final Map<ItemStack, Double> orderDrops : this.playerDrops) {
+			final List<Tuple<ItemStack, Double>> tuples = new ArrayList<>();
+
+			for (final Map.Entry<ItemStack, Double> entry : orderDrops.entrySet())
+				tuples.add(new Tuple<>(entry.getKey(), entry.getValue()));
+
+			result.add(tuples);
+		}
+
+		return result;
 	}
 
 	private List<Tuple<ItemStack, Double>> loadGeneralDrops() {
@@ -672,7 +811,7 @@ public final class Boss extends YamlConfig implements ConfigStringSerializable {
 		this.set("Skills", this.skills);
 		this.set("Drops.Vanilla", this.vanillaDrops);
 		this.set("Drops.General", this.generalDrops);
-		this.set("Drops.Player", this.playerDrops);
+		this.set("Drops.Player", this.convertPlayerDropsToTuples());
 		this.set("Drops.Player_Time_Threshold", this.playerDropsTimeThreshold);
 		this.set("Drops.Player_Commands", this.playerDropsCommands);
 		this.set("Limit_Reasons", this.limitReasons);
