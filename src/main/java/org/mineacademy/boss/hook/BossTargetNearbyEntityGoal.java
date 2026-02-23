@@ -9,11 +9,11 @@ import org.bukkit.entity.EntityType;
 import org.mineacademy.boss.model.Boss;
 
 import net.citizensnpcs.api.ai.event.CancelReason;
-import net.citizensnpcs.api.ai.tree.BehaviorGoalAdapter;
+import net.citizensnpcs.api.ai.tree.Behavior;
 import net.citizensnpcs.api.ai.tree.BehaviorStatus;
 import net.citizensnpcs.api.npc.NPC;
 
-public class BossTargetNearbyEntityGoal extends BehaviorGoalAdapter {
+public class BossTargetNearbyEntityGoal implements Behavior {
 
 	private final boolean aggressive;
 	private boolean finished;

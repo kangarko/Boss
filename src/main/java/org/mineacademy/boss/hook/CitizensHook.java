@@ -42,7 +42,7 @@ import com.google.gson.JsonObject;
 
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.ai.EntityTarget;
-import net.citizensnpcs.api.ai.Goal;
+import net.citizensnpcs.api.ai.tree.Behavior;
 import net.citizensnpcs.api.ai.Navigator;
 import net.citizensnpcs.api.ai.goals.WanderGoal;
 import net.citizensnpcs.api.npc.MetadataStore;
@@ -211,23 +211,23 @@ public final class CitizensHook {
 		data.setPersistent(NPC.Metadata.DAMAGE_OTHERS, true);
 
 		if (citizens.isTargetGoalEnabled()) {
-			final Goal goal = BossTargetNearbyEntityGoal.builder(npc)
+			final Behavior goal = BossTargetNearbyEntityGoal.builder(npc)
 					.aggressive(citizens.isTargetGoalAggressive())
 					.radius(citizens.getTargetGoalRadius())
 					.targets(citizens.getTargetGoalEntities())
 					.build();
 
-			npc.getDefaultGoalController().addGoal(goal, 1);
+			npc.getDefaultBehaviorController().addBehavior(goal);
 		}
 
 		if (citizens.isWanderGoalEnabled())
 			try {
-				npc.getDefaultGoalController().addGoal(WanderGoal.builder(npc).xrange(citizens.getWanderGoalRadius()).yrange(citizens.getWanderGoalRadius()).build(), citizens.getWanderGoalRadius());
+				npc.getDefaultBehaviorController().addBehavior(WanderGoal.builder(npc).xrange(citizens.getWanderGoalRadius()).yrange(citizens.getWanderGoalRadius()).build());
 			} catch (final NoSuchMethodError ex) {
-				// Outdatd
+				// Outdated
 			}
 		else
-			npc.getDefaultGoalController().cancelCurrentExecution();
+			npc.getDefaultBehaviorController().clear();
 
 		final Navigator navigator = npc.getNavigator();
 
