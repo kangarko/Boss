@@ -153,6 +153,9 @@ public final class BossMenu extends Menu {
 
 	public static void showTo(Menu parent, Player player, Boss boss) {
 		for (final Player online : Remain.getOnlinePlayers()) {
+			if (online.equals(player))
+				continue;
+
 			Menu otherMenu = Menu.getMenu(online);
 
 			if (otherMenu != null) {
