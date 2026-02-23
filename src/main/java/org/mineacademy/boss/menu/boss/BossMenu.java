@@ -52,46 +52,63 @@ public final class BossMenu extends Menu {
 
 		this.boss = boss;
 
-		this.setTitle(Lang.legacy("menu-boss-title", "boss", boss.getName()));
+		this.setTitle("Boss " + boss.getName());
 		this.setSize(9 * 4);
 
 		this.settingsButton = new ButtonMenu(new SettingsMenu(this, boss),
 				CompMaterial.CHEST,
-				Lang.legacy("menu-boss-button-settings"),
-				Lang.legacy("menu-boss-button-settings-lore").split("\n"));
+				"&6Settings",
+				"",
+				"Edit how this Boss behaves",
+				"or looks like, when spawned.");
 
 		this.skillsButton = new ButtonMenu(new SkillsMenu(this, boss),
 				CompMaterial.ENDER_EYE,
-				Lang.legacy("menu-boss-button-skills"),
-				Lang.legacy("menu-boss-button-skills-lore").split("\n"));
+				"&bSkills",
+				"",
+				"Give your Boss special",
+				"functions or abilities.");
 
 		this.deathButton = new ButtonMenu(new DeathMenu(this, boss),
 				CompMaterial.BONE,
-				Lang.legacy("menu-boss-button-death"),
-				Lang.legacy("menu-boss-button-death-lore").split("\n"));
+				"Death",
+				"",
+				"Edit what happens when",
+				"your Boss dies.");
 
 		this.spawningButton = new ButtonMenu(new SpawningMenu(this, boss),
 				CompMaterial.OAK_SAPLING,
-				Lang.legacy("menu-boss-button-spawning"),
-				Lang.legacy("menu-boss-button-spawning-lore").split("\n"));
+				"&aSpawning",
+				"",
+				"Select how and when",
+				"to spawn this Boss.");
 
 		this.eggButton = Button.makeSimple(ItemCreator.fromItemStack(boss.getEgg()).clearLore()
-				.name(Lang.legacy("menu-boss-button-egg"))
-				.lore(Lang.legacy("menu-boss-button-egg-lore",
-						"permission_egg", Permissions.Use.SPAWNER_EGG,
-						"permission_spawn", Permissions.Spawn.BOSS.replace("{boss}", boss.getName())).split("\n")),
+				.name("Get Spawner Egg")
+				.lore("",
+						"Receive a Boss egg you",
+						"can use to spawn the Boss.",
+						"",
+						"&cTip: &7Give players permissions",
+						"below to use this spawner egg:",
+						"&c&o" + Permissions.Use.SPAWNER_EGG,
+						"&c&o" + Permissions.Spawn.BOSS.replace("{boss}", boss.getName())),
 				click -> {
 					this.getViewer().getInventory().addItem(boss.getEgg());
 				});
 
 		this.butcherButton = Button.makeSimple(ItemCreator.from(
 				CompMaterial.RED_DYE,
-				Lang.legacy("menu-boss-button-butcher"),
-				Lang.legacy("menu-boss-button-butcher-lore", "label", SimpleSettings.MAIN_COMMAND_ALIASES.get(0)).split("\n")),
+				"&cKill Bosses",
+				"Remove alive Bosses in all",
+				"worlds in loaded chunks.",
+				"",
+				"&cTip: &7Use /" + SimpleSettings.MAIN_COMMAND_ALIASES.get(0) + " butcher",
+				"command for more options."),
 				player -> {
 					final int count = Boss.killAliveBosses(boss);
 
-					this.animateTitle(Lang.legacy("menu-boss-button-butcher-success", "amount", Lang.numberFormat("case-boss", count)));
+					this.animateTitle("&4Killed " + Lang.numberFormat("case-boss", count));
 				});
 
 		final String bossBame = boss.getName();
@@ -104,10 +121,10 @@ public final class BossMenu extends Menu {
 				final Menu nextMenu = Boss.getBosses().isEmpty() ? MainMenu.create() : SelectBossMenu.create();
 
 				nextMenu.displayTo(this.getViewer());
-				Platform.runTask(2, () -> nextMenu.animateTitle(Lang.legacy("menu-boss-removed", "boss", boss.getName())));
+				Platform.runTask(2, () -> nextMenu.animateTitle("&4Removed Boss " + boss.getName()));
 
 			} else
-				this.animateTitle(Lang.legacy("menu-boss-not-loaded"));
+				this.animateTitle("&4Boss not loaded!");
 		});
 	}
 
@@ -118,7 +135,14 @@ public final class BossMenu extends Menu {
 
 	@Override
 	protected String[] getInfo() {
-		return Lang.legacy("menu-boss-info").split("\n");
+		return new String[] {
+				"This the main Boss' menu.",
+				"Edit how the Boss looks",
+				"like or behaves here.",
+				"",
+				"Your Boss on your worlds",
+				"will update automatically."
+		};
 	}
 
 	// ------------------------------------------------------------------------------------------------------------
@@ -140,9 +164,9 @@ public final class BossMenu extends Menu {
 					final Menu playerMenu = Menu.getMenu(player);
 
 					if (playerMenu != null)
-						playerMenu.animateTitle(Lang.legacy("menu-boss-browsing-warning", "player", online.getName()));
+						playerMenu.animateTitle("&4" + online.getName() + " is browsing this!");
 					else
-						Messenger.error(player, Lang.legacy("menu-boss-browsing-error", "player", online.getName()));
+						Messenger.error(player, "Cannot open Boss menu while " + online.getName() + " is browsing it!");
 
 					return;
 				}

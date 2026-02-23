@@ -53,25 +53,33 @@ public final class SelectSpawnRuleMenu extends MenuPaged<SpawnRule> {
 
 		this.bossFor = bossFor;
 
-		this.setTitle(Lang.legacy("menu-spawn-rules-title"));
+		this.setTitle("Create Or Edit Spawn Rules");
 
 		this.createButton = new ButtonMenu(new ConditionSelectMenu(),
 				CompMaterial.EMERALD,
-				Lang.legacy("menu-spawn-rules-button-create"),
-				Lang.legacy("menu-spawn-rules-button-create-lore").split("\n"));
+				"&aCreate New",
+				"",
+				"Click to add a new",
+				"way for your Boss",
+				"to spawn naturally.");
 	}
 
 	@Override
 	protected ItemStack convertToItemStack(SpawnRule item) {
 
 		final List<String> warning = item.getBosses().getList().isEmpty()
-				? Arrays.asList(Lang.legacy("menu-spawn-rules-item-warning").split("\n"))
+				? Arrays.asList("", "&cWarning: This rule has no", "&cBosses it applies for.", "&cOpen and configure it.")
 				: new ArrayList<>();
 
 		return ItemCreator.from(
 				item.getType().getIconType(),
 				item.getName(),
-				Lang.legacy("menu-spawn-rules-item-lore", "type", item.getType().getDescription()).split("\n"))
+				"",
+				"Type: &f" + item.getType().getDescription(),
+				"",
+				"Click to enter and set",
+				"up conditions when",
+				"Bosses will appear.")
 				.lore(warning)
 				.make();
 	}
@@ -86,7 +94,13 @@ public final class SelectSpawnRuleMenu extends MenuPaged<SpawnRule> {
 	 */
 	@Override
 	protected String[] getInfo() {
-		return Lang.legacy("menu-spawn-rules-info").split("\n");
+		return new String[] {
+				"Spawns rules make it easy",
+				"to spawn Boss automatically",
+				"on a certain day, or randomly",
+				"around players. You can create",
+				"or edit spawn rules here."
+		};
 	}
 
 	@Override
@@ -115,36 +129,67 @@ public final class SelectSpawnRuleMenu extends MenuPaged<SpawnRule> {
 			super(SelectSpawnRuleMenu.this);
 
 			this.setSize(9 * 2);
-			this.setTitle(Lang.legacy("menu-spawn-rules-condition-title"));
+			this.setTitle("Select How To Spawn Bosses");
 
 			this.locationPeriodButton = this.generateButton(SpawnRuleType.LOCATION_PERIOD,
 					CompMaterial.SPAWNER,
-					Lang.legacy("menu-spawn-rules-condition-location-period"),
-					Lang.legacy("menu-spawn-rules-condition-location-period-lore").split("\n"));
+					"On A Block At A Given Time",
+					"",
+					"Spawn Boss at a block",
+					"you select every day",
+					"at 17:00, each Friday",
+					"at noon or every 30 mins.");
 
 			this.regionEnterButton = Settings.REGISTER_REGIONS ? this.generateButton(SpawnRuleType.REGION_ENTER,
 					CompMaterial.ORANGE_DYE,
-					Lang.legacy("menu-spawn-rules-condition-region-enter"),
-					Lang.legacy("menu-spawn-rules-condition-region-enter-lore").split("\n"))
+					"On Entering A Region",
+					"",
+					"Spawn Boss every time on",
+					"your custom location when",
+					"players enter a region.",
+					"(Requires Boss Region and",
+					"Boss Location, see /boss tools)")
 					: Button.makeDummy(
 							CompMaterial.ORANGE_DYE,
-							Lang.legacy("menu-spawn-rules-condition-region-enter"),
-							Lang.legacy("menu-spawn-rules-condition-region-disabled-lore").split("\n"));
+							"On Entering A Region",
+							"",
+							"&cThis feature is disabled.",
+							"&cEnable Register_Regions in",
+							"&csettings.yml first.");
 
 			this.respawnAfterDeathButton = this.generateButton(SpawnRuleType.RESPAWN_AFTER_DEATH,
 					CompMaterial.BONE,
-					Lang.legacy("menu-spawn-rules-condition-respawn"),
-					Lang.legacy("menu-spawn-rules-condition-respawn-lore").split("\n"));
+					"Respawn After Death",
+					"",
+					"Spawn the next Boss after",
+					"a given delay after the",
+					"previous Boss dies.",
+					"",
+					"This rule only spawns 1 Boss.",
+					"We mark the spawned Boss with",
+					"invisible metadata and wait the",
+					"given delay to respawn it.",
+					"",
+					"This rule is unaffected by other",
+					"rules.");
 
 			this.periodButton = this.generateButton(SpawnRuleType.PERIOD,
 					CompMaterial.PLAYER_HEAD,
-					Lang.legacy("menu-spawn-rules-condition-period"),
-					Lang.legacy("menu-spawn-rules-condition-period-lore").split("\n"));
+					"Randomly Around Players",
+					"",
+					"Spawn Boss around players",
+					"like vanilla mobs. Your",
+					"vanilla mobs won't be",
+					"affected.");
 
 			this.replaceVanillaButton = this.generateButton(SpawnRuleType.REPLACE_VANILLA,
 					CompMaterial.OAK_SAPLING,
-					Lang.legacy("menu-spawn-rules-condition-replace"),
-					Lang.legacy("menu-spawn-rules-condition-replace-lore").split("\n"));
+					"Replacing Vanilla Mobs",
+					"",
+					"Replace vanilla mobs",
+					"with Bosses, with a",
+					"configurable chance",
+					"and limits.");
 		}
 
 		protected Button generateButton(SpawnRuleType type, CompMaterial material, String name, String... lore) {
@@ -160,7 +205,10 @@ public final class SelectSpawnRuleMenu extends MenuPaged<SpawnRule> {
 
 		@Override
 		protected String[] getInfo() {
-			return Lang.legacy("menu-spawn-rules-condition-info").split("\n");
+			return new String[] {
+					"Select how we will spawn",
+					"your Boss across worlds."
+			};
 		}
 	}
 
@@ -180,7 +228,7 @@ public final class SelectSpawnRuleMenu extends MenuPaged<SpawnRule> {
 		IndividualSpawningMenu(Menu parent, SpawnRule spawnRule) {
 			super(parent);
 
-			this.setTitle(Lang.legacy("menu-spawn-rules-individual-title", "rule", spawnRule.getName()));
+			this.setTitle(spawnRule.getName() + " Settings");
 
 			this.spawnRule = spawnRule;
 
@@ -192,7 +240,7 @@ public final class SelectSpawnRuleMenu extends MenuPaged<SpawnRule> {
 				if (SpawnRule.isRuleLoaded(spawnRuleName))
 					SpawnRule.removeRule(spawnRule);
 				else
-					this.animateTitle(Lang.legacy("menu-spawn-rules-individual-rule-not-loaded"));
+					this.animateTitle("&4Rule not loaded!");
 			});
 
 			this.enabledButton = new Button() {
@@ -206,17 +254,21 @@ public final class SelectSpawnRuleMenu extends MenuPaged<SpawnRule> {
 					final Menu newInstance = newInstance();
 					newInstance.displayTo(player);
 
-					Platform.runTask(1, () -> newInstance.restartMenu(!has ? Lang.legacy("menu-spawn-rules-individual-enabled-message") : Lang.legacy("menu-spawn-rules-individual-disabled-message")));
+					Platform.runTask(1, () -> newInstance.restartMenu(!has ? "&2Enabled this spawn rule" : "&4Disabled spawn rule :("));
 				}
 
 				@Override
 				public ItemStack getItem() {
 					final boolean has = spawnRule.isEnabled();
 
-					return ItemCreator.from(
-							has ? CompMaterial.BEACON : CompMaterial.GLASS,
-							Lang.legacy("menu-spawn-rules-individual-enabled"),
-							Lang.legacy("menu-spawn-rules-individual-enabled-lore", "status", has ? Lang.legacy("part-enabled") : Lang.legacy("part-disabled")).split("\n"))
+				return ItemCreator.from(
+						has ? CompMaterial.BEACON : CompMaterial.GLASS,
+						"Enabled?",
+						"",
+						"Status: " + (has ? Lang.legacy("part-enabled") : Lang.legacy("part-disabled")),
+						"",
+						"Click to toggle this spawn",
+						"rule from functioning.")
 							.glow(has)
 							.make();
 				}
@@ -233,7 +285,19 @@ public final class SelectSpawnRuleMenu extends MenuPaged<SpawnRule> {
 			 */
 		@Override
 		protected String[] getInfo() {
-			return Lang.legacy("menu-spawn-rules-individual-info").split("\n");
+			return new String[] {
+					"Edit the conditions under which",
+					"this spawn rules will function.",
+					"",
+					"&cImportant: &7Please also see the",
+					"Spawning Limits for each boss that",
+					"this rule affects because we will",
+					"take it into account.",
+					"",
+					"&6Tip: &7Set Debug key to [spawning] in",
+					"in settings.yml and reload to see",
+					"console logs why this rule failed."
+			};
 		}
 
 		@Override

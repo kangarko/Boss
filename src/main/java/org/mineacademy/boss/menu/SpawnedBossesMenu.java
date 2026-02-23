@@ -11,7 +11,6 @@ import org.mineacademy.fo.menu.MenuPaged;
 import org.mineacademy.fo.menu.model.ItemCreator;
 import org.mineacademy.fo.remain.CompMaterial;
 import org.mineacademy.fo.remain.Remain;
-import org.mineacademy.fo.settings.Lang;
 
 /**
  * Menu showing all currently alive Bosses with teleport and kill actions.
@@ -21,7 +20,7 @@ public final class SpawnedBossesMenu extends MenuPaged<SpawnedBoss> {
 	protected SpawnedBossesMenu(Menu parent) {
 		super(parent, Boss.findBossesAlive());
 
-		this.setTitle(Lang.legacy("menu-spawned-bosses-title"));
+		this.setTitle("&0Spawned Bosses");
 	}
 
 	@Override
@@ -31,7 +30,7 @@ public final class SpawnedBossesMenu extends MenuPaged<SpawnedBoss> {
 
 		if (entity.isDead() || !entity.isValid())
 			return ItemCreator.from(CompMaterial.BARRIER, "&c" + boss.getName(),
-					Lang.legacy("menu-spawned-bosses-not-alive"))
+					"&4Boss is no longer alive!")
 					.makeMenuTool();
 
 		final int health    = Remain.getHealth(entity);
@@ -41,14 +40,14 @@ public final class SpawnedBossesMenu extends MenuPaged<SpawnedBoss> {
 		return ItemCreator.fromItemStack(boss.getEgg())
 				.name(boss.getName())
 				.clearLore()
-				.lore(Lang.legacy("menu-spawned-bosses-item-lore",
-						"health", health,
-						"max_health", maxHealth,
-						"health_percent", percent,
-						"world", entity.getWorld().getName(),
-						"x", entity.getLocation().getBlockX(),
-						"y", entity.getLocation().getBlockY(),
-						"z", entity.getLocation().getBlockZ()).split("\n"))
+				.lore("",
+						"&7Health: &f" + health + "&7/&f" + maxHealth + " &8(" + percent + "%)",
+						"",
+						"&7World: &f" + entity.getWorld().getName(),
+						"&7Location: &f" + entity.getLocation().getBlockX() + ", " + entity.getLocation().getBlockY() + ", " + entity.getLocation().getBlockZ(),
+						"",
+						"&eLeft-click: &7teleport to Boss",
+						"&cRight-click: &7kill Boss")
 				.makeMenuTool();
 	}
 
@@ -57,7 +56,7 @@ public final class SpawnedBossesMenu extends MenuPaged<SpawnedBoss> {
 		final LivingEntity entity = spawned.getEntity();
 
 		if (entity.isDead() || !entity.isValid()) {
-			this.restartMenu(Lang.legacy("menu-spawned-bosses-not-alive"));
+			this.restartMenu("&4Boss is no longer alive!");
 
 			return;
 		}
@@ -65,18 +64,24 @@ public final class SpawnedBossesMenu extends MenuPaged<SpawnedBoss> {
 		if (click == ClickType.LEFT || click == ClickType.SHIFT_LEFT) {
 			player.teleport(entity);
 
-			this.restartMenu(Lang.legacy("menu-spawned-bosses-teleported", "boss", spawned.getName()));
+			this.restartMenu("&7Teleported to Boss &6" + spawned.getName() + "&7.");
 
 		} else if (click == ClickType.RIGHT || click == ClickType.SHIFT_RIGHT) {
 			Remain.removeEntityWithPassengersAndNPC(entity);
 
-			this.restartMenu(Lang.legacy("menu-spawned-bosses-killed", "boss", spawned.getName()));
+			this.restartMenu("&2Killed " + spawned.getName());
 		}
 	}
 
 	@Override
 	protected String[] getInfo() {
-		return Lang.legacy("menu-spawned-bosses-info").split("\n");
+		return new String[] {
+				"This menu lists all currently",
+				"spawned Bosses in the server.",
+				"",
+				"&8Bosses from 'Replace Vanilla'",
+				"&8spawn rules are excluded."
+		};
 	}
 
 	@Override

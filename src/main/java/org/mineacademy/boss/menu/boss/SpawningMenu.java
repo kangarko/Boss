@@ -29,7 +29,6 @@ import org.mineacademy.fo.menu.model.ItemCreator;
 import org.mineacademy.fo.model.Tuple;
 import org.mineacademy.fo.platform.Platform;
 import org.mineacademy.fo.remain.CompMaterial;
-import org.mineacademy.fo.settings.Lang;
 
 import lombok.RequiredArgsConstructor;
 
@@ -64,16 +63,21 @@ final class SpawningMenu extends Menu {
 		this.boss = boss;
 
 		this.setSize(9 * 4);
-		this.setTitle(Lang.legacy("menu-spawning-title"));
+		this.setTitle("Spawning");
 
 		this.spawnRulesButton = new ButtonMenu(new SelectSpawnRuleMenu(this, boss), CompMaterial.REDSTONE,
-				Lang.legacy("menu-spawning-button-rules"),
-				Lang.legacy("menu-spawning-button-rules-lore").split("\n"));
+				"&cSpawn Rules",
+				"",
+				"Click to manage spawn",
+				"rules for this Boss.");
 
 		this.worldLimitButton = new ButtonMenu(new EditWorldLimitMenu(),
 				CompMaterial.GRASS_BLOCK,
-				Lang.legacy("menu-spawning-button-world-limit"),
-				Lang.legacy("menu-spawning-button-world-limit-lore", "boss", boss.getName()).split("\n"));
+				"World Limits",
+				"",
+				"Click to limit how",
+				"many " + boss.getName() + " Bosses",
+				"can appear in worlds.");
 
 		this.nearbyBossesButton = new Button() {
 
@@ -86,25 +90,43 @@ final class SpawningMenu extends Menu {
 			public ItemStack getItem() {
 				return ItemCreator.from(
 						CompMaterial.FISHING_ROD,
-						Lang.legacy("menu-spawning-button-radius"),
-						Lang.legacy("menu-spawning-button-radius-lore", "limit", boss.getNearbyBossesLimit(), "radius", MathUtil.formatTwoDigits(boss.getNearbyBossesRadiusForLimit())).split("\n")).make();
+						"Radius",
+						"",
+						"Current: Max &3" + boss.getNearbyBossesLimit() + " &7other",
+						"&7Bosses &4" + MathUtil.formatTwoDigits(boss.getNearbyBossesRadiusForLimit()) + " &7blocks near",
+						"&7the spawned Boss.",
+						"",
+						"&3&l< &7Left click to edit other.",
+						"Boss limit.",
+						"",
+						"&4&l> &7Right click to edit block",
+						"radius to scan for Bosses.").make();
 			}
 		};
 
 		this.applyToReasonsButton = new ButtonMenu(new ReasonsSelectionMenu(),
 				CompMaterial.PURPLE_DYE,
-				Lang.legacy("menu-spawning-button-reasons"),
-				Lang.legacy("menu-spawning-button-reasons-lore").split("\n"));
+				"Where Limits Are Applied",
+				"",
+				"You can turn on/off applying",
+				"these limits for certain",
+				"ways the Boss is spawned,",
+				"such as through Boss egg.");
 
 		this.regionKeepingButton = new ButtonMenu(new RegionKeepingMenu(),
 				CompMaterial.SLIME_BLOCK,
-				Lang.legacy("menu-spawning-button-region-keeping"),
-				Lang.legacy("menu-spawning-button-region-keeping-lore").split("\n"));
+				"Region Keeping",
+				"",
+				"Enable forcing Boss to stay",
+				"within the Boss Region he",
+				"spawned in, if it exists.");
 
 		this.spawnEggButton = new ButtonMenu(new SpawnEggMenu(),
 				CompMaterial.ENDERMAN_SPAWN_EGG,
-				Lang.legacy("menu-spawning-button-egg"),
-				Lang.legacy("menu-spawning-button-egg-lore").split("\n"));
+				"Spawn Egg Appearance",
+				"",
+				"Customize spawn egg material,",
+				"title or its lore.");
 	}
 
 	private class EditWorldLimitMenu extends MenuPaged<World> {
@@ -179,7 +201,12 @@ final class SpawningMenu extends Menu {
 	 */
 	@Override
 	protected String[] getInfo() {
-		return Lang.legacy("menu-spawning-info").split("\n");
+		return new String[] {
+				"Configure global limits for all",
+				"Bosses of this kind to prevent",
+				"flooding your server. Also see",
+				"the Spawning section in settings.yml."
+		};
 	}
 
 	@Override

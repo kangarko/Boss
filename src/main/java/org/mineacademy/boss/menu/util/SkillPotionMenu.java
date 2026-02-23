@@ -27,7 +27,6 @@ import org.mineacademy.fo.model.SimpleTime;
 import org.mineacademy.fo.platform.Platform;
 import org.mineacademy.fo.remain.CompMaterial;
 import org.mineacademy.fo.remain.CompPotionEffectType;
-import org.mineacademy.fo.settings.Lang;
 
 import lombok.RequiredArgsConstructor;
 
@@ -48,12 +47,14 @@ public final class SkillPotionMenu extends MenuPaged<PotionEffect> {
 		this.skill = skill;
 		this.potions = potions;
 
-		this.setTitle(Lang.legacy("menu-skill-potions-title"));
+		this.setTitle("Add Skill Potions");
 
 		this.createButton = new ButtonMenu(new NewPotionSelectMenu(),
 				CompMaterial.EMERALD,
-				Lang.legacy("menu-skills-button-create"),
-				Lang.legacy("menu-skills-button-create-lore").split("\n"));
+				"&aCreate New",
+				"",
+				"Click to create",
+				"a new skill.");
 	}
 
 	@Override
@@ -61,8 +62,12 @@ public final class SkillPotionMenu extends MenuPaged<PotionEffect> {
 		final String duration = item.getDuration() >= 20 ? TimeUtil.formatTimeGeneric(item.getDuration() / 20) : item.getDuration() + " ticks";
 
 		return ItemCreator.fromPotion(item,
-				Lang.legacy("menu-skill-potions-item", "potion", ChatUtil.capitalizeFully(item.getType().getName())),
-				Lang.legacy("menu-skill-potions-item-lore", "level", item.getAmplifier() + 1, "duration", duration).split("\n"))
+				ChatUtil.capitalizeFully(item.getType().getName()) + " Effect",
+				"",
+				"Level: " + (item.getAmplifier() + 1),
+				"Duration: " + duration,
+				"",
+				"&4&l< &7Left click to remove")
 				.make();
 	}
 
@@ -72,13 +77,18 @@ public final class SkillPotionMenu extends MenuPaged<PotionEffect> {
 			this.potions.remove(item);
 			this.skill.save();
 
-			this.restartMenu(Lang.legacy("menu-skill-potions-removed"));
+			this.restartMenu("&4Potion has been removed!");
 		}
 	}
 
 	@Override
 	protected String[] getInfo() {
-		return Lang.legacy("menu-skill-potions-info").split("\n");
+		return new String[] {
+				"This skill can add multiple",
+				"potions to the player that",
+				"the Boss targets. Edit them",
+				"here."
+		};
 	}
 
 	@Override
@@ -91,14 +101,16 @@ public final class SkillPotionMenu extends MenuPaged<PotionEffect> {
 		NewPotionSelectMenu() {
 			super(SkillPotionMenu.this, CompPotionEffectType.getPotions(), true);
 
-			this.setTitle(Lang.legacy("menu-skill-potions-new-title"));
+			this.setTitle("Select Potion Type");
 		}
 
 		@Override
 		protected ItemStack convertToItemStack(PotionEffectType item) {
 			return ItemCreator.fromPotion(item,
-					Lang.legacy("menu-skill-potions-new-item", "potion", ChatUtil.capitalizeFully(item.getName())),
-					Lang.legacy("menu-skill-potions-new-item-lore").split("\n"))
+					ChatUtil.capitalizeFully(item.getName()) + " Effect",
+					"",
+					"Click to add the",
+					"effect to skill.")
 					.make();
 		}
 
@@ -109,7 +121,11 @@ public final class SkillPotionMenu extends MenuPaged<PotionEffect> {
 
 		@Override
 		protected String[] getInfo() {
-			return Lang.legacy("menu-skill-potions-new-info").split("\n");
+			return new String[] {
+					"Click to select which",
+					"potion effect to give",
+					"each targeted player."
+			};
 		}
 
 		@Override

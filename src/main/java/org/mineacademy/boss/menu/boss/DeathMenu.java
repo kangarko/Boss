@@ -33,7 +33,6 @@ import org.mineacademy.fo.model.Tuple;
 import org.mineacademy.fo.remain.CompColor;
 import org.mineacademy.fo.remain.CompMaterial;
 import org.mineacademy.fo.remain.CompMonsterEgg;
-import org.mineacademy.fo.settings.Lang;
 
 /**
  * The menu with settings on Boss death.
@@ -56,23 +55,32 @@ final class DeathMenu extends Menu {
 
 		this.boss = boss;
 
-		this.setTitle(Lang.legacy("menu-death-title"));
+		this.setTitle("Death Settings");
 		this.setSize(9 * 3);
 
 		this.dropsButton = new ButtonMenu(new DropsMenu(),
 				CompMaterial.STICK,
-				Lang.legacy("menu-death-button-drops"),
-				Lang.legacy("menu-death-button-drops-lore").split("\n"));
+				"&6Drops",
+				"",
+				"Configure what items",
+				"Boss drops on death");
 
 		this.droppedExpButton = new ButtonConversation(new DroppedExpPrompt(), ItemCreator.from(
 				CompMaterial.EXPERIENCE_BOTTLE,
-				Lang.legacy("menu-death-button-exp"),
-				Lang.legacy("menu-death-button-exp-lore", "exp", boss.getDroppedExpAsString()).split("\n")));
+				"&aDropped Experience",
+				"",
+				"Current: &a" + boss.getDroppedExpAsString() + " XP",
+				"",
+				"Set a custom dropped",
+				"exp on Boss' death."));
 
 		this.reinforcementsButton = new ButtonMenu(new ReinforcementsMenu(),
 				CompMaterial.MAGMA_CREAM,
-				Lang.legacy("menu-death-button-reinforcements"),
-				Lang.legacy("menu-death-button-reinforcements-lore").split("\n"));
+				"&cReinforcements",
+				"",
+				"Configure other mobs or",
+				"Bosses that will appear",
+				"when this Boss dies.");
 	}
 
 	private class DroppedExpPrompt extends SimpleStringPrompt {
@@ -126,7 +134,11 @@ final class DeathMenu extends Menu {
 
 	@Override
 	protected String[] getInfo() {
-		return Lang.legacy("menu-death-info").split("\n");
+		return new String[] {
+				"Every Boss has a bad day.",
+				"Configure what happens when",
+				"your Boss dies in a fight!"
+		};
 	}
 
 	// ------------------------------------------------------------------------------------------------------------
@@ -147,22 +159,31 @@ final class DeathMenu extends Menu {
 		DropsMenu() {
 			super(DeathMenu.this);
 
-			this.setTitle(Lang.legacy("menu-death-drops-title"));
+			this.setTitle("Drops Menu");
 
 			this.generalDropsButton = new ButtonMenu(new GeneralDropsMenu(),
 					CompMaterial.ZOMBIE_HEAD,
-					Lang.legacy("menu-death-drops-button-general"),
-					Lang.legacy("menu-death-drops-button-general-lore").split("\n"));
+					"&bGeneral Drops",
+					"",
+					"Configure items Boss",
+					"always drops on death.");
 
 			this.playerDropsButton = new ButtonMenu(new PlayerDropsMenu(),
 					CompMaterial.PLAYER_HEAD,
-					Lang.legacy("menu-death-drops-button-player"),
-					Lang.legacy("menu-death-drops-button-player-lore").split("\n"));
+					"&ePlayer Drops",
+					"",
+					"Configure items players",
+					"that gave most damage to",
+					"Boss get individually.");
 
 			this.vanillaDropsButton = Button.makeBoolean(ItemCreator.from(
 					CompMaterial.YELLOW_DYE,
-					Lang.legacy("menu-death-drops-button-vanilla"),
-					Lang.legacy("menu-death-drops-button-vanilla-lore").split("\n")),
+					"Vanilla Drops",
+					"",
+					"Status: " + (DeathMenu.this.boss.hasVanillaDrops() ? "&aEnabled" : "&cDisabled"),
+					"",
+					"Click to toggle if Boss",
+					"drops his natural items."),
 					DeathMenu.this.boss::hasVanillaDrops, DeathMenu.this.boss::setVanillaDrops);
 		}
 
@@ -171,7 +192,10 @@ final class DeathMenu extends Menu {
 		 */
 		@Override
 		protected String[] getInfo() {
-			return Lang.legacy("menu-death-drops-info").split("\n");
+			return new String[] {
+					"Configure what items this",
+					"Boss drops upon death."
+			};
 		}
 
 		@Override
@@ -185,7 +209,7 @@ final class DeathMenu extends Menu {
 				super(DropsMenu.this, true);
 
 				this.setSize(9 * 6);
-				this.setTitle(Lang.legacy("menu-death-drops-general-title"));
+				this.setTitle("General Boss Drops");
 			}
 
 			@Override
@@ -220,7 +244,11 @@ final class DeathMenu extends Menu {
 
 			@Override
 			protected String[] getInfo() {
-				return Lang.legacy("menu-death-drops-general-info").split("\n");
+				return new String[] {
+						"Drag items into this container",
+						"and set their drop chance. Boss",
+						"will drop these items on death."
+				};
 			}
 
 			@Override

@@ -13,7 +13,6 @@ import org.mineacademy.fo.menu.button.Button;
 import org.mineacademy.fo.menu.button.ButtonMenu;
 import org.mineacademy.fo.menu.model.ItemCreator;
 import org.mineacademy.fo.remain.CompMaterial;
-import org.mineacademy.fo.settings.Lang;
 import org.mineacademy.fo.settings.SimpleSettings;
 
 /**
@@ -27,7 +26,7 @@ public final class SpawnRuleLocationsMenu extends MenuPaged<String> {
 	private SpawnRuleLocationsMenu(Menu parent, Set<String> oldLocations, Consumer<Set<String>> setter) {
 		super(parent, BossLocation.getLocationsNames(), true);
 
-		this.setTitle(Lang.legacy("menu-spawn-rule-locations-title"));
+		this.setTitle("Spawn Rule Locations");
 
 		this.oldLocations = oldLocations;
 		this.setter = setter;
@@ -39,8 +38,11 @@ public final class SpawnRuleLocationsMenu extends MenuPaged<String> {
 
 		return ItemCreator.from(
 				CompMaterial.PAPER,
-				Lang.legacy("menu-spawn-rule-locations-item", "location", locationName),
-				Lang.legacy("menu-spawn-rule-locations-item-lore", "status", has ? Lang.legacy("menu-spawn-rule-locations-spawns") : Lang.legacy("menu-spawn-rule-locations-no-spawns")).split("\n"))
+				locationName,
+				"",
+				"Status: " + (has ? "&aSpawns Here" : "&cDoesn't Spawn Here"),
+				"",
+				"Click to toggle.")
 				.glow(has)
 				.make();
 	}
@@ -56,7 +58,7 @@ public final class SpawnRuleLocationsMenu extends MenuPaged<String> {
 			this.oldLocations.add(locationName);
 
 		this.setter.accept(this.oldLocations);
-		this.restartMenu(has ? Lang.legacy("menu-spawn-rule-locations-disabled", "location", locationName) : Lang.legacy("menu-spawn-rule-locations-enabled", "location", locationName));
+		this.restartMenu(has ? "&cDisabled spawning at " + locationName + "." : "&aEnabled spawning at " + locationName + ".");
 	}
 
 	/**
@@ -64,17 +66,23 @@ public final class SpawnRuleLocationsMenu extends MenuPaged<String> {
 	 */
 	@Override
 	protected String[] getInfo() {
-		return Lang.legacy("menu-spawn-rule-locations-info").split("\n");
+		return new String[] {
+				"Select which Boss locations",
+				"this spawn rule applies to."
+		};
 	}
 
 	public static Button createButton(Menu parent, Set<String> locations, Consumer<Set<String>> setter, boolean respawn) {
 		return new ButtonMenu(new SpawnRuleLocationsMenu(parent, locations, setter),
 				CompMaterial.MAP,
-				Lang.legacy("menu-spawn-rule-locations-button"),
-				Lang.legacy("menu-spawn-rule-locations-button-lore",
-						"selected", locations.size(),
-						"total", BossLocation.getLocations().size(),
-						"respawn_notice", respawn ? Lang.legacy("menu-spawn-rule-locations-button-respawn") : "",
-						"label", SimpleSettings.MAIN_COMMAND_ALIASES.get(0)).split("\n"));
+				"Select Locations",
+				"",
+				"Selected: " + locations.size() + " / " + BossLocation.getLocations().size(),
+				"",
+				(respawn ? "&6Respawns at original location" : ""),
+				"Use &6/" + SimpleSettings.MAIN_COMMAND_ALIASES.get(0) + " region",
+				"to create Boss locations.",
+				"",
+				"Click to edit.");
 	}
 }

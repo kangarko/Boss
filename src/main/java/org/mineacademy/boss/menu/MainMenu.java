@@ -11,7 +11,6 @@ import org.mineacademy.fo.menu.button.Button;
 import org.mineacademy.fo.menu.button.ButtonMenu;
 import org.mineacademy.fo.menu.model.ItemCreator;
 import org.mineacademy.fo.remain.CompMaterial;
-import org.mineacademy.fo.settings.Lang;
 
 /**
  * The main Boss plugin menu.
@@ -88,28 +87,41 @@ public final class MainMenu extends Menu {
 
 	protected MainMenu() {
 
-		this.setTitle(Lang.legacy("menu-main-title"));
+		this.setTitle("Boss™ Main Menu");
 		this.setSize(Settings.REGISTER_TOOLS && Settings.REGISTER_REGIONS ? 9 * 5 : 9 * 3);
 
 		this.bossesButton = new ButtonMenu(new SelectBossMenu(this), CompMaterial.CHEST,
-				Lang.legacy("menu-main-button-bosses"),
-				Lang.legacy("menu-main-button-bosses-lore").split("\n"));
+				"&6Bosses",
+				"",
+				"Click to edit",
+				"loaded Bosses",
+				"or create them.");
 
 		this.regionsButton = new ButtonMenu(SelectRegionMenu.create(this), CompMaterial.ORANGE_DYE,
-				Lang.legacy("menu-main-button-regions"),
-				Lang.legacy("menu-main-button-regions-lore").split("\n"));
+				"&eRegions",
+				"",
+				"Click to manage",
+				"Boss regions.");
 
 		this.toolsButton = Settings.REGISTER_TOOLS ? new ButtonMenu(new ToolsMenu(this), ItemCreator.from(CompMaterial.DIAMOND_AXE,
-				Lang.legacy("menu-main-button-tools"),
-				Lang.legacy("menu-main-button-tools-lore").split("\n")).glow(true))
+				"&bTools",
+				"",
+				"Click to list useful",
+				"Boss tools for regions",
+				"and mob editing.").glow(true))
 				: Button.makeDummy(
 						CompMaterial.DIAMOND_AXE,
-						Lang.legacy("menu-main-button-tools-disabled"),
-						Lang.legacy("menu-main-button-tools-disabled-lore").split("\n"));
+						"&cTools Disabled!",
+						"",
+						"To enable tools, set",
+						"&6Register_Tools &7key in",
+						"settings.yml to true.");
 
 		this.spawningButton = new ButtonMenu(new SelectSpawnRuleMenu(this), CompMaterial.REDSTONE,
-				Lang.legacy("menu-main-button-spawning"),
-				Lang.legacy("menu-main-button-spawning-lore").split("\n"));
+				"&cSpawning",
+				"",
+				"Click to manage",
+				"Boss spawning.");
 	}
 
 	// ------------------------------------------------------------------------------------------------------------
