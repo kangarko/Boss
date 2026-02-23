@@ -72,6 +72,7 @@ public abstract class CustomSetting<T> {
 	public static final CustomSetting<Boolean> IRON_GOLEM_AGGRESSIVE = new IronGolemAggressiveSetting();
 	public static final CustomSetting<Boolean> NO_AI = new NoAISetting();
 	public static final CustomSetting<Boolean> PICKUP_ITEMS = new PickupItemsSetting();
+	public static final CustomSetting<Boolean> PROJECTILE_IMMUNE = new ProjectileImmuneSetting();
 	public static final CustomSetting<Boolean> SILENT = new SilentSetting();
 	public static final CustomSetting<Boolean> SLIME_BABIES_ON_DEATH = new SlimeBabiesOnDeathSetting();
 	public static final CustomSetting<Boolean> SNOWMAN_PUMPKIN = new SnowmanPumpkinSetting();
@@ -457,6 +458,29 @@ class PickupItemsSetting extends CustomBooleanSetting {
 				"",
 				"Set if the Boss can",
 				"pickup ground items.");
+	}
+}
+
+class ProjectileImmuneSetting extends CustomBooleanSetting {
+
+	public ProjectileImmuneSetting() {
+		super("Projectile_Immune");
+	}
+
+	@Override
+	public ItemCreator getIcon() {
+		return ItemCreator.from(
+				CompMaterial.ARROW,
+				"Projectile Immunity",
+				"",
+				"Status: " + (this.getValue() ? "&aimmune" : "&7vulnerable"),
+				"",
+				"When enabled, the Boss is",
+				"immune to projectile damage",
+				"such as arrows or tridents.",
+				"",
+				"&7Forces players to engage",
+				"&7the Boss in melee combat.");
 	}
 }
 

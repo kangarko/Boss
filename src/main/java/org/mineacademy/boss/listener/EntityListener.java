@@ -499,6 +499,16 @@ public final class EntityListener extends BossListener {
 		Entity victim = event.getEntity();
 		Entity damager = event.getDamager();
 
+		if (damager instanceof Projectile) {
+			final SpawnedBoss spawnedBoss = Boss.findBoss(victim);
+
+			if (spawnedBoss != null && spawnedBoss.getBoss().getCustomSetting(CustomSetting.PROJECTILE_IMMUNE)) {
+				event.setCancelled(true);
+
+				return;
+			}
+		}
+
 		if (victim instanceof Projectile && ((Projectile) victim).getShooter() instanceof LivingEntity)
 			victim = (LivingEntity) ((Projectile) victim).getShooter();
 
@@ -588,8 +598,8 @@ public final class EntityListener extends BossListener {
 			});
 		}
 
-		if (victim.getType().toString().equals("ARMOR_STAND"))
-			// Prevent destroying armor stand bosses if they are invulnerable
+		if (victim.getType().toString().equals("ARMOR_STAND") || victim.getType().toString().equals("MANNEQUIN"))
+			// Prevent destroying armor stand / mannequin bosses if they are invulnerable
 			this.runIfBoss(victim, spawnedBoss -> {
 				if (spawnedBoss.getBoss().getCustomSetting(CustomSetting.INVULNERABLE))
 					event.setCancelled(true);
