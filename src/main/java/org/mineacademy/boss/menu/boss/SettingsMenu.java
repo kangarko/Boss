@@ -314,7 +314,7 @@ final class SettingsMenu extends Menu {
 			protected boolean isInputValid(ConversationContext context, String input) {
 				final CompSound sound = CompSound.fromName(input);
 
-				return "default".equals(input) || (sound != null && sound.getSound() != null);
+				return "default".equals(input) || "silent".equals(input) || (sound != null && sound.getSound() != null);
 			}
 
 			@Override
@@ -329,7 +329,7 @@ final class SettingsMenu extends Menu {
 
 			@Override
 			protected void onValidatedInput(ConversationContext context, String input) {
-				setDeathSound.accept("default".equals(input) ? null : input);
+				setDeathSound.accept("default".equals(input) || "silent".equals(input) ? null : input);
 			}
 		};
 	}
@@ -749,7 +749,8 @@ final class SettingsMenu extends Menu {
 					if (item != null && CompMaterial.isMonsterEgg(item.getType())) {
 						final EntityType type = CompMonsterEgg.lookupEntity(item);
 
-						types.add(type);
+						if (type != null)
+							types.add(type);
 					}
 
 				SettingsMenu.this.boss.setRidingVanilla(types);
