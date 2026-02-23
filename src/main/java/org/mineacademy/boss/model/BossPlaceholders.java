@@ -58,6 +58,17 @@ public final class BossPlaceholders extends SimpleExpansion {
 			return String.valueOf(Boss.findBossesAlive().size());
 		}
 
+		// %boss_spawned_here%
+		if ("spawned_here".equals(params)) {
+			if (player == null)
+				return "0";
+
+			if (!Bukkit.isPrimaryThread())
+				return "";
+
+			return String.valueOf(Boss.findBossesAliveIn(player.getWorld()).size());
+		}
+
 		// %boss_spawned_<world>%
 		if (params.startsWith("spawned_")) {
 			final String worldName = params.substring("spawned_".length());
@@ -67,9 +78,7 @@ public final class BossPlaceholders extends SimpleExpansion {
 				if (!Bukkit.isPrimaryThread())
 					return "";
 
-				return String.valueOf(Boss.findBossesAlive().stream()
-						.filter(spawned -> spawned.getEntity().getWorld().equals(world))
-						.count());
+				return String.valueOf(Boss.findBossesAliveIn(world).size());
 			}
 		}
 
@@ -176,9 +185,7 @@ public final class BossPlaceholders extends SimpleExpansion {
 				if (!Bukkit.isPrimaryThread())
 					return "";
 
-				return String.valueOf(Boss.findBossesAlive().stream()
-						.filter(spawned -> spawned.getBoss().getName().equals(boss.getName()) && spawned.getEntity().getWorld().equals(world))
-						.count());
+				return String.valueOf(Boss.findBossesAliveIn(world, boss).size());
 			}
 
 			if (thirdArg.equals("kills") || thirdArg.equals("damage")) {
