@@ -10,7 +10,6 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import com.ticxo.modelengine.api.ModelEngineAPI;
 import org.bukkit.conversations.ConversationContext;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -61,6 +60,8 @@ import org.mineacademy.fo.remain.CompPotionEffectType;
 import org.mineacademy.fo.remain.CompSound;
 import org.mineacademy.fo.remain.Remain;
 import org.mineacademy.fo.settings.Lang;
+
+import com.ticxo.modelengine.api.ModelEngineAPI;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -1621,7 +1622,7 @@ final class SettingsMenu extends Menu {
 
 		@Override
 		protected String[] getInfo() {
-			return new String[]{
+			return new String[] {
 					"Configure ModelEngine",
 					"custom models and",
 					"animations for this Boss.",
@@ -1736,9 +1737,9 @@ final class SettingsMenu extends Menu {
 							CompMaterial.HOPPER,
 							"Filter",
 							"Current filter: &f" + (this.filter.isEmpty() ? "none" : this.filter) + "\n" +
-							"\n" +
-							"&aLeft click: &fset\n" +
-							"&cRight click: &fremove",
+									"\n" +
+									"&aLeft click: &fset\n" +
+									"&cRight click: &fremove",
 							(player, clickType) -> {
 								if (clickType.name().startsWith("LEFT"))
 									new SimpleStringPrompt("Please enter the new filter: ", newFilter -> this.filter = newFilter.replace("clear", "")).show(this.getViewer());
@@ -1850,7 +1851,7 @@ final class SettingsMenu extends Menu {
 
 			@Override
 			protected String[] getInfo() {
-				return new String[]{
+				return new String[] {
 						"Configure custom animations for this Boss",
 						"with ModelEngine.",
 						"",
@@ -1914,7 +1915,7 @@ final class SettingsMenu extends Menu {
 
 				@Override
 				protected String[] getInfo() {
-					return new String[]{
+					return new String[] {
 							"Configure custom attack animations",
 							"for this Boss with ModelEngine.",
 							"",
@@ -1944,8 +1945,7 @@ final class SettingsMenu extends Menu {
 								"&aAdd Attack Animation",
 								"",
 								"Click to add a new",
-								"custom attack animation."
-						);
+								"custom attack animation.");
 
 						this.clearAttackAnimationsButton = new Button() {
 							@Override
@@ -1964,15 +1964,14 @@ final class SettingsMenu extends Menu {
 										"&cClear All Attack Animations",
 										"",
 										"Click to remove all",
-										"custom attack animations."
-								).make();
+										"custom attack animations.").make();
 							}
 						};
 					}
 
 					@Override
 					protected ItemStack convertToItemStack(final String item) {
-					    return ItemCreator.from(
+						return ItemCreator.from(
 								CompMaterial.PAPER,
 								"&7Animation: &f" + item,
 								String.format("&7Chance: &f%.1f", (double) 100 / SettingsMenu.this.boss.getCustomAttackAnimations().size()) + "%",
@@ -1988,7 +1987,7 @@ final class SettingsMenu extends Menu {
 
 					@Override
 					protected String[] getInfo() {
-						return new String[]{
+						return new String[] {
 								"If you select more than 1 animation,",
 								"the plugin will choose a random",
 								"one every time the Boss attacks."
