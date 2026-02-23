@@ -345,7 +345,7 @@ final class DeathMenu extends Menu {
 				return new String[] {
 						"You can give players who did the",
 						"most damage different items, in",
-						"the other in which they did the",
+						"the order in which they did the",
 						"most damage."
 				};
 			}
@@ -423,7 +423,7 @@ final class DeathMenu extends Menu {
 				}
 
 				private List<Map.Entry<ItemStack, Double>> getItems(int order) {
-					final Map<ItemStack, Double> orderDrops = DeathMenu.this.boss.getPlayerDrops(this.order);
+					final Map<ItemStack, Double> orderDrops = DeathMenu.this.boss.getPlayerDrops(order);
 
 					return orderDrops == null ? new ArrayList<>() : new ArrayList<>(orderDrops.entrySet());
 				}
@@ -556,7 +556,7 @@ final class DeathMenu extends Menu {
 		protected boolean canEditItem(MenuClickLocation location, int slot, ItemStack clicked, ItemStack cursor, InventoryAction action) {
 			final ItemStack item = clicked != null && !CompMaterial.isAir(clicked) ? clicked : cursor;
 
-			if (Boss.findBoss(item) == null) {
+			if (item == null || (Boss.findBoss(item) == null && !CompMaterial.isMonsterEgg(item.getType()))) {
 				this.animateTitle("&4Only place Boss eggs here!");
 
 				return false;
