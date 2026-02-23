@@ -54,6 +54,7 @@ import org.mineacademy.boss.hook.HeroesHook;
 import org.mineacademy.boss.hook.ModelEngineHook;
 import org.mineacademy.boss.model.Boss;
 import org.mineacademy.boss.model.BossAttribute;
+import org.mineacademy.boss.model.BossBarTracker;
 import org.mineacademy.boss.model.BossCheatDisable;
 import org.mineacademy.boss.model.BossCommandType;
 import org.mineacademy.boss.model.BossReinforcement;
@@ -354,6 +355,8 @@ public final class EntityListener extends BossListener {
 
 			Debugger.debug("drops", "Boss " + boss.getName() + " at " + SerializeUtil.serializeLocation(location) + " has died. Collecting drops.");
 
+			BossBarTracker.removeBar(entity);
+
 			// Handle experience
 			if (killer != null && HeroesHook.isEnabled()) {
 				event.setDroppedExp(0);
@@ -581,6 +584,9 @@ public final class EntityListener extends BossListener {
 
 						HealthBarUtil.display(damagerPlayer, entity, boss.replaceVariables(fightMessage, entity, damagerPlayer), 0);
 					}
+
+					if (!entity.isDead() && entity.isValid())
+						BossBarTracker.updateBar(boss, entity, entity.getHealth());
 				});
 
 				Debugger.debug("damage", "[Boss " + boss.getName() + "] Final damage: " + MathUtil.formatTwoDigits(damage)

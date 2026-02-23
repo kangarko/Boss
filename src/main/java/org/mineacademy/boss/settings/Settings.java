@@ -121,6 +121,26 @@ public final class Settings extends SimpleSettings {
 		}
 
 		/**
+		 * The Boss_Bar section
+		 */
+		public static class BossBar {
+
+			public static String COLOR;
+			public static String STYLE;
+			public static String FORMAT;
+			public static Integer RADIUS;
+
+			private static void init() {
+				setPathPrefix("Fighting.Boss_Bar");
+
+				COLOR  = getString("Color");
+				STYLE  = getString("Style");
+				FORMAT = getString("Format");
+				RADIUS = getInteger("Radius");
+			}
+		}
+
+		/**
 		 * The Citizens_Retarget section
 		 */
 		public static class CitizensRetarget {

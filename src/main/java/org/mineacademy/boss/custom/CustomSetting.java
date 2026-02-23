@@ -29,6 +29,7 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 import org.mineacademy.boss.custom.EnderdragonPhaseSetting.CompPhase;
 import org.mineacademy.boss.model.Boss;
+import org.mineacademy.boss.model.BossBarTracker;
 import org.mineacademy.fo.Common;
 import org.mineacademy.fo.MinecraftVersion;
 import org.mineacademy.fo.MinecraftVersion.V;
@@ -86,6 +87,7 @@ public abstract class CustomSetting<T> {
 	public static final CustomSetting<String> SKELETON_TYPE = new SkeletonTypeSetting();
 	public static final CustomSetting<String> VILLAGER_PROFESSION = new VillagerProfessionSetting();
 	public static final CustomSetting<String> VILLAGER_TYPE = new VillagerTypeSetting();
+	public static final CustomSetting<Boolean> BOSS_BAR = new BossBarSetting();
 	public static final CustomSetting<Boolean> GLOWING = new GlowingSetting();
 	public static final CustomSetting<Boolean> CUSTOM_NAME_VISIBLE = new CustomNameVisible();
 
@@ -1282,5 +1284,38 @@ class SnowmanPumpkinSetting extends CustomBooleanSetting {
 				"",
 				"&cThis setting might not work",
 				"&con Minecraft 1.8.8.");
+	}
+}
+
+class BossBarSetting extends CustomBooleanSetting {
+
+	public BossBarSetting() {
+		super("Boss_Bar");
+	}
+
+	@Override
+	public boolean canApplyTo(EntityType entity) {
+		return MinecraftVersion.atLeast(V.v1_9);
+	}
+
+	@Override
+	public void onSpawn(Boss boss, LivingEntity entity) {
+		if (this.getValue())
+			BossBarTracker.createBar(boss, entity);
+		else
+			BossBarTracker.removeBar(entity);
+	}
+
+	@Override
+	public ItemCreator getIcon() {
+		return ItemCreator.from(
+				CompMaterial.NETHER_STAR,
+				"Boss Bar",
+				"",
+				"Status: " + (this.getValue() ? "&aenabled" : "&7disabled"),
+				"",
+				"When enabled, nearby players",
+				"see a boss bar displaying",
+				"the Boss's name and health.");
 	}
 }
