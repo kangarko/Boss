@@ -288,7 +288,7 @@ abstract class SpawnRuleRandom extends SpawnRuleRegions {
 			this.enableAllButton = Button.makeSimple(CompMaterial.WATER_BUCKET,
 					"Enable All",
 					"Click to set chances to\n"
-							+ "0% in all biomes.",
+							+ "100% in all biomes.",
 					player -> {
 						for (final CompBiome biome : CompBiome.getAvailable())
 							SpawnRuleRandom.this.biomesWithChances.put(biome, 1D);

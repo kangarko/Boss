@@ -25,7 +25,6 @@ import org.mineacademy.fo.remain.CompMaterial;
 import org.mineacademy.fo.visual.VisualizedRegion;
 
 import lombok.Getter;
-import lombok.Setter;
 
 /**
  * Represents a rule that triggers when Boss enters a region
@@ -42,7 +41,6 @@ public final class SpawnRuleRegionEnter extends SpawnRuleRegions {
 	 * The limit of Bosses that can spawn in a region. This rule stops when there is the
 	 * given number of Bosses of the same type in a region.
 	 */
-	@Setter
 	private Integer maxBossesInRegion;
 
 	/**
@@ -94,6 +92,9 @@ public final class SpawnRuleRegionEnter extends SpawnRuleRegions {
 	@Override
 	public void onTick(SpawnData data) {
 
+		if (!this.canRun())
+			return;
+
 		final DiskRegion enteredRegion = data.getRegion();
 		final String enteredRegionName = enteredRegion.getFileName();
 		final VisualizedRegion border = enteredRegion.getBorder();
@@ -122,9 +123,6 @@ public final class SpawnRuleRegionEnter extends SpawnRuleRegions {
 				return;
 			}
 		}
-
-		if (!this.canRun())
-			return;
 
 		final List<String> toRemove = new ArrayList<>();
 
@@ -230,6 +228,17 @@ public final class SpawnRuleRegionEnter extends SpawnRuleRegions {
 	 */
 	public void setLocations(Set<String> locations) {
 		this.locations = locations;
+
+		this.save();
+	}
+
+	/**
+	 * Set the max bosses in region limit
+	 *
+	 * @param maxBossesInRegion the limit to set
+	 */
+	public void setMaxBossesInRegion(Integer maxBossesInRegion) {
+		this.maxBossesInRegion = maxBossesInRegion;
 
 		this.save();
 	}

@@ -101,7 +101,7 @@ public abstract class SpawnRuleLocationData extends SpawnRuleDateExact {
 				boolean playersNearby = false;
 
 				for (final Player online : location.getWorld().getPlayers())
-					if (online.getLocation().distance(location) <= nearbyBlocksThreshold)
+					if (online.getWorld().equals(location.getWorld()) && online.getLocation().distance(location) <= nearbyBlocksThreshold)
 						playersNearby = true;
 
 				if (!playersNearby) {
