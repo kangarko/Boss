@@ -41,8 +41,8 @@ import org.mineacademy.fo.remain.Remain;
 import com.google.gson.JsonObject;
 
 import net.citizensnpcs.api.CitizensAPI;
+import net.citizensnpcs.api.ai.BehaviorController;
 import net.citizensnpcs.api.ai.EntityTarget;
-import net.citizensnpcs.api.ai.tree.Behavior;
 import net.citizensnpcs.api.ai.Navigator;
 import net.citizensnpcs.api.ai.goals.WanderGoal;
 import net.citizensnpcs.api.npc.MetadataStore;
@@ -210,40 +210,35 @@ public final class CitizensHook {
 		data.setPersistent(NPC.Metadata.COLLIDABLE, true);
 		data.setPersistent(NPC.Metadata.DAMAGE_OTHERS, true);
 
-		if (citizens.isTargetGoalEnabled()) {
-			final Behavior goal = BossTargetNearbyEntityGoal.builder(npc)
+		final BehaviorController behaviorController = npc.getDefaultBehaviorController();
+
+		behaviorController.clear();
+
+		if (citizens.isTargetGoalEnabled())
+			behaviorController.addBehavior(BossTargetNearbyEntityGoal.builder(npc)
 					.aggressive(citizens.isTargetGoalAggressive())
 					.radius(citizens.getTargetGoalRadius())
 					.targets(citizens.getTargetGoalEntities())
-					.build();
-
-			npc.getDefaultBehaviorController().addBehavior(goal);
-		}
+					.build());
 
 		if (citizens.isWanderGoalEnabled())
 			try {
-				npc.getDefaultBehaviorController().addBehavior(WanderGoal.builder(npc).xrange(citizens.getWanderGoalRadius()).yrange(citizens.getWanderGoalRadius()).build());
+				behaviorController.addBehavior(WanderGoal.builder(npc).xrange(citizens.getWanderGoalRadius()).yrange(citizens.getWanderGoalRadius()).build());
 			} catch (final NoSuchMethodError ex) {
-				// Outdated
 			}
-		else
-			npc.getDefaultBehaviorController().clear();
+
+		if (!citizens.isTargetGoalEnabled() && !citizens.isWanderGoalEnabled())
+			npc.setUseMinecraftAI(true);
 
 		final Navigator navigator = npc.getNavigator();
 
-		// Fix weird slow motion issue
 		if (boss.getType() == CompEntityType.PLAYER) {
 			navigator.getLocalParameters().speedModifier(1F);
 			navigator.getLocalParameters().speed(1F);
 			navigator.getLocalParameters().baseSpeed((float) boss.getCitizensSettings().getSpeed());
 		}
 
-		// https://github.com/kangarko/Boss/issues/1195#issuecomment-1692729888
 		navigator.getLocalParameters().distanceMargin(0.5).pathDistanceMargin(0.5);
-
-		// Fallback to MC AI
-		if (!citizens.isTargetGoalEnabled() && !citizens.isWanderGoalEnabled())
-			npc.setUseMinecraftAI(true);
 
 		// Remove teleporting to players when far away
 		npc.getNavigator().getDefaultParameters().stuckAction(null);
@@ -373,15 +368,8 @@ public final class CitizensHook {
 				if (spawnRegion != null && !spawnRegion.isWithin(nearby.getLocation()))
 					continue;
 
-				if (!WorldGuardHook.canTarget(nearby.getLocation()))
+				if (!Boss.canTarget(nearby))
 					continue;
-
-				if (nearby instanceof Player) {
-					final Player player = (Player) nearby;
-
-					if (player.getGameMode() != GameMode.SURVIVAL || PlayerUtil.isVanished(player))
-						continue;
-				}
 
 				final SpawnedBoss nearbyBoss = Boss.findBoss(nearby);
 
@@ -404,6 +392,9 @@ public final class CitizensHook {
 
 				if (npc.isSpawned())
 					npc.getNavigator().setTarget(closestTarget, citizens.isTargetGoalAggressive());
+
+			} else if (oldTarget != null && !Boss.canTarget(oldTarget.getTarget())) {
+				npc.getNavigator().cancelNavigation();
 			}
 		}
 
