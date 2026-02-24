@@ -43,6 +43,13 @@ public class BossTargetNearbyEntityGoal implements Behavior {
 	public BehaviorStatus run() {
 		if (this.finished)
 			return (this.reason == null) ? BehaviorStatus.SUCCESS : BehaviorStatus.FAILURE;
+
+		if (this.target != null && !Boss.canTarget(this.target)) {
+			this.npc.getNavigator().cancelNavigation();
+
+			return BehaviorStatus.FAILURE;
+		}
+
 		return BehaviorStatus.RUNNING;
 	}
 

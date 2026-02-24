@@ -13,11 +13,9 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
-import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.mineacademy.boss.model.Boss;
 import org.mineacademy.boss.model.BossCitizensSettings;
@@ -27,7 +25,6 @@ import org.mineacademy.boss.model.SpawnedBoss;
 import org.mineacademy.fo.Common;
 import org.mineacademy.fo.MinecraftVersion;
 import org.mineacademy.fo.MinecraftVersion.V;
-import org.mineacademy.fo.PlayerUtil;
 import org.mineacademy.fo.Valid;
 import org.mineacademy.fo.collection.ExpiringMap;
 import org.mineacademy.fo.collection.SerializedMap;
@@ -223,7 +220,7 @@ public final class CitizensHook {
 
 		if (citizens.isWanderGoalEnabled())
 			try {
-				behaviorController.addBehavior(WanderGoal.builder(npc).xrange(citizens.getWanderGoalRadius()).yrange(citizens.getWanderGoalRadius()).build());
+				behaviorController.addBehavior(WanderGoal.builder(npc).xrange(citizens.getWanderGoalRadius()).yrange(citizens.getWanderGoalRadius()).delay(0).build());
 			} catch (final NoSuchMethodError ex) {
 			}
 
