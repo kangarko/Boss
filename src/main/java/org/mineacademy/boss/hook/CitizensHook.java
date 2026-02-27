@@ -401,21 +401,26 @@ public final class CitizensHook {
 	}
 
 	/**
-	 * Sends the given Boss to the given location
+	 * Sends the given Boss to the given location using Citizens pathfinding.
 	 *
 	 * @param boss
 	 * @param target
+	 * @return true if the NPC was found and navigation started
 	 */
-	public static void sendToLocation(SpawnedBoss boss, Location target) {
+	public static boolean sendToLocation(SpawnedBoss boss, Location target) {
 		final NPCRegistry registry = findRegistry();
 
 		if (registry == null)
-			return;
+			return false;
 
 		final NPC npc = registry.getNPC(boss.getEntity());
 
-		if (npc != null)
-			npc.getNavigator().setTarget(target);
+		if (npc == null)
+			return false;
+
+		npc.getNavigator().setTarget(target);
+
+		return true;
 	}
 
 	/**

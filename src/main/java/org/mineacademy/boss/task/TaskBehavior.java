@@ -213,28 +213,34 @@ public final class TaskBehavior extends SimpleRunnable {
 		else
 			Debugger.debug("region-keep", "Returning '" + boss.getName() + "' to to region using escape return location '" + boss.getEscapeReturnLocation() + "' to: " + spawnLocation);
 
-		// Teleport back to spawn location, or walk when Citizens are enabled
+		// Walk back using Citizens pathfinding when possible, otherwise teleport
 		final Entity vehicle = entity.getVehicle();
 
-		if (vehicle != null) {
-			CompMetadata.setTempMetadata(entity, "BossDontPreventVehicleExit");
-			entity.leaveVehicle();
+		if (vehicle == null && HookManager.isCitizensLoaded() && CitizensHook.sendToLocation(spawnedBoss, spawnLocation)) {
+			Debugger.debug("region-keep", "Using Citizens pathfinding to walk '" + boss.getName() + "' back to region");
 
-			vehicle.setFallDistance(0);
-			vehicle.teleport(spawnLocation);
-			vehicle.setFallDistance(0);
-		}
+		} else {
 
-		entity.setFallDistance(0);
-		entity.teleport(spawnLocation);
-		entity.setFallDistance(0);
-		CompMetadata.removeTempMetadata(entity, "BossDontPreventVehicleExit");
+			if (vehicle != null) {
+				CompMetadata.setTempMetadata(entity, "BossDontPreventVehicleExit");
+				entity.leaveVehicle();
 
-		if (vehicle != null) {
-			if (Remain.hasEntityAddPassenger())
-				vehicle.addPassenger(entity);
-			else
-				vehicle.setPassenger(entity);
+				vehicle.setFallDistance(0);
+				vehicle.teleport(spawnLocation);
+				vehicle.setFallDistance(0);
+			}
+
+			entity.setFallDistance(0);
+			entity.teleport(spawnLocation);
+			entity.setFallDistance(0);
+			CompMetadata.removeTempMetadata(entity, "BossDontPreventVehicleExit");
+
+			if (vehicle != null) {
+				if (Remain.hasEntityAddPassenger())
+					vehicle.addPassenger(entity);
+				else
+					vehicle.setPassenger(entity);
+			}
 		}
 
 		// Remove target if outside region
