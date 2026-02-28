@@ -683,6 +683,21 @@ public final class Boss extends YamlConfig implements ConfigStringSerializable {
 						+ ". Contact us to report this issue. Got: " + obj);
 
 			for (final Object rawOrder : (List<?>) obj) {
+
+				// Handle old format where each order was saved as a flat Map<ItemStack, Double>
+				if (rawOrder instanceof Map) {
+					final Map<ItemStack, Double> converted = new LinkedHashMap<>();
+
+					for (final Map.Entry<?, ?> entry : ((Map<?, ?>) rawOrder).entrySet()) {
+						if (entry.getKey() instanceof ItemStack && entry.getValue() instanceof Number)
+							converted.put((ItemStack) entry.getKey(), ((Number) entry.getValue()).doubleValue());
+					}
+
+					drops.add(converted);
+
+					continue;
+				}
+
 				if (!(rawOrder instanceof List))
 					throw new FoException("Each entry in Drops.Player must be a list of Tuples, not a " + rawOrder.getClass().getSimpleName()
 							+ ". Got: " + rawOrder);
