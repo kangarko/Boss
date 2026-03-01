@@ -138,14 +138,15 @@ public final class BossPlugin extends BukkitPlugin {
 
 			this.loadData();
 
-			// Warn about names with underscores since they break PAPI placeholders
-			for (final Boss boss : Boss.getBosses())
-				if (boss.getName().contains("_"))
-					Common.warning("Boss '" + boss.getName() + "' contains an underscore in its name, which breaks PlaceholderAPI placeholders. Please rename it (remove underscores).");
+			if (HookManager.isPlaceholderAPILoaded()) {
+ 				for (final Boss boss : Boss.getBosses())
+					if (boss.getName().contains("_"))
+						Common.warning("Boss '" + boss.getName() + "' contains an underscore in its name, which breaks PlaceholderAPI placeholders. Please rename it (remove underscores).");
 
 			for (final SpawnRule rule : SpawnRule.getRules())
 				if (rule.getName().contains("_"))
 					Common.warning("Spawn rule '" + rule.getName() + "' contains an underscore in its name, which breaks PlaceholderAPI placeholders. Please rename it (remove underscores).");
+			}
 		});
 
 		// Run timer tasks
