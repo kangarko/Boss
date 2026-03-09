@@ -253,6 +253,12 @@ public final class Boss extends YamlConfig implements ConfigStringSerializable {
 	private boolean lightningOnSpawn;
 
 	/**
+	 * Ambient particle effect settings.
+	 */
+	@Getter
+	private BossParticleSettings particleSettings;
+
+	/**
 	 * What Boss reinforcement should we spawn?
 	 */
 	@Getter
@@ -614,6 +620,7 @@ public final class Boss extends YamlConfig implements ConfigStringSerializable {
 		this.attributes = this.getMap("Attributes", BossAttribute.class, Double.class);
 		this.lightningOnDeath = this.getBoolean("Lightning.Death", false);
 		this.lightningOnSpawn = this.getBoolean("Lightning.Spawn", false);
+		this.particleSettings = BossParticleSettings.deserialize(this.getMap("Particle"), this);
 		this.reinforcements = this.getList("Reinforcements", BossReinforcement.class);
 		this.customSettings = this.getMap("Custom_Settings", String.class, Object.class);
 		this.skills = this.loadSkills();
@@ -821,6 +828,7 @@ public final class Boss extends YamlConfig implements ConfigStringSerializable {
 		this.set("Attributes", this.attributes);
 		this.set("Lightning.Death", this.lightningOnDeath);
 		this.set("Lightning.Spawn", this.lightningOnSpawn);
+		this.set("Particle", this.particleSettings);
 		this.set("Reinforcements", this.reinforcements);
 		this.set("Custom_Settings", this.customSettings);
 		this.set("Skills", this.skills);
