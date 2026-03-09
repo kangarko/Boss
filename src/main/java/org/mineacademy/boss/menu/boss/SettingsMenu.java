@@ -79,30 +79,33 @@ final class SettingsMenu extends Menu {
 	private final Button healthButton;
 
 	@Position(9 + 5)
-	private final Button potionsButton;
-
-	@Position(9 + 7)
 	private final Button equipmentButton;
 
-	@Position(9 * 3 + 1)
-	private final Button lightningButton;
+	@Position(9 + 7)
+	private final Button particleButton;
 
-	@Position(9 * 3 + 2)
-	private final Button pathfindersButton;
+	@Position(9 * 3 + 1)
+	private final Button potionsButton;
 
 	@Position(9 * 3 + 3)
-	private final Button ridingButton;
-
-	@Position(9 * 3 + 5)
-	private final Button commandsButton;
-
-	@Position(9 * 3 + 6)
 	private final Button attributesButton;
 
+	@Position(9 * 3 + 5)
+	private final Button lightningButton;
+
 	@Position(9 * 3 + 7)
+	private final Button ridingButton;
+
+	@Position(9 * 4 + 1)
+	private final Button pathfindersButton;
+
+	@Position(9 * 4 + 3)
+	private final Button commandsButton;
+
+	@Position(9 * 4 + 5)
 	private final Button customSettingsButton;
 
-	@Position(9 * 5 + 7)
+	@Position(9 * 4 + 7)
 	private final Button modelEngineButton;
 
 	SettingsMenu(Menu parent, Boss boss) {
@@ -199,6 +202,13 @@ final class SettingsMenu extends Menu {
 						"",
 						"&cThis Boss type does",
 						"&cnot support equipment.");
+
+		this.particleButton = new ButtonMenu(new ParticleMenu(this, boss),
+				CompMaterial.BLAZE_POWDER,
+				"&dParticles",
+				"",
+				"Configure ambient particle",
+				"effects around this Boss.");
 
 		this.lightningButton = new ButtonMenu(new LightningMenu(),
 				CompMaterial.ENDER_PEARL,

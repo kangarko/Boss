@@ -33,6 +33,7 @@ import org.mineacademy.boss.skill.SkillTeleport;
 import org.mineacademy.boss.skill.SkillThrow;
 import org.mineacademy.boss.spawn.SpawnRule;
 import org.mineacademy.boss.task.TaskBehavior;
+import org.mineacademy.boss.task.TaskParticle;
 import org.mineacademy.boss.task.TaskDistarget;
 import org.mineacademy.boss.task.TaskFrozenPlayers;
 import org.mineacademy.boss.task.TaskRegionEnter;
@@ -152,6 +153,7 @@ public final class BossPlugin extends BukkitPlugin {
 		// Run timer tasks
 		Platform.runTaskTimer(5, TaskFrozenPlayers.getInstance());
 		Platform.runTaskTimer(20, TaskBehavior.getInstance());
+		Platform.runTaskTimer(2, TaskParticle.getInstance());
 		Platform.runTaskTimer(20 * 2, new TaskDistarget());
 
 		if (Settings.REGISTER_REGIONS)
