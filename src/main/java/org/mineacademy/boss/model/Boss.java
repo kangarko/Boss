@@ -2966,6 +2966,31 @@ public final class Boss extends YamlConfig implements ConfigStringSerializable {
 	}
 
 	/**
+	 * Duplicate an existing boss under a new name by copying its YAML file
+	 * and loading it as a new boss instance.
+	 *
+	 * @param source
+	 * @param newName
+	 * @return
+	 */
+	public static Boss duplicateBoss(@NonNull final Boss source, @NonNull final String newName) {
+		final File sourceFile = FileUtil.getFile("bosses/" + source.getName() + ".yml");
+		final File targetFile = FileUtil.getFile("bosses/" + newName + ".yml");
+
+		Valid.checkBoolean(sourceFile.exists(), "Source boss file does not exist: " + sourceFile);
+		Valid.checkBoolean(!targetFile.exists(), "Boss file already exists: " + targetFile);
+
+		try {
+			Files.copy(sourceFile.toPath(), targetFile.toPath());
+
+		} catch (final IOException ex) {
+			throw new FoException(ex, "Failed to copy boss file from " + sourceFile + " to " + targetFile);
+		}
+
+		return loadedBosses.loadOrCreateItem(newName);
+	}
+
+	/**
 	 * @see ConfigItems#loadItems()
 	 */
 	public static void loadBosses() {
