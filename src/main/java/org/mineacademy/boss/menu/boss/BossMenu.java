@@ -5,6 +5,7 @@ import org.mineacademy.boss.menu.MainMenu;
 import org.mineacademy.boss.menu.SelectBossMenu;
 import org.mineacademy.boss.model.Boss;
 import org.mineacademy.boss.model.Permissions;
+import org.mineacademy.boss.prompt.DuplicateBossPrompt;
 import org.mineacademy.fo.Messenger;
 import org.mineacademy.fo.menu.Menu;
 import org.mineacademy.fo.menu.button.Button;
@@ -46,6 +47,9 @@ public final class BossMenu extends Menu {
 
 	@Position(start = StartPosition.BOTTOM_CENTER, value = +1)
 	private final Button removeButton;
+
+	@Position(start = StartPosition.BOTTOM_CENTER, value = +2)
+	private final Button duplicateButton;
 
 	private BossMenu(Menu parent, Boss boss) {
 		super(parent);
@@ -126,6 +130,18 @@ public final class BossMenu extends Menu {
 			} else
 				this.animateTitle("&4Boss not loaded!");
 		});
+
+		this.duplicateButton = Button.makeSimple(ItemCreator.from(
+				CompMaterial.BOOK,
+				"&eDuplicate",
+				"",
+				"Create a copy of this Boss",
+				"with all its settings under",
+				"a new name."),
+				player -> {
+					player.closeInventory();
+					DuplicateBossPrompt.showTo(player, boss);
+				});
 	}
 
 	@Override

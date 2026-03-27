@@ -33,9 +33,9 @@ import org.mineacademy.boss.skill.SkillTeleport;
 import org.mineacademy.boss.skill.SkillThrow;
 import org.mineacademy.boss.spawn.SpawnRule;
 import org.mineacademy.boss.task.TaskBehavior;
-import org.mineacademy.boss.task.TaskParticle;
 import org.mineacademy.boss.task.TaskDistarget;
 import org.mineacademy.boss.task.TaskFrozenPlayers;
+import org.mineacademy.boss.task.TaskParticle;
 import org.mineacademy.boss.task.TaskRegionEnter;
 import org.mineacademy.fo.Common;
 import org.mineacademy.fo.HealthBarUtil;
@@ -140,13 +140,13 @@ public final class BossPlugin extends BukkitPlugin {
 			this.loadData();
 
 			if (HookManager.isPlaceholderAPILoaded()) {
- 				for (final Boss boss : Boss.getBosses())
+				for (final Boss boss : Boss.getBosses())
 					if (boss.getName().contains("_"))
 						Common.warning("Boss '" + boss.getName() + "' contains an underscore in its name, which breaks PlaceholderAPI placeholders. Please rename it (remove underscores).");
 
-			for (final SpawnRule rule : SpawnRule.getRules())
-				if (rule.getName().contains("_"))
-					Common.warning("Spawn rule '" + rule.getName() + "' contains an underscore in its name, which breaks PlaceholderAPI placeholders. Please rename it (remove underscores).");
+				for (final SpawnRule rule : SpawnRule.getRules())
+					if (rule.getName().contains("_"))
+						Common.warning("Spawn rule '" + rule.getName() + "' contains an underscore in its name, which breaks PlaceholderAPI placeholders. Please rename it (remove underscores).");
 			}
 		});
 
@@ -223,10 +223,10 @@ public final class BossPlugin extends BukkitPlugin {
 	/**
 	 * @see org.mineacademy.fo.platform.BukkitPlugin#getSentryDsn()
 	 */
-	@Override
+	/*@Override
 	public String getSentryDsn() {
 		return "https://9a2bf9f9e4308ddeea77e79b269e2206@o4508048573661184.ingest.us.sentry.io/4508052202913792";
-	}
+	}*/
 
 	/**
 	 * @see org.mineacademy.fo.platform.BukkitPlugin#getFoundedYear()
