@@ -1171,7 +1171,7 @@ public final class Boss extends YamlConfig implements ConfigStringSerializable {
 				entity.setHealth(this.maxHealth);
 
 		} catch (final Throwable t) {
-			// Do not report to sentry since this is user configuration error
+			// Do not auto-report since this is user configuration error
 			Common.log("Failed to give " + this.getName() + " Boss health " + this.maxHealth
 					+ " HP! Your server allows maximum of " + Remain.getMaxHealth()
 					+ " HP. Increase your spigot.yml > settings.attribute.maxHealth.max");

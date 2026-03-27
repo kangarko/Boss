@@ -220,20 +220,14 @@ public final class BossPlugin extends BukkitPlugin {
 		ChunkListener.saveToFile();
 	}
 
-	/**
-	 * @see org.mineacademy.fo.platform.BukkitPlugin#getSentryDsn()
-	 */
-	/*@Override
-	public String getSentryDsn() {
-		return "https://9a2bf9f9e4308ddeea77e79b269e2206@o4508048573661184.ingest.us.sentry.io/4508052202913792";
-	}*/
-
-	/**
-	 * @see org.mineacademy.fo.platform.BukkitPlugin#getFoundedYear()
-	 */
 	@Override
 	public int getFoundedYear() {
 		return 2017;
+	}
+
+	@Override
+	public boolean isErrorReportingSupported() {
+		return true;
 	}
 
 	@Override

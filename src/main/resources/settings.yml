@@ -282,10 +282,10 @@ Log_Lag_Over_Milis: 100
 Notify_New_Versions: true
 
 # -------------------------------------------------------------------------------------------------
-# Send anonymized error reports to sentry.io? This helps us fix bugs without you needing to
+# Send anonymized error reports automatically? This helps us fix bugs without you needing to
 # report them manually.
 # -------------------------------------------------------------------------------------------------
-Sentry: true
+Error_Auto_Reporting: true
 
 # -------------------------------------------------------------------------------------------------
 # List of section names that will print informative messages about their features.
