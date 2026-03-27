@@ -82,6 +82,7 @@ import org.mineacademy.fo.model.Variables;
 import org.mineacademy.fo.platform.FoundationPlayer;
 import org.mineacademy.fo.platform.Platform;
 import org.mineacademy.fo.region.DiskRegion;
+import org.mineacademy.fo.remain.CompAttribute;
 import org.mineacademy.fo.remain.CompEntityType;
 import org.mineacademy.fo.remain.CompEquipmentSlot;
 import org.mineacademy.fo.remain.CompMaterial;
@@ -1164,7 +1165,7 @@ public final class Boss extends YamlConfig implements ConfigStringSerializable {
 
 		// Set health
 		try {
-			entity.setMaxHealth(this.maxHealth);
+			CompAttribute.MAX_HEALTH.set(entity, this.maxHealth);
 
 			if (!keepOldHealth)
 				entity.setHealth(this.maxHealth);
