@@ -35,6 +35,7 @@ import org.mineacademy.fo.annotation.AutoRegister;
 import org.mineacademy.fo.menu.Menu;
 import org.mineacademy.fo.model.Tuple;
 import org.mineacademy.fo.platform.Platform;
+import org.mineacademy.fo.remain.CompAttribute;
 import org.mineacademy.fo.remain.CompMaterial;
 import org.mineacademy.fo.remain.CompMetadata;
 import org.mineacademy.fo.remain.Remain;
@@ -178,6 +179,10 @@ public final class PlayerListener extends BossListener {
 
 				if (spawned.getEntity() instanceof Tameable) {
 					((Tameable) spawned.getEntity()).setOwner(player);
+
+					// Re-apply health after taming since Minecraft resets max health when a wolf is tamed
+					CompAttribute.MAX_HEALTH.set(spawned.getEntity(), spawned.getBoss().getMaxHealth());
+					spawned.getEntity().setHealth(spawned.getBoss().getMaxHealth());
 
 					Messenger.success(player, Lang.component("egg-spawn-success-tamed", "boss", boss.getName()));
 				}
