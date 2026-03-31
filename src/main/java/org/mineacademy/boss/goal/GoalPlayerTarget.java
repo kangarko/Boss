@@ -9,6 +9,8 @@ import com.destroystokyo.paper.entity.ai.Goal;
 import com.destroystokyo.paper.entity.ai.GoalKey;
 import com.destroystokyo.paper.entity.ai.GoalType;
 
+import org.mineacademy.boss.model.Boss;
+
 public class GoalPlayerTarget<T extends Mob> implements Goal<T> {
 
 	private final T mob;
@@ -23,7 +25,7 @@ public class GoalPlayerTarget<T extends Mob> implements Goal<T> {
 	@Override
 	public boolean shouldActivate() {
 		this.targetPlayer = this.mob.getWorld().getPlayers().stream()
-				.filter(player -> player.getLocation().distance(this.mob.getLocation()) <= this.targetRange)
+				.filter(player -> Boss.canTarget(player) && player.getLocation().distance(this.mob.getLocation()) <= this.targetRange)
 				.min((p1, p2) -> Double.compare(
 						p1.getLocation().distance(this.mob.getLocation()),
 						p2.getLocation().distance(this.mob.getLocation())))

@@ -11,7 +11,7 @@ import com.destroystokyo.paper.entity.ai.Goal;
 import com.destroystokyo.paper.entity.ai.GoalKey;
 import com.destroystokyo.paper.entity.ai.GoalType;
 
-// Separate goal for melee attack behavior
+import org.mineacademy.boss.model.Boss;
 public class GoalMeleeAttackPlayer<T extends Mob> implements Goal<T> {
 
 	private final T mob;
@@ -30,13 +30,14 @@ public class GoalMeleeAttackPlayer<T extends Mob> implements Goal<T> {
 	public boolean shouldActivate() {
 		final LivingEntity target = this.mob.getTarget();
 
-		return target != null && target instanceof Player && !target.isDead();
+		return target instanceof Player && Boss.canTarget(target);
 	}
 
 	@Override
 	public boolean shouldStayActive() {
 		final LivingEntity target = this.mob.getTarget();
-		return target != null && target.isValid() && !target.isDead() && this.mob.getWorld().equals(target.getWorld()) && this.mob.getLocation().distance(target.getLocation()) < 20.0;
+
+		return target != null && Boss.canTarget(target) && this.mob.getWorld().equals(target.getWorld()) && this.mob.getLocation().distance(target.getLocation()) < 20.0;
 	}
 
 	@Override
