@@ -143,6 +143,14 @@ public final class TaskBehavior extends SimpleRunnable {
 					continue;
 				}
 
+				final double healthPercent = entity.getMaxHealth() > 0 ? (entity.getHealth() / entity.getMaxHealth()) * 100 : 0;
+
+				if (healthPercent < selectedSkill.getHealthMinPercent() || healthPercent > selectedSkill.getHealthMaxPercent()) {
+					Debugger.debug("skills", "Skipping " + selectedSkill.getName() + " for '" + boss.getName() + "', health " + (int) healthPercent + "% outside range [" + selectedSkill.getHealthMinPercent() + "-" + selectedSkill.getHealthMaxPercent() + "%].");
+
+					continue;
+				}
+
 				boolean success;
 
 				try {

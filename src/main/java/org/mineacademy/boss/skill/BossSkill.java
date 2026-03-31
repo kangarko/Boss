@@ -70,6 +70,16 @@ public abstract class BossSkill implements ConfigSerializable {
 	 */
 	private boolean stopMoreSkills = false;
 
+	/**
+	 * The minimum health percent (0-100) for this skill to fire. Defaults to 0.
+	 */
+	private int healthMinPercent = 0;
+
+	/**
+	 * The maximum health percent (0-100) for this skill to fire. Defaults to 100.
+	 */
+	private int healthMaxPercent = 100;
+
 	/*
 	 * Create a new boss skill.
 	 */
@@ -322,6 +332,38 @@ public abstract class BossSkill implements ConfigSerializable {
 	}
 
 	/**
+	 * @return the healthMinPercent
+	 */
+	public final int getHealthMinPercent() {
+		return this.healthMinPercent;
+	}
+
+	/**
+	 * @param healthMinPercent the healthMinPercent to set
+	 */
+	public final void setHealthMinPercent(int healthMinPercent) {
+		this.healthMinPercent = healthMinPercent;
+
+		this.save();
+	}
+
+	/**
+	 * @return the healthMaxPercent
+	 */
+	public final int getHealthMaxPercent() {
+		return this.healthMaxPercent;
+	}
+
+	/**
+	 * @param healthMaxPercent the healthMaxPercent to set
+	 */
+	public final void setHealthMaxPercent(int healthMaxPercent) {
+		this.healthMaxPercent = healthMaxPercent;
+
+		this.save();
+	}
+
+	/**
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
@@ -339,6 +381,8 @@ public abstract class BossSkill implements ConfigSerializable {
 				"Commands", this.commands,
 				"Messages", this.messages,
 				"Stop_More_Skills", this.stopMoreSkills,
+				"Health_Min_Percent", this.healthMinPercent,
+				"Health_Max_Percent", this.healthMaxPercent,
 				"Settings", this.writeSettings());
 	}
 
@@ -406,6 +450,8 @@ public abstract class BossSkill implements ConfigSerializable {
 		instance.commands = map.getList("Commands", BossCommand.class, boss);
 		instance.messages = Collections.unmodifiableList(map.getStringList("Messages", Arrays.asList(instance.getDefaultMessage())));
 		instance.stopMoreSkills = map.getBoolean("Stop_More_Skills", true);
+		instance.healthMinPercent = map.getInteger("Health_Min_Percent", 0);
+		instance.healthMaxPercent = map.getInteger("Health_Max_Percent", 100);
 
 		// Load skill-specific settings
 		instance.readSettings(map.getMap("Settings"));

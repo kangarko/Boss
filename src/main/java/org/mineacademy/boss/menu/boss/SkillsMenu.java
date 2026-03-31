@@ -129,6 +129,7 @@ final class SkillsMenu extends MenuPaged<BossSkill> {
 		private final Button delayButton;
 		private final Button messagesButton;
 		private final Button commandsButton;
+		private final Button healthRangeButton;
 
 		@Position(start = StartPosition.BOTTOM_CENTER, value = -1)
 		private final Button stopMoreSkillsButton;
@@ -200,6 +201,16 @@ final class SkillsMenu extends MenuPaged<BossSkill> {
 							"",
 							"Current: " + commandsDisplay));
 
+			this.healthRangeButton = new ButtonConversation(new HealthRangePrompt(),
+					CompMaterial.GOLDEN_APPLE,
+					"Health Range",
+					"",
+					"Current: &f" + skill.getHealthMinPercent() + "% - " + skill.getHealthMaxPercent() + "%",
+					"",
+					"Edit what health range this",
+					"skill requires to fire.",
+					"Allows creating Boss phases.");
+
 			this.stopMoreSkillsButton = Button.makeBoolean(ItemCreator.from(
 					(skill.isStopMoreSkills() ? CompMaterial.RED_DYE : CompMaterial.GREEN_DYE),
 					"Stop More Skills?",
@@ -224,6 +235,9 @@ final class SkillsMenu extends MenuPaged<BossSkill> {
 		@Override
 		public ItemStack getItemAt(int slot) {
 			final boolean isSkillCommands = this.skill instanceof SkillCommands;
+
+			if (slot == 9 * 2 + 4)
+				return this.healthRangeButton.getItem();
 
 			if (isSkillCommands) {
 				if (slot == 9 * 1 + 3)
@@ -319,6 +333,50 @@ final class SkillsMenu extends MenuPaged<BossSkill> {
 			@Override
 			protected void onValidatedInput(ConversationContext context, String input) {
 				IndividualSkillMenu.this.skill.setMessages("none".equals(input) ? new ArrayList<>() : Arrays.asList(input.split("\\|")));
+			}
+		}
+
+		final class HealthRangePrompt extends SimpleStringPrompt {
+
+			@Override
+			protected String getPrompt(ConversationContext ctx) {
+				return "Enter the health percent range for this skill to fire, such as '0 - 50' for below half health or '50 - 100' for above half. Current: "
+						+ IndividualSkillMenu.this.skill.getHealthMinPercent() + "% - " + IndividualSkillMenu.this.skill.getHealthMaxPercent() + "%.";
+			}
+
+			@Override
+			protected boolean isInputValid(ConversationContext context, String input) {
+				try {
+					final String[] parts = input.replace("%", "").split("\\s*-\\s*");
+
+					if (parts.length != 2)
+						return false;
+
+					final int min = Integer.parseInt(parts[0].trim());
+					final int max = Integer.parseInt(parts[1].trim());
+
+					if (min < 0 || max > 100 || min > max)
+						return false;
+
+					context.setSessionData("Min", min);
+					context.setSessionData("Max", max);
+
+					return true;
+
+				} catch (final NumberFormatException ex) {
+					return false;
+				}
+			}
+
+			@Override
+			protected String getFailedValidationText(ConversationContext context, String invalidInput) {
+				return "Invalid range! Use 'min - max' such as '0 - 50'. Both values must be 0-100 and min must be <= max.";
+			}
+
+			@Override
+			protected void onValidatedInput(ConversationContext context, String input) {
+				IndividualSkillMenu.this.skill.setHealthMinPercent((int) context.getSessionData("Min"));
+				IndividualSkillMenu.this.skill.setHealthMaxPercent((int) context.getSessionData("Max"));
 			}
 		}
 	}
