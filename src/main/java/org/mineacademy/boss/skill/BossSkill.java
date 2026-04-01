@@ -70,6 +70,10 @@ public abstract class BossSkill implements ConfigSerializable {
 	 */
 	private boolean stopMoreSkills = false;
 
+	private int healthMinPercent = 0;
+
+	private int healthMaxPercent = 100;
+
 	/*
 	 * Create a new boss skill.
 	 */
@@ -321,6 +325,26 @@ public abstract class BossSkill implements ConfigSerializable {
 		this.stopMoreSkills = stopMoreSkills;
 	}
 
+	public final int getHealthMinPercent() {
+		return this.healthMinPercent;
+	}
+
+	public final void setHealthMinPercent(int healthMinPercent) {
+		this.healthMinPercent = healthMinPercent;
+
+		this.save();
+	}
+
+	public final int getHealthMaxPercent() {
+		return this.healthMaxPercent;
+	}
+
+	public final void setHealthMaxPercent(int healthMaxPercent) {
+		this.healthMaxPercent = healthMaxPercent;
+
+		this.save();
+	}
+
 	/**
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
@@ -339,6 +363,8 @@ public abstract class BossSkill implements ConfigSerializable {
 				"Commands", this.commands,
 				"Messages", this.messages,
 				"Stop_More_Skills", this.stopMoreSkills,
+				"Health_Min_Percent", this.healthMinPercent,
+				"Health_Max_Percent", this.healthMaxPercent,
 				"Settings", this.writeSettings());
 	}
 
@@ -406,6 +432,8 @@ public abstract class BossSkill implements ConfigSerializable {
 		instance.commands = map.getList("Commands", BossCommand.class, boss);
 		instance.messages = Collections.unmodifiableList(map.getStringList("Messages", Arrays.asList(instance.getDefaultMessage())));
 		instance.stopMoreSkills = map.getBoolean("Stop_More_Skills", true);
+		instance.healthMinPercent = map.getInteger("Health_Min_Percent", 0);
+		instance.healthMaxPercent = map.getInteger("Health_Max_Percent", 100);
 
 		// Load skill-specific settings
 		instance.readSettings(map.getMap("Settings"));
