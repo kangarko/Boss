@@ -144,7 +144,7 @@
     "The {boss} has <red>drained <gray>your health!"
   ],
   "skill-teleport-default-message": [
-    "You are now facing the {boss} himself!",
+    "You are now facing the {boss}!",
     "Welcome! {boss} has <red>teleported you <gray>closer!",
     "Don't run away from me! Fight like a man!"
   ],
