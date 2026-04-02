@@ -66,7 +66,7 @@ public final class SkillStealLife extends AbstractTargetSkill {
 				"Steal Life",
 				"",
 				"Boss will take a portion of",
-				"player's health to his own!")
+				"player's health to their own!")
 				.make();
 	}
 
