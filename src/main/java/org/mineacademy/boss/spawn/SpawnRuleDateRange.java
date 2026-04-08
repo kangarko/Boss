@@ -3,7 +3,6 @@ package org.mineacademy.boss.spawn;
 import java.time.LocalTime;
 import java.util.List;
 
-import javax.annotation.Nullable;
 
 import org.bukkit.conversations.ConversationContext;
 import org.mineacademy.fo.TimeUtil;
@@ -238,7 +237,7 @@ abstract class SpawnRuleDateRange extends SpawnRule {
 	 *
 	 * @param whichMinutes the whichMinutes to set
 	 */
-	public final void setWhichMinutes(@Nullable Tuple<Integer, Integer> whichMinutes) {
+	public final void setWhichMinutes(Tuple<Integer, Integer> whichMinutes) {
 		this.whichMinutes = whichMinutes;
 
 		this.save();
@@ -249,7 +248,7 @@ abstract class SpawnRuleDateRange extends SpawnRule {
 	 *
 	 * @param whichHours the whichHours to set
 	 */
-	public final void setWhichHours(@Nullable Tuple<Integer, Integer> whichHours) {
+	public final void setWhichHours(Tuple<Integer, Integer> whichHours) {
 		this.whichHours = whichHours;
 
 		this.save();

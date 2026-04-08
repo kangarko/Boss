@@ -2,7 +2,6 @@ package org.mineacademy.boss.prompt;
 
 import java.util.Arrays;
 
-import javax.annotation.Nullable;
 
 import org.bukkit.entity.Player;
 import org.mineacademy.boss.menu.SelectSpawnRuleMenu;
@@ -26,7 +25,6 @@ public final class CreateSpawnRulePrompt extends CreatePrompt<SpawnRule> {
 	/**
 	 * The optional nullable Bossík for whom we create the rule automatically
 	 */
-	@Nullable
 	private final Boss bossFor;
 
 	/*
@@ -91,7 +89,7 @@ public final class CreateSpawnRulePrompt extends CreatePrompt<SpawnRule> {
 	 * @param type
 	 * @param bossFor
 	 */
-	public static void showTo(Player player, SpawnRuleType type, @Nullable Boss bossFor) {
+	public static void showTo(Player player, SpawnRuleType type, Boss bossFor) {
 		new CreateSpawnRulePrompt(type, bossFor).show(player);
 	}
 }

@@ -1,6 +1,5 @@
 package org.mineacademy.boss.model;
 
-import javax.annotation.Nullable;
 
 import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
@@ -25,13 +24,11 @@ public final class BossReinforcement implements ConfigSerializable {
 	/**
 	 * The Boss name, if null, we spawn vanilla entity
 	 */
-	@Nullable
 	private final String bossName;
 
 	/**
 	 * The Boss entity type, if null, we spawn a boss
 	 */
-	@Nullable
 	private final EntityType entityType;
 
 	/**

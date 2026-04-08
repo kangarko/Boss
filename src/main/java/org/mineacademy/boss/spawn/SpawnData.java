@@ -5,7 +5,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.Nullable;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
@@ -40,7 +39,6 @@ public final class SpawnData {
 	 *
 	 * @return
 	 */
-	@Nullable
 	public Location getLocation() {
 		return this.data.containsKey(Tag.LOCATION) ? (Location) this.data.get(Tag.LOCATION) : null;
 	}
@@ -50,7 +48,6 @@ public final class SpawnData {
 	 *
 	 * @return
 	 */
-	@Nullable
 	public EntityType getMatchingType() {
 		return this.data.containsKey(Tag.MATCHING_TYPE) ? (EntityType) this.data.get(Tag.MATCHING_TYPE) : null;
 	}
@@ -60,7 +57,6 @@ public final class SpawnData {
 	 *
 	 * @return
 	 */
-	@Nullable
 	public DiskRegion getRegion() {
 		return this.data.containsKey(Tag.REGION) ? (DiskRegion) this.data.get(Tag.REGION) : null;
 	}
