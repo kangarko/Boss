@@ -144,9 +144,10 @@ public final class TaskBehavior extends SimpleRunnable {
 				}
 
 				final double healthPercent = Remain.getMaxHealth(entity) > 0 ? (Remain.getHealth(entity) / Remain.getMaxHealth(entity)) * 100 : 0;
+				final String healthDebug = "(health " + (int) healthPercent + "%, range " + selectedSkill.getHealthMinPercent() + "-" + selectedSkill.getHealthMaxPercent() + "%)";
 
 				if (healthPercent < selectedSkill.getHealthMinPercent() || healthPercent > selectedSkill.getHealthMaxPercent()) {
-					Debugger.debug("skills", "Skipping " + selectedSkill.getName() + " for '" + boss.getName() + "', health " + (int) healthPercent + "% outside range [" + selectedSkill.getHealthMinPercent() + "-" + selectedSkill.getHealthMaxPercent() + "%].");
+					Debugger.debug("skills", "Skipping " + selectedSkill.getName() + " for '" + boss.getName() + "' " + healthDebug + ", outside range.");
 
 					continue;
 				}
@@ -167,7 +168,7 @@ public final class TaskBehavior extends SimpleRunnable {
 
 				if (success) {
 					final long nextTicks = selectedSkill.getDelay().getRandomTicks();
-					Debugger.debug("skills", "Ran skill '" + selectedSkill.getName() + "' for '" + boss.getName() + "' boss and scheduled another in " + nextTicks + " ticks");
+					Debugger.debug("skills", "Ran skill '" + selectedSkill.getName() + "' for '" + boss.getName() + "' " + healthDebug + " and scheduled another in " + nextTicks + " ticks");
 
 					final Map<String, Long> nextSkillTime = this.nextSkillsRun.getOrDefault(entity.getUniqueId(), new HashMap<>());
 					nextSkillTime.put(selectedSkill.getName(), this.nowTicks + nextTicks);
@@ -178,7 +179,7 @@ public final class TaskBehavior extends SimpleRunnable {
 						break;
 
 				} else
-					Debugger.debug("skills", "Running " + selectedSkill.getName() + " for '" + boss.getName() + "' returned false, skill did not run.");
+					Debugger.debug("skills", "Running " + selectedSkill.getName() + " for '" + boss.getName() + "' " + healthDebug + " returned false, skill did not run.");
 			}
 		}
 	}
