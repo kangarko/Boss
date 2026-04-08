@@ -1,6 +1,5 @@
 package org.mineacademy.boss.model;
 
-import javax.annotation.Nullable;
 
 import org.bukkit.entity.LivingEntity;
 import org.mineacademy.fo.MinecraftVersion;
@@ -195,7 +194,6 @@ public enum BossAttribute {
 	/**
 	 * The bukkit attribute
 	 */
-	@Nullable
 	private final CompAttribute attribute;
 
 	/**
@@ -219,7 +217,6 @@ public enum BossAttribute {
 	 * @param entity
 	 * @return
 	 */
-	@Nullable
 	public Double getDefaultValue(LivingEntity entity) {
 		Valid.checkNotNull(this.attribute, "Getting default attribute " + this + " of " + entity + " not implemented!");
 
@@ -262,7 +259,6 @@ public enum BossAttribute {
 	 * @param key
 	 * @return
 	 */
-	@Nullable
 	public static BossAttribute fromKey(String key) {
 		key = key.toUpperCase().replace(" ", "_");
 

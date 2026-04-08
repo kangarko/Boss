@@ -2,7 +2,6 @@ package org.mineacademy.boss.model;
 
 import java.util.UUID;
 
-import javax.annotation.Nullable;
 
 import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
@@ -75,7 +74,6 @@ public final class SpawnedBoss {
 	 *
 	 * @return
 	 */
-	@Nullable
 	public DiskRegion getSpawnRegion() {
 		final String regionName = CompMetadata.getMetadata(this.entity, Boss.REGION_TAG);
 
@@ -87,7 +85,6 @@ public final class SpawnedBoss {
 	 *
 	 * @return
 	 */
-	@Nullable
 	public String getSpawnRuleName() {
 		return CompMetadata.getMetadata(this.entity, Boss.SPAWN_RULE_TAG);
 	}

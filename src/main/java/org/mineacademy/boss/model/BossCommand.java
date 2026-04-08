@@ -3,7 +3,6 @@ package org.mineacademy.boss.model;
 import java.util.Arrays;
 import java.util.Objects;
 
-import javax.annotation.Nullable;
 
 import org.mineacademy.fo.Common;
 import org.mineacademy.fo.Valid;
@@ -58,7 +57,6 @@ public final class BossCommand implements ConfigSerializable {
 	/**
 	 * Trigger, requires type == {@link BossCommandType#HEALTH_TRIGGER}
 	 */
-	@Nullable
 	private Double healthTrigger;
 
 	/**

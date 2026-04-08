@@ -22,7 +22,6 @@ import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import javax.annotation.Nullable;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
@@ -441,7 +440,7 @@ public final class Boss extends YamlConfig implements ConfigStringSerializable {
 	/*
 	 * Create a new Boss from command or menu.
 	 */
-	private Boss(@NonNull String name, @Nullable EntityType type) {
+	private Boss(@NonNull String name, EntityType type) {
 		this.type = type;
 
 		this.setHeader(
@@ -1001,7 +1000,6 @@ public final class Boss extends YamlConfig implements ConfigStringSerializable {
 	 *
 	 * @return
 	 */
-	@Nullable
 	public Tuple<BossSpawnResult, SpawnedBoss> spawn(Location location, BossSpawnReason reason) {
 		return this.spawn(location, reason, null);
 	}
@@ -1017,9 +1015,8 @@ public final class Boss extends YamlConfig implements ConfigStringSerializable {
 	 *
 	 * @return
 	 */
-	@Nullable
 	public Tuple<BossSpawnResult, SpawnedBoss> spawn(Location location, BossSpawnReason reason,
-			@Nullable SpawnRule spawnRule) {
+			SpawnRule spawnRule) {
 
 		// Apply limits
 		if (this.limitReasons.contains(reason) && this.canAddRidingEntities /*
@@ -1464,7 +1461,7 @@ public final class Boss extends YamlConfig implements ConfigStringSerializable {
 	 * @param bossEntity
 	 * @return
 	 */
-	public boolean runCommand(String command, boolean console, @Nullable Player player, LivingEntity bossEntity) {
+	public boolean runCommand(String command, boolean console, Player player, LivingEntity bossEntity) {
 		return this.runCommand(command, 1D, console, player, bossEntity);
 	}
 
@@ -1478,7 +1475,7 @@ public final class Boss extends YamlConfig implements ConfigStringSerializable {
 	 * @param bossEntity
 	 * @return
 	 */
-	public boolean runCommand(String command, double chance, boolean console, @Nullable Player player,
+	public boolean runCommand(String command, double chance, boolean console, Player player,
 			LivingEntity bossEntity) {
 
 		if (!RandomUtil.chanceD(chance))
@@ -1676,7 +1673,7 @@ public final class Boss extends YamlConfig implements ConfigStringSerializable {
 	 *
 	 * @return
 	 */
-	public String replaceVariablesLegacy(String message, @NonNull LivingEntity bossEntity, @Nullable Player player) {
+	public String replaceVariablesLegacy(String message, @NonNull LivingEntity bossEntity, Player player) {
 		final Location loc = bossEntity.getLocation();
 
 		return Variables.builder().audience(player).placeholderArray(
@@ -1713,7 +1710,7 @@ public final class Boss extends YamlConfig implements ConfigStringSerializable {
 	 * @return
 	 */
 	public SimpleComponent replaceVariables(SimpleComponent message, @NonNull LivingEntity bossEntity,
-			@Nullable Player player) {
+			Player player) {
 		final Location loc = bossEntity.getLocation();
 
 		return Variables.builder().audience(player).placeholderArray(
@@ -1882,7 +1879,7 @@ public final class Boss extends YamlConfig implements ConfigStringSerializable {
 	 * @param droppedExp the droppedExp to set, null to use Minecraft default, 0 to
 	 *                   disable exp drops
 	 */
-	public void setDroppedExp(@Nullable RangedValue droppedExp) {
+	public void setDroppedExp(RangedValue droppedExp) {
 		this.droppedExp = droppedExp;
 
 		this.save();
@@ -1926,7 +1923,7 @@ public final class Boss extends YamlConfig implements ConfigStringSerializable {
 	 * @param slot
 	 * @param tuple
 	 */
-	public void setEquipmentNoSave(@NonNull CompEquipmentSlot slot, @Nullable Tuple<ItemStack, Double> tuple) {
+	public void setEquipmentNoSave(@NonNull CompEquipmentSlot slot, Tuple<ItemStack, Double> tuple) {
 		if (tuple == null)
 			this.equipment.remove(slot);
 
@@ -2106,7 +2103,6 @@ public final class Boss extends YamlConfig implements ConfigStringSerializable {
 	 * @param attribute
 	 * @return
 	 */
-	@Nullable
 	public Double getAttribute(BossAttribute attribute) {
 		return this.attributes.getOrDefault(attribute, this.getDefaultAttribute(attribute));
 	}
@@ -2136,7 +2132,7 @@ public final class Boss extends YamlConfig implements ConfigStringSerializable {
 	 * @param attribute
 	 * @param value
 	 */
-	public void setAttribute(BossAttribute attribute, @Nullable Double value) {
+	public void setAttribute(BossAttribute attribute, Double value) {
 		if (value == null)
 			this.attributes.remove(attribute);
 		else
@@ -2203,7 +2199,7 @@ public final class Boss extends YamlConfig implements ConfigStringSerializable {
 	 * @param setting
 	 * @param value
 	 */
-	public <T> void setCustomSetting(CustomSetting<T> setting, @Nullable T value) {
+	public <T> void setCustomSetting(CustomSetting<T> setting, T value) {
 		final String key = setting.getKey();
 
 		if (value == null)
@@ -2221,7 +2217,6 @@ public final class Boss extends YamlConfig implements ConfigStringSerializable {
 	 * @param setting
 	 * @return
 	 */
-	@Nullable
 	public <T> T getCustomSetting(CustomSetting<T> setting) {
 		final T value = (T) this.customSettings.get(setting.getKey());
 
@@ -2344,7 +2339,6 @@ public final class Boss extends YamlConfig implements ConfigStringSerializable {
 	 * @param slot
 	 * @return
 	 */
-	@Nullable
 	public ItemStack getGeneralDropAt(int slot) {
 		final List<Tuple<ItemStack, Double>> drops = this.getGeneralDrops();
 
@@ -2363,7 +2357,6 @@ public final class Boss extends YamlConfig implements ConfigStringSerializable {
 	 * @param slot
 	 * @return
 	 */
-	@Nullable
 	public Double getGeneralDropChanceAt(int slot) {
 		if (slot < this.generalDrops.size()) {
 			final Tuple<ItemStack, Double> tuple = this.generalDrops.get(slot);
@@ -2405,7 +2398,6 @@ public final class Boss extends YamlConfig implements ConfigStringSerializable {
 	 * @param order
 	 * @return
 	 */
-	@Nullable
 	public Map<ItemStack, Double> getPlayerDrops(int order) {
 		return order < this.playerDrops.size()
 				? Collections.unmodifiableMap(new LinkedHashMap<>(this.playerDrops.get(order)))
@@ -2610,7 +2602,7 @@ public final class Boss extends YamlConfig implements ConfigStringSerializable {
 	 *
 	 * @param escapeReturnLocation
 	 */
-	public void setEscapeReturnLocation(@Nullable BossLocation escapeReturnLocation) {
+	public void setEscapeReturnLocation(BossLocation escapeReturnLocation) {
 		this.escapeReturnLocation = escapeReturnLocation == null ? null : escapeReturnLocation.getName();
 
 		this.save();
@@ -2621,7 +2613,7 @@ public final class Boss extends YamlConfig implements ConfigStringSerializable {
 	 *
 	 * @param eggMaterial
 	 */
-	public void setEggMaterial(@Nullable CompMaterial eggMaterial) {
+	public void setEggMaterial(CompMaterial eggMaterial) {
 		this.eggMaterial = eggMaterial;
 
 		this.save();
@@ -2632,7 +2624,7 @@ public final class Boss extends YamlConfig implements ConfigStringSerializable {
 	 *
 	 * @param eggTitle
 	 */
-	public void setEggTitle(@Nullable String eggTitle) {
+	public void setEggTitle(String eggTitle) {
 		this.eggTitle = eggTitle;
 
 		this.save();
@@ -2643,7 +2635,7 @@ public final class Boss extends YamlConfig implements ConfigStringSerializable {
 	 *
 	 * @param eggLore
 	 */
-	public void setEggLore(@Nullable List<String> eggLore) {
+	public void setEggLore(List<String> eggLore) {
 		this.eggLore = eggLore;
 
 		this.save();
@@ -3255,7 +3247,7 @@ public final class Boss extends YamlConfig implements ConfigStringSerializable {
 	 * @param boss
 	 * @return
 	 */
-	public static int killAliveBosses(@Nullable Boss boss) {
+	public static int killAliveBosses(Boss boss) {
 		final List<SpawnedBoss> nearby = findBossesAlive();
 
 		return killAlive0(nearby, boss);
@@ -3268,7 +3260,7 @@ public final class Boss extends YamlConfig implements ConfigStringSerializable {
 	 * @param boss
 	 * @return
 	 */
-	public static int killAliveInWorld(World world, @Nullable Boss boss) {
+	public static int killAliveInWorld(World world, Boss boss) {
 		final List<SpawnedBoss> nearby = findBossesAliveIn(world);
 
 		return killAlive0(nearby, boss);
@@ -3282,7 +3274,7 @@ public final class Boss extends YamlConfig implements ConfigStringSerializable {
 	 * @param boss
 	 * @return
 	 */
-	public static int killAliveInRange(Location center, int radius, @Nullable Boss boss) {
+	public static int killAliveInRange(Location center, int radius, Boss boss) {
 		final List<SpawnedBoss> nearby = findBossesInRange(center, radius);
 
 		return killAlive0(nearby, boss);
@@ -3291,7 +3283,7 @@ public final class Boss extends YamlConfig implements ConfigStringSerializable {
 	/*
 	 * Helper to kill spawned bosses
 	 */
-	private static int killAlive0(List<SpawnedBoss> bosses, @Nullable Boss bossToMatch) {
+	private static int killAlive0(List<SpawnedBoss> bosses, Boss bossToMatch) {
 		int count = 0;
 
 		for (final SpawnedBoss spawned : bosses) {

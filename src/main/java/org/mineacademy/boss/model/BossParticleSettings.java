@@ -1,6 +1,5 @@
 package org.mineacademy.boss.model;
 
-import javax.annotation.Nullable;
 
 import org.mineacademy.fo.CommonCore;
 import org.mineacademy.fo.collection.SerializedMap;
@@ -16,7 +15,6 @@ public final class BossParticleSettings implements ConfigSerializable {
 
 	private boolean enabled;
 
-	@Nullable
 	private CompParticle type;
 
 	private ParticleShape shape;
@@ -51,7 +49,7 @@ public final class BossParticleSettings implements ConfigSerializable {
 		this.boss.save();
 	}
 
-	public void setType(@Nullable CompParticle type) {
+	public void setType(CompParticle type) {
 		this.type = type;
 
 		this.boss.save();

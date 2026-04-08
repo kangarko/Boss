@@ -12,7 +12,6 @@ import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-import javax.annotation.Nullable;
 
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -130,7 +129,7 @@ public abstract class SpawnRule extends YamlConfig {
 	 * @param name
 	 * @param type
 	 */
-	protected SpawnRule(@NonNull String name, @Nullable SpawnRuleType type) {
+	protected SpawnRule(@NonNull String name, SpawnRuleType type) {
 		this.type = type;
 
 		this.setHeader(" -------------------------------------------------------------------------------------------------\n" +

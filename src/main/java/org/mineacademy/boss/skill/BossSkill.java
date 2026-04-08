@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.annotation.Nullable;
 
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -116,7 +115,7 @@ public abstract class BossSkill implements ConfigSerializable {
 	 * @param player the player to replace variables as, can be mnull
 	 * @param bossEntity the Boss entity
 	 */
-	public final void executeSkillCommands(@Nullable Player player, LivingEntity bossEntity) {
+	public final void executeSkillCommands(Player player, LivingEntity bossEntity) {
 		for (final BossCommand command : this.commands)
 			this.boss.runCommand(command.getCommand(), command.getChance(), command.isConsole(), player, bossEntity);
 	}

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import javax.annotation.Nullable;
 
 import org.bukkit.Location;
 import org.mineacademy.boss.model.BossLocation;
@@ -208,7 +207,6 @@ final class LocationCommand extends BossSubCommand {
 		private final String usage;
 		private final String description;
 
-		@Nullable
 		private static Param find(String argument) {
 			argument = argument.toLowerCase();
 

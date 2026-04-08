@@ -6,7 +6,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.function.Function;
 
-import javax.annotation.Nullable;
 
 import org.bukkit.Location;
 import org.bukkit.block.Block;
@@ -56,7 +55,7 @@ public final class BossLocation extends YamlConfig {
 	/*
 	 * Create a new location, used when creating new
 	 */
-	private BossLocation(String name, @Nullable Location location) {
+	private BossLocation(String name, Location location) {
 		this.location = location;
 
 		this.setHeader(
@@ -100,7 +99,6 @@ public final class BossLocation extends YamlConfig {
 	 *
 	 * @return the location
 	 */
-	@Nullable
 	public Location getLocation() {
 		return this.location.clone();
 	}
