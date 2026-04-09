@@ -14,6 +14,7 @@ import org.mineacademy.boss.model.BossSpawnReason;
 import org.mineacademy.boss.model.BossSpawnResult;
 import org.mineacademy.boss.model.SpawnedBoss;
 import org.mineacademy.fo.Common;
+import org.mineacademy.fo.MinecraftVersion;
 import org.mineacademy.fo.collection.SerializedMap;
 import org.mineacademy.fo.conversation.SimpleDecimalPrompt;
 import org.mineacademy.fo.menu.Menu;
@@ -95,7 +96,9 @@ public final class SkillMinions extends AbstractTargetSkill {
 			int dy = 0;
 			boolean last = CompMaterial.isAir(block);
 
-			for (; loc.getY() + dy > 1; --dy)
+			final int minHeight = MinecraftVersion.atLeast(MinecraftVersion.V.v1_18) ? loc.getWorld().getMinHeight() : 0;
+
+			for (; loc.getY() + dy > minHeight; --dy)
 				if (!CompMaterial.isAir(block.getRelative(0, dy, 0))) {
 					if (last)
 						break;
