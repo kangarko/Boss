@@ -28,6 +28,7 @@ import org.mineacademy.fo.MinecraftVersion.V;
 import org.mineacademy.fo.Valid;
 import org.mineacademy.fo.collection.ExpiringMap;
 import org.mineacademy.fo.collection.SerializedMap;
+import org.mineacademy.fo.model.HookManager;
 import org.mineacademy.fo.model.Tuple;
 import org.mineacademy.fo.platform.Platform;
 import org.mineacademy.fo.region.DiskRegion;
@@ -38,7 +39,6 @@ import org.mineacademy.fo.remain.Remain;
 import com.google.gson.JsonObject;
 
 import net.citizensnpcs.api.CitizensAPI;
-import net.citizensnpcs.api.ai.BehaviorController;
 import net.citizensnpcs.api.ai.EntityTarget;
 import net.citizensnpcs.api.ai.Navigator;
 import net.citizensnpcs.api.ai.goals.WanderGoal;
@@ -207,12 +207,10 @@ public final class CitizensHook {
 		data.setPersistent(NPC.Metadata.COLLIDABLE, true);
 		data.setPersistent(NPC.Metadata.DAMAGE_OTHERS, true);
 
-		final BehaviorController behaviorController = npc.getDefaultBehaviorController();
-
-		behaviorController.clear();
+		HookManager.clearNPCBehaviors(npc);
 
 		if (citizens.isTargetGoalEnabled())
-			behaviorController.addBehavior(BossTargetNearbyEntityGoal.builder(npc)
+			HookManager.addNPCBehaviors(npc, BossTargetNearbyEntityGoal.builder(npc)
 					.aggressive(citizens.isTargetGoalAggressive())
 					.radius(citizens.getTargetGoalRadius())
 					.targets(citizens.getTargetGoalEntities())
@@ -220,7 +218,7 @@ public final class CitizensHook {
 
 		if (citizens.isWanderGoalEnabled())
 			try {
-				behaviorController.addBehavior(WanderGoal.builder(npc).xrange(citizens.getWanderGoalRadius()).yrange(citizens.getWanderGoalRadius()).delay(0).build());
+				HookManager.addNPCBehaviors(npc, WanderGoal.builder(npc).xrange(citizens.getWanderGoalRadius()).yrange(citizens.getWanderGoalRadius()).delay(0).build());
 			} catch (final NoSuchMethodError ex) {
 			}
 

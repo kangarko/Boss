@@ -793,7 +793,7 @@ public final class Boss extends YamlConfig implements ConfigStringSerializable {
 		final World firstWorld = Bukkit.getWorlds().get(0);
 		final Location spawnLocation = firstWorld.getSpawnLocation();
 		final LivingEntity dummyBoss = (LivingEntity) firstWorld
-				.spawnEntity(new Location(firstWorld, spawnLocation.getX(), 0, spawnLocation.getZ()), this.type);
+				.spawnEntity(new Location(firstWorld, spawnLocation.getX(), spawnLocation.getY(), spawnLocation.getZ()), this.type);
 
 		for (final BossAttribute attribute : BossAttribute.values())
 			if (attribute.isAvailable(dummyBoss)) {
