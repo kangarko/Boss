@@ -879,7 +879,7 @@ final class NewDismountEventListener implements Listener {
 		final SpawnedBoss boss = Boss.findBoss(entity);
 
 		if (boss != null && dismountedEntity != null && dismountedEntity.isValid())
-			if (boss.getBoss().getRemoveRidingOnDeath())
+			if (boss.getBoss().getRemoveRidingOnDeath() && !(dismountedEntity instanceof Player))
 				dismountedEntity.remove();
 
 			else if (!CompMetadata.hasTempMetadata(entity, "BossDontPreventVehicleExit"))
@@ -901,7 +901,7 @@ final class CompSpigotBossDismountListener implements Listener {
 		final SpawnedBoss boss = Boss.findBoss(entity);
 
 		if (boss != null && dismountedEntity != null && dismountedEntity.isValid())
-			if (boss.getBoss().getRemoveRidingOnDeath())
+			if (boss.getBoss().getRemoveRidingOnDeath() && !(dismountedEntity instanceof Player))
 				dismountedEntity.remove();
 
 			else if (!CompMetadata.hasTempMetadata(entity, "BossDontPreventVehicleExit"))
