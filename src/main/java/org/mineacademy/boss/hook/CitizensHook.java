@@ -144,7 +144,12 @@ public final class CitizensHook {
 	 * @param entity
 	 */
 	public static void update(Boss boss, Entity entity) {
-		final NPC npc = findRegistry().getNPC(entity);
+		final NPCRegistry registry = findRegistry();
+
+		if (registry == null)
+			return;
+
+		final NPC npc = registry.getNPC(entity);
 
 		if (npc == null)
 			return;
@@ -457,6 +462,9 @@ public final class CitizensHook {
 			return CitizensAPI.getNPCRegistry();
 
 		} catch (final IllegalStateException ex) {
+			return null;
+
+		} catch (final NoClassDefFoundError ex) {
 			return null;
 		}
 	}
