@@ -65,7 +65,10 @@ public final class MaxHealthTrait extends Trait {
 			final LivingEntity living = (LivingEntity) event.getEntity();
 			final double health = Math.max(0, living.getHealth() - Remain.getFinalDamage(event));
 
-			npc.getTraitNullable(MaxHealthTrait.class).health = health;
+			final MaxHealthTrait trait = npc.getTraitNullable(MaxHealthTrait.class);
+
+			if (trait != null)
+				trait.health = health;
 		}
 	}
 

@@ -17,9 +17,9 @@ import net.citizensnpcs.api.trait.TraitName;
 public final class ScaleTrait extends Trait {
 
 	/**
-	 * Stores last known current health since Citizens does not save this value
+	 * Stores last known scale since Citizens does not save this value
 	 */
-	@Persist("boss_health")
+	@Persist("boss_scale")
 	double scale = -1;
 
 	public ScaleTrait() {
@@ -37,10 +37,18 @@ public final class ScaleTrait extends Trait {
 
 		if (boss != null) {
 			final NPCRegistry registry = CitizensAPI.getNPCRegistry();
+
+			if (registry == null)
+				return;
+
 			final NPC npc = registry.getNPC(entity);
 
-			if (npc != null)
-				npc.getTraitNullable(ScaleTrait.class).scale = scale;
+			if (npc != null) {
+				final ScaleTrait trait = npc.getTraitNullable(ScaleTrait.class);
+
+				if (trait != null)
+					trait.scale = scale;
+			}
 		}
 	}
 
