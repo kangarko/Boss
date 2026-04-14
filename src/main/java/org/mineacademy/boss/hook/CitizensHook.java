@@ -55,6 +55,12 @@ import net.citizensnpcs.trait.SkinTrait;
 public final class CitizensHook {
 
 	/*
+	 * Set to true when Citizens classes are not available at runtime,
+	 * preventing repeated NoClassDefFoundError on every entity spawn.
+	 */
+	private static boolean citizensUnavailable = false;
+
+	/*
 	 * Skin cache
 	 */
 	private static final Map<String, JsonObject> cache = ExpiringMap.builder().expiration(30, TimeUnit.MINUTES).build();
@@ -144,7 +150,12 @@ public final class CitizensHook {
 	 * @param entity
 	 */
 	public static void update(Boss boss, Entity entity) {
-		final NPC npc = findRegistry().getNPC(entity);
+		final NPCRegistry registry = findRegistry();
+
+		if (registry == null)
+			return;
+
+		final NPC npc = registry.getNPC(entity);
 
 		if (npc == null)
 			return;
@@ -453,10 +464,21 @@ public final class CitizensHook {
 	 * Find the NPC registry and return null if not found by catching the exception
 	 */
 	private static NPCRegistry findRegistry() {
+		if (citizensUnavailable)
+			return null;
+
 		try {
 			return CitizensAPI.getNPCRegistry();
 
 		} catch (final IllegalStateException ex) {
+			return null;
+
+		} catch (final NoClassDefFoundError ex) {
+			citizensUnavailable = true;
+
+			Common.warning("Citizens classes are not available at runtime. Disabling Citizens integration. "
+					+ "If you use Citizens, ensure it is properly installed, enabled, and compatible with your server version.");
+
 			return null;
 		}
 	}
