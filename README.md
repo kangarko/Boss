@@ -13,9 +13,9 @@ Boss is a plugin for custom monsters on your server.
 * Clean GUI allows you to configure EVERYTHING in-game easily.
 * and much more! Read more [here](https://github.com/kangarko/Boss/wiki/What-is-Boss).
 
-## Purchasing
+## Getting Boss
 
-Visit [MineAcademy.org/Boss](https://mineacademy.org/boss) to purchase the plugin.
+Visit [MineAcademy.org/Boss](https://mineacademy.org/boss) to get the plugin.
 
 ## Compiling
 Please note that NO support is provided for the compilation process and for non-buyers. Consider purchasing the plugin to support its development, get our insider rank on our [Discord](https://mineacademy.org/discord) and get support.
