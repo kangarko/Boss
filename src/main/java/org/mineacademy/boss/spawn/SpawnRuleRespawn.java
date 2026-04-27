@@ -44,14 +44,24 @@ public class SpawnRuleRespawn extends SpawnRuleLocationData {
 		}
 
 		final long now = System.currentTimeMillis();
-		final long lastDeathTime = boss.getLastDeathFromSpawnRule(this);
+		final long lastDeathTime = this.getLastDeathTime();
 
 		if (lastDeathTime != 0 && (now - lastDeathTime) < this.getDelay().getTimeMilliseconds()) {
-			Debugger.debug("spawning-respawn", "Skip spawning " + boss.getName() + " because the last death was less than " + this.getDelay().getTimeSeconds() + " sec ago (" + (now - lastDeathTime) / 1000 + ")");
+			Debugger.debug("spawning-respawn", "Skip spawning " + boss.getName() + " because this rule's last death was less than " + this.getDelay().getTimeSeconds() + " sec ago (" + (now - lastDeathTime) / 1000 + ")");
 
 			return false;
 		}
 
 		return true;
+	}
+
+	public long getLastDeathTime() {
+		long lastDeathTime = 0;
+
+		for (final Boss boss : Boss.getBosses())
+			if (this.getBosses().contains(boss.getName()))
+				lastDeathTime = Math.max(lastDeathTime, boss.getLastDeathFromSpawnRule(this));
+
+		return lastDeathTime;
 	}
 }
