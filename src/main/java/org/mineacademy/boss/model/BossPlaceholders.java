@@ -244,7 +244,7 @@ public final class BossPlaceholders extends SimpleExpansion {
 					return "Boss '" + bossName + "' Is Not Assigned To Spawn Rule '" + thirdArg + "'";
 
 				final long now = System.currentTimeMillis();
-				final long lastDeathTime = boss.getLastDeathFromSpawnRule(rule);
+				final long lastDeathTime = ((SpawnRuleRespawn) rule).getLastDeathTime();
 
 				if (lastDeathTime != 0) {
 					final long difference = now - lastDeathTime;
