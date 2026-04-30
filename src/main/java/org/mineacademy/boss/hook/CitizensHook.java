@@ -228,10 +228,7 @@ public final class CitizensHook {
 					.build());
 
 		if (citizens.isWanderGoalEnabled())
-			try {
-				HookManager.addNPCBehaviors(npc, WanderGoal.builder(npc).xrange(citizens.getWanderGoalRadius()).yrange(citizens.getWanderGoalRadius()).delay(0).build());
-			} catch (final NoSuchMethodError ex) {
-			}
+			HookManager.addNPCBehaviors(npc, WanderGoal.builder(npc).xrange(citizens.getWanderGoalRadius()).yrange(citizens.getWanderGoalRadius()).delay(0).build());
 
 		if (!citizens.isTargetGoalEnabled() && !citizens.isWanderGoalEnabled())
 			npc.setUseMinecraftAI(true);
