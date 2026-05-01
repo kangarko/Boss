@@ -54,14 +54,4 @@ public class SpawnRuleRespawn extends SpawnRuleLocationData {
 
 		return true;
 	}
-
-	public long getLastDeathTime() {
-		long lastDeathTime = 0;
-
-		for (final Boss boss : Boss.getBosses())
-			if (this.getBosses().contains(boss.getName()))
-				lastDeathTime = Math.max(lastDeathTime, boss.getLastDeathFromSpawnRule(this));
-
-		return lastDeathTime;
-	}
 }
