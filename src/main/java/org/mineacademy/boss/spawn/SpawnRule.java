@@ -218,12 +218,20 @@ public abstract class SpawnRule extends YamlConfig {
 	protected boolean canRun() {
 
 		// Respawn rules are ticked in a runnable task
-		if (this.checkLastExecuted())
-			if (this.lastExecuted != -1 && System.currentTimeMillis() - this.lastExecuted + 1 < this.delay.getTimeSeconds() * 1000) {
-				Debugger.debug("spawning", "[SpawnRule=" + this.getName() + "] Not running due to last executed " + (System.currentTimeMillis() - this.lastExecuted) / 1000 + "s ago and delay is " + this.delay.getTimeSeconds() + "s");
+		if (this.checkLastExecuted()) {
+			final long now = System.currentTimeMillis();
+			final long lastDeathTime = this.getLastDeathTime();
+
+			// Use whichever happened later: the last successful spawn or the last death of a boss spawned by this rule.
+			// This way "Delay" also acts as a cooldown after death, not just between spawn attempts.
+			final long effectiveLast = Math.max(this.lastExecuted, lastDeathTime);
+
+			if (effectiveLast > 0 && now - effectiveLast + 1 < this.delay.getTimeSeconds() * 1000) {
+				Debugger.debug("spawning", "[SpawnRule=" + this.getName() + "] Not running due to last spawn/death " + (now - effectiveLast) / 1000 + "s ago and delay is " + this.delay.getTimeSeconds() + "s");
 
 				return false;
 			}
+		}
 
 		if (!RandomUtil.chanceD(this.getChance())) {
 			Debugger.debug("spawning", "[SpawnRule=" + this.getName() + "] Not running due to chance did not pass: " + this.getChance() * 100 + "%");
@@ -339,6 +347,21 @@ public abstract class SpawnRule extends YamlConfig {
 
 		if (success)
 			this.lastExecuted = System.currentTimeMillis();
+	}
+
+	/**
+	 * Returns the latest death timestamp of any boss that was spawned by this rule, or 0 if none.
+	 *
+	 * @return
+	 */
+	public long getLastDeathTime() {
+		long lastDeathTime = 0;
+
+		for (final Boss boss : Boss.getBosses())
+			if (this.getBosses().contains(boss.getName()))
+				lastDeathTime = Math.max(lastDeathTime, boss.getLastDeathFromSpawnRule(this));
+
+		return lastDeathTime;
 	}
 
 	/* ------------------------------------------------------------------------------- */
