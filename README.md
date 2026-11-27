@@ -29,6 +29,6 @@ If you encounter any missing dependencies error, download the plugins manually a
 
 You have to purchase Boss to be eligible for customer support.
 
-1. Please read our **[Wiki](https://docs.mineacademy.org/boss)** first before opening a ticket.
-2. See [Common Issues](https://docs.mineacademy.org/boss/common-issues) whether your question or bug has already been answered.
-3. To open a ticket, please read the [Getting Help the Best Way](https://docs.mineacademy.org/general/getting-help).
+1. Please read our **[Wiki](https://mineacademy.org/docs/boss)** first before opening a ticket.
+2. See [Common Issues](https://mineacademy.org/docs/boss/common-issues) whether your question or bug has already been answered.
+3. To open a ticket, please read the [Getting Help the Best Way](https://mineacademy.org/docs/general/getting-help).
